@@ -1,9 +1,6 @@
 {
     "compilerOptions": {
         "target": "ES6",
-        "lib": [
-            "ESNext",
-        ],
         "module": "CommonJS",
         "declaration": true,
         "outDir": "./dist",
@@ -16,7 +13,11 @@
             "@brasil-interface/*": [
                 "packages/*/src"
             ]
-        }
+        },
+        "types": [
+            "node",
+            "jest"
+        ]
     },
     "exclude": [
         "node_modules"

@@ -41,7 +41,7 @@ export class CnpjUtils {
 
 		const cleanedCnpj = this.clear(cnpj);
 		if (cleanedCnpj.length !== this.CNPJ_LENGTH) return false;
-		if (this.CNPJ_BLACKLIST.includes(cleanedCnpj)) return false;
+		if (this.CNPJ_BLACKLIST.some((bl) => bl === cleanedCnpj)) return false;
 
 		const firstDigit = this.verifierDigit(cleanedCnpj.slice(0, 12));
 		const secondDigit = this.verifierDigit(cleanedCnpj.slice(0, 13));

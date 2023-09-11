@@ -43,7 +43,7 @@ export class CpfUtils {
 
 		cpf = this.clear(cpf);
 		if (cpf.length !== this.CPF_LENGTH) return false;
-		if (this.CPF_BLACKLIST.includes(cpf)) return false;
+		if (this.CPF_BLACKLIST.some((bl) => bl === cpf)) return false;
 
 		const generatedVerifierDigits = this.generateVerifierDigits(
 			cpf.slice(0, 9)
@@ -100,8 +100,10 @@ export class CpfUtils {
 	 * ```
 	 */
 	public static generate(): string {
-		const numbers = Math.floor(Math.random() * 90000000000) + 10000000000;
-		return numbers.toString() + this.generateVerifierDigits(numbers.toString());
+		const digits = Array.from({ length: 9 }, () =>
+			Math.floor(Math.random() * 10)
+		).join("");
+		return digits + this.generateVerifierDigits(digits);
 	}
 
 	/**
