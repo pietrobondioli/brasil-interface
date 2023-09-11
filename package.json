@@ -2,7 +2,15 @@
   "name": "brasil-interface",
   "version": "0.0.0",
   "license": "MIT",
+  "scripts": {
+    "test": "jest --no-cache"
+  },
   "dependencies": {
     "lerna": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.4",
+    "jest": "^29.6.4",
+    "ts-jest": "^29.1.1"
   }
 }
