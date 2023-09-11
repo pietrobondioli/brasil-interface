@@ -1,5 +1,5 @@
 module.exports = {
-	displayName: "utils",
+	displayName: "Brasil Interface - Utils",
 	preset: "ts-jest",
 	testEnvironment: "node",
 	transform: {
