@@ -1,4 +1,4 @@
-export class CpfUtils {
+export class CPFUtils {
 	private static readonly ANY_NON_DIGIT_REGEX = /\D+/g;
 
 	private static readonly CPF_LENGTH = 11;
@@ -32,10 +32,10 @@ export class CpfUtils {
 	 *
 	 * @example
 	 * ```
-	 * CpfUtils.isValid("000.000.000-00"); // false
-	 * CpfUtils.isValid("000.000.001-91"); // true
-	 * CpfUtils.isValid("00000000191"); // true
-	 * CpfUtils.isValid("00000000192"); // false
+	 * CPFUtils.isValid("000.000.000-00"); // false
+	 * CPFUtils.isValid("000.000.001-91"); // true
+	 * CPFUtils.isValid("00000000191"); // true
+	 * CPFUtils.isValid("00000000192"); // false
 	 * ```
 	 */
 	public static isValid(cpf: string | number): boolean {
@@ -48,6 +48,7 @@ export class CpfUtils {
 		const generatedVerifierDigits = this.generateVerifierDigits(
 			cpf.slice(0, 9)
 		);
+
 		return cpf.slice(9, 11) === generatedVerifierDigits;
 	}
 
@@ -61,8 +62,8 @@ export class CpfUtils {
 	 *
 	 * @example
 	 * ```
-	 * CpfUtils.mask("00000000191"); // "000.000.001-91"
-	 * CpfUtils.mask("00000000192"); // "000.000.001-92"
+	 * CPFUtils.mask("00000000191"); // "000.000.001-91"
+	 * CPFUtils.mask("00000000192"); // "000.000.001-92"
 	 * ```
 	 */
 	public static mask(cpf: string | number): string {
@@ -79,8 +80,8 @@ export class CpfUtils {
 	 *
 	 * @example
 	 * ```
-	 * CpfUtils.unmask("000.000.001-91"); // "00000000191"
-	 * CpfUtils.unmask("000.000.001-92"); // "00000000192"
+	 * CPFUtils.unmask("000.000.001-91"); // "00000000191"
+	 * CPFUtils.unmask("000.000.001-92"); // "00000000192"
 	 * ```
 	 */
 	public static unmask(cpf: string | number): string {
@@ -96,13 +97,14 @@ export class CpfUtils {
 	 *
 	 * @example
 	 * ```
-	 * CpfUtils.generate(); // "00000000191"
+	 * CPFUtils.generate(); // "00000000191"
 	 * ```
 	 */
 	public static generate(): string {
 		const digits = Array.from({ length: 9 }, () =>
 			Math.floor(Math.random() * 10)
 		).join("");
+
 		return digits + this.generateVerifierDigits(digits);
 	}
 
@@ -115,7 +117,7 @@ export class CpfUtils {
 	 *
 	 * @example
 	 * ```
-	 * CpfUtils.generate(); // "000.000.001-91"
+	 * CPFUtils.generate(); // "000.000.001-91"
 	 * ```
 	 */
 	public static generateMasked(): string {
@@ -134,7 +136,7 @@ export class CpfUtils {
 	 *
 	 * @example
 	 * ```
-	 * CpfUtils.maskSensitive("00000000191"); // "000.000.***-**"
+	 * CPFUtils.maskSensitive("00000000191"); // "000.000.***-**"
 	 * ```
 	 */
 	public static maskSensitive(cpf: string | number): string {
@@ -155,6 +157,7 @@ export class CpfUtils {
 	private static generateVerifierDigits(digits: string): string {
 		const firstDigit = this.calculateVerifierDigit(digits);
 		const secondDigit = this.calculateVerifierDigit(digits + firstDigit);
+
 		return firstDigit.toString() + secondDigit.toString();
 	}
 
@@ -166,6 +169,7 @@ export class CpfUtils {
 			0
 		);
 		const mod = sum % 11;
+
 		return mod < 2 ? 0 : 11 - mod;
 	}
 }

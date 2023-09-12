@@ -1,4 +1,4 @@
-export class CnpjUtils {
+export class CNPJUtils {
 	private static readonly ANY_NON_DIGIT_REGEX = /\D+/g;
 
 	private static readonly CNPJ_LENGTH = 14;
@@ -32,8 +32,8 @@ export class CnpjUtils {
 	 *
 	 * @example
 	 * ```
-	 * CnpjUtils.isValid("00.000.000/0000-00"); // false
-	 * CnpjUtils.isValid("00.000.000/0001-91"); // true
+	 * CNPJUtils.isValid("00.000.000/0000-00"); // false
+	 * CNPJUtils.isValid("00.000.000/0001-91"); // true
 	 * ```
 	 */
 	public static isValid(cnpj: string): boolean {
@@ -60,6 +60,7 @@ export class CnpjUtils {
 			multiplier = multiplier === 9 ? 2 : multiplier + 1;
 		}
 		const mod = sum % 11;
+
 		return mod < 2 ? 0 : 11 - mod;
 	}
 
@@ -87,7 +88,7 @@ export class CnpjUtils {
 	 *
 	 * @example
 	 * ```
-	 * CnpjUtils.mask("00000000000191"); // "00.000.000/0001-91"
+	 * CNPJUtils.mask("00000000000191"); // "00.000.000/0001-91"
 	 * ```
 	 */
 	public static mask(cnpj: string): string {
@@ -106,7 +107,7 @@ export class CnpjUtils {
 	 *
 	 * @example
 	 * ```
-	 * CnpjUtils.maskSensitive("00000000000191"); // "00.000.***\/0000-**"
+	 * CNPJUtils.maskSensitive("00000000000191"); // "00.000.***\/0000-**"
 	 * ```
 	 */
 	public static maskSensitive(cnpj: string): string {
@@ -123,7 +124,7 @@ export class CnpjUtils {
 	 *
 	 * @example
 	 * ```
-	 * CnpjUtils.unmask("00.000.000/0001-91"); // "00000000000191"
+	 * CNPJUtils.unmask("00.000.000/0001-91"); // "00000000000191"
 	 * ```
 	 */
 	public static unmask(cnpj: string): string {
@@ -139,7 +140,7 @@ export class CnpjUtils {
 	 *
 	 * @example
 	 * ```
-	 * CnpjUtils.generate(); // "00000000000191"
+	 * CNPJUtils.generate(); // "00000000000191"
 	 * ```
 	 */
 	public static generate(): string {
@@ -149,6 +150,7 @@ export class CnpjUtils {
 		}
 		cnpj += this.verifierDigit(cnpj);
 		cnpj += this.verifierDigit(cnpj);
+
 		return cnpj;
 	}
 }
