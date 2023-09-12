@@ -20,14 +20,14 @@ export class Mod11Alg {
 	public static calculateCheckDigit(
 		number: string,
 		weights: number[],
-		direction: "left" | "right" = "left"
+		direction: "fromLeft" | "fromRight" = "fromLeft"
 	): number {
 		let sum = 0;
 		let weightIndex = 0;
 
 		// If direction is 'right', we'll reverse the number so the logic within the loop remains consistent.
 		const iterNumber =
-			direction === "right" ? number.split("").reverse().join("") : number;
+			direction === "fromRight" ? number.split("").reverse().join("") : number;
 
 		for (let i = 0; i < iterNumber.length; i++) {
 			const digit = parseInt(iterNumber.charAt(i), 10);
