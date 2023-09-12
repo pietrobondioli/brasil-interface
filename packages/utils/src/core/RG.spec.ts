@@ -2,16 +2,22 @@ import { RG } from "./RG";
 
 const VALID_RG = "203361040";
 const VALID_RG_MASKED = "20.336.104-0";
-const VALID_RG_WITH_X = "30001046X";
+const VALID_RG_WITH_X = "90001071X";
 const VALID_RG_MASKED_SENSITIVE = "20.336.***-*";
-
 const INVALID_RG = "000000000";
 const INVALID_RG_MASKED = "00.000.000-0";
-
 const RG_INVALID_LENGTH = "00.000.00";
 const RG_REPEATED_DIGITS = "111111111";
-
 const MASKED_RG_REGEX = /^\d{2}\.\d{3}\.\d{3}-[\dX]{1}$/;
+
+const VALID_RGS = [
+	"312031312",
+	"332552172",
+	"388725461",
+	"448810694",
+	"231352165",
+	"139620965",
+];
 
 describe("RG.SP", () => {
 	describe("isValid", () => {
@@ -32,6 +38,12 @@ describe("RG.SP", () => {
 		it("should return true for valid RG", () => {
 			expect(RG.SP.isValid(VALID_RG)).toBe(true);
 			expect(RG.SP.isValid(VALID_RG_MASKED)).toBe(true);
+		});
+
+		VALID_RGS.forEach((rg) => {
+			it(`should return true for valid RG ${rg}`, () => {
+				expect(RG.SP.isValid(rg)).toBe(true);
+			});
 		});
 
 		it("should return true for valid RG with X", () => {
