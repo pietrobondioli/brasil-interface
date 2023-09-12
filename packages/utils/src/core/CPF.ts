@@ -1,7 +1,22 @@
-export class CPFUtils {
+import { LuhnValidator } from "../helpers/LuhnValidator";
+import { Mod11Alg } from "../helpers/Mod11Alg";
+
+export class CPF {
 	private static readonly ANY_NON_DIGIT_REGEX = /\D+/g;
 
 	private static readonly CPF_LENGTH = 11;
+
+	private static readonly CPF_BASE_NUMERALS_START = 0;
+
+	private static readonly CPF_BASE_NUMERALS_END = 9;
+
+	private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
+		10, 9, 8, 7, 6, 5, 4, 3, 2,
+	];
+
+	private static readonly SECOND_VERIFIER_DIGIT_WEIGHTS = [
+		11, 10, 9, 8, 7, 6, 5, 4, 3, 2,
+	];
 
 	private static readonly CPF_DIGITS_REGEX = /(\d{3})(\d{3})(\d{3})(\d{2})/;
 
@@ -32,10 +47,10 @@ export class CPFUtils {
 	 *
 	 * @example
 	 * ```
-	 * CPFUtils.isValid("000.000.000-00"); // false
-	 * CPFUtils.isValid("000.000.001-91"); // true
-	 * CPFUtils.isValid("00000000191"); // true
-	 * CPFUtils.isValid("00000000192"); // false
+	 * CPF.isValid("000.000.000-00"); // false
+	 * CPF.isValid("00000000192"); // false
+	 * CPF.isValid("209.936.850-30"); // true
+	 * CPF.isValid("20993685030"); // true
 	 * ```
 	 */
 	public static isValid(cpf: string | number): boolean {
@@ -45,11 +60,11 @@ export class CPFUtils {
 		if (cpf.length !== this.CPF_LENGTH) return false;
 		if (this.CPF_BLACKLIST.some((bl) => bl === cpf)) return false;
 
-		const generatedVerifierDigits = this.generateVerifierDigits(
-			cpf.slice(0, 9)
+		const verifierDigits = this.generateVerifierDigits(
+			this.getBaseNumerals(cpf)
 		);
 
-		return cpf.slice(9, 11) === generatedVerifierDigits;
+		return cpf.endsWith(verifierDigits);
 	}
 
 	/**
@@ -62,12 +77,30 @@ export class CPFUtils {
 	 *
 	 * @example
 	 * ```
-	 * CPFUtils.mask("00000000191"); // "000.000.001-91"
-	 * CPFUtils.mask("00000000192"); // "000.000.001-92"
+	 * CPF.mask("20993685030"); // "209.936.850-30"
 	 * ```
 	 */
 	public static mask(cpf: string | number): string {
 		return this.applyMask(cpf, this.CPF_MASK);
+	}
+
+	/**
+	 * PT-BR: Máscara um número de CPF,
+	 * Útil para exibir dados sensíveis.
+	 *
+	 * EN: Masks a CPF number,
+	 * Useful for displaying sensitive data.
+	 *
+	 * @param cpf - PT-BR: O número de CPF. EN: The CPF number.
+	 * @returns PT-BR: O número de CPF mascarado. EN: The masked CPF number.
+	 *
+	 * @example
+	 * ```
+	 * CPF.maskSensitive("20993685030"); // "209.936.***-**"
+	 * ```
+	 */
+	public static maskSensitive(cpf: string | number): string {
+		return this.applyMask(cpf, this.CPF_MASK_SENSITIVE);
 	}
 
 	/**
@@ -80,8 +113,7 @@ export class CPFUtils {
 	 *
 	 * @example
 	 * ```
-	 * CPFUtils.unmask("000.000.001-91"); // "00000000191"
-	 * CPFUtils.unmask("000.000.001-92"); // "00000000192"
+	 * CPF.unmask("209.936.850-30"); // "20993685030"
 	 * ```
 	 */
 	public static unmask(cpf: string | number): string {
@@ -97,7 +129,7 @@ export class CPFUtils {
 	 *
 	 * @example
 	 * ```
-	 * CPFUtils.generate(); // "00000000191"
+	 * CPF.generate(); // "20993685030"
 	 * ```
 	 */
 	public static generate(): string {
@@ -117,30 +149,11 @@ export class CPFUtils {
 	 *
 	 * @example
 	 * ```
-	 * CPFUtils.generate(); // "000.000.001-91"
+	 * CPF.generate(); // "209.936.850-30"
 	 * ```
 	 */
 	public static generateMasked(): string {
 		return this.mask(this.generate());
-	}
-
-	/**
-	 * PT-BR: Máscara um número de CPF,
-	 * Útil para exibir dados sensíveis.
-	 *
-	 * EN: Masks a CPF number,
-	 * Useful for displaying sensitive data.
-	 *
-	 * @param cpf - PT-BR: O número de CPF. EN: The CPF number.
-	 * @returns PT-BR: O número de CPF mascarado. EN: The masked CPF number.
-	 *
-	 * @example
-	 * ```
-	 * CPFUtils.maskSensitive("00000000191"); // "000.000.***-**"
-	 * ```
-	 */
-	public static maskSensitive(cpf: string | number): string {
-		return this.applyMask(cpf, this.CPF_MASK_SENSITIVE);
 	}
 
 	private static clear(value: string | number): string {
@@ -154,22 +167,24 @@ export class CPFUtils {
 		return this.clear(value).replace(this.CPF_DIGITS_REGEX, maskPattern);
 	}
 
-	private static generateVerifierDigits(digits: string): string {
-		const firstDigit = this.calculateVerifierDigit(digits);
-		const secondDigit = this.calculateVerifierDigit(digits + firstDigit);
-
-		return firstDigit.toString() + secondDigit.toString();
+	private static getBaseNumerals(digits: string): string {
+		return digits.slice(
+			this.CPF_BASE_NUMERALS_START,
+			this.CPF_BASE_NUMERALS_END
+		);
 	}
 
-	private static calculateVerifierDigit(digits: string): number {
-		const numbers = digits.split("").map((n) => parseInt(n, 10));
-		const modulus = numbers.length + 1;
-		const sum = numbers.reduce(
-			(acc, value, idx) => acc + value * (modulus - idx),
-			0
+	private static generateVerifierDigits(digits: string): string {
+		const firstDigit = Mod11Alg.calculateCheckDigit(
+			digits,
+			this.FIRST_VERIFIER_DIGIT_WEIGHTS
 		);
-		const mod = sum % 11;
 
-		return mod < 2 ? 0 : 11 - mod;
+		const secondDigit = Mod11Alg.calculateCheckDigit(
+			digits + firstDigit,
+			this.SECOND_VERIFIER_DIGIT_WEIGHTS
+		);
+
+		return `${firstDigit}${secondDigit}`;
 	}
 }

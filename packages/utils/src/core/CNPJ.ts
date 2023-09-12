@@ -1,7 +1,21 @@
-export class CNPJUtils {
+import { Mod11Alg } from "../helpers/Mod11Alg";
+
+export class CNPJ {
 	private static readonly ANY_NON_DIGIT_REGEX = /\D+/g;
 
 	private static readonly CNPJ_LENGTH = 14;
+
+	private static readonly CNPJ_BASE_NUMERALS_START = 0;
+
+	private static readonly CNPJ_BASE_NUMERALS_END = 12;
+
+	private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
+		5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2,
+	];
+
+	private static readonly SECOND_VERIFIER_DIGIT_WEIGHTS = [
+		6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2,
+	];
 
 	private static readonly CNPJ_DIGITS_REGEX =
 		/(^\d{2})(\d{3})(\d{3})(\d{4})(\d{2}$)/;
@@ -32,8 +46,8 @@ export class CNPJUtils {
 	 *
 	 * @example
 	 * ```
-	 * CNPJUtils.isValid("00.000.000/0000-00"); // false
-	 * CNPJUtils.isValid("00.000.000/0001-91"); // true
+	 * CNPJ.isValid("00.000.000/0000-00"); // false
+	 * CNPJ.isValid("52.029.894/0001-46"); // true
 	 * ```
 	 */
 	public static isValid(cnpj: string): boolean {
@@ -43,33 +57,11 @@ export class CNPJUtils {
 		if (cleanedCnpj.length !== this.CNPJ_LENGTH) return false;
 		if (this.CNPJ_BLACKLIST.some((bl) => bl === cleanedCnpj)) return false;
 
-		const firstDigit = this.verifierDigit(cleanedCnpj.slice(0, 12));
-		const secondDigit = this.verifierDigit(cleanedCnpj.slice(0, 13));
-
-		return (
-			parseInt(cleanedCnpj.charAt(12)) === firstDigit &&
-			parseInt(cleanedCnpj.charAt(13)) === secondDigit
+		const verifierDigits = this.generateVerifierDigits(
+			this.getBaseNumerals(cleanedCnpj)
 		);
-	}
 
-	private static verifierDigit(cnpj: string): number {
-		let sum = 0,
-			multiplier = 2;
-		for (let i = cnpj.length - 1; i >= 0; i--) {
-			sum += parseInt(cnpj.charAt(i)) * multiplier;
-			multiplier = multiplier === 9 ? 2 : multiplier + 1;
-		}
-		const mod = sum % 11;
-
-		return mod < 2 ? 0 : 11 - mod;
-	}
-
-	private static clear(cpf: string): string {
-		return cpf.replace(this.ANY_NON_DIGIT_REGEX, "");
-	}
-
-	private static applyMask(cnpj: string, maskPattern: string): string {
-		return this.clear(cnpj).replace(this.CNPJ_DIGITS_REGEX, maskPattern);
+		return cleanedCnpj.endsWith(verifierDigits);
 	}
 
 	/**
@@ -88,7 +80,7 @@ export class CNPJUtils {
 	 *
 	 * @example
 	 * ```
-	 * CNPJUtils.mask("00000000000191"); // "00.000.000/0001-91"
+	 * CNPJ.mask("52029894000146"); // "52.029.894/0001-46"
 	 * ```
 	 */
 	public static mask(cnpj: string): string {
@@ -107,7 +99,7 @@ export class CNPJUtils {
 	 *
 	 * @example
 	 * ```
-	 * CNPJUtils.maskSensitive("00000000000191"); // "00.000.***\/0000-**"
+	 * CNPJ.maskSensitive("52029894000146"); // "52.029.***\/0001-**"
 	 * ```
 	 */
 	public static maskSensitive(cnpj: string): string {
@@ -124,7 +116,7 @@ export class CNPJUtils {
 	 *
 	 * @example
 	 * ```
-	 * CNPJUtils.unmask("00.000.000/0001-91"); // "00000000000191"
+	 * CNPJ.unmask("52.029.894/0001-46"); // "52029894000146"
 	 * ```
 	 */
 	public static unmask(cnpj: string): string {
@@ -140,17 +132,59 @@ export class CNPJUtils {
 	 *
 	 * @example
 	 * ```
-	 * CNPJUtils.generate(); // "00000000000191"
+	 * CNPJ.generate(); // "52029894000146"
 	 * ```
 	 */
 	public static generate(): string {
-		let cnpj = "";
-		for (let i = 0; i < 12; i++) {
-			cnpj += Math.floor(Math.random() * 9);
-		}
-		cnpj += this.verifierDigit(cnpj);
-		cnpj += this.verifierDigit(cnpj);
+		const digits = Array.from({ length: 12 }, () =>
+			Math.floor(Math.random() * 10)
+		).join("");
 
-		return cnpj;
+		return digits + this.generateVerifierDigits(digits);
+	}
+
+	/**
+	 * PT-BR: Gera um número de CNPJ aleatório com máscara.
+	 *
+	 * EN: Generates a random CNPJ number with mask.
+	 *
+	 * @returns PT-BR: O número de CNPJ gerado com máscara. EN: The generated CNPJ number with mask.
+	 *
+	 * @example
+	 * ```
+	 * CNPJ.generateMasked(); // "52.029.894/0001-46"
+	 * ```
+	 */
+	public static generateMasked(): string {
+		return this.mask(this.generate());
+	}
+
+	private static clear(cpf: string): string {
+		return cpf.replace(this.ANY_NON_DIGIT_REGEX, "");
+	}
+
+	private static applyMask(cnpj: string, maskPattern: string): string {
+		return this.clear(cnpj).replace(this.CNPJ_DIGITS_REGEX, maskPattern);
+	}
+
+	private static getBaseNumerals(digits: string): string {
+		return digits.slice(
+			this.CNPJ_BASE_NUMERALS_START,
+			this.CNPJ_BASE_NUMERALS_END
+		);
+	}
+
+	private static generateVerifierDigits(digits: string) {
+		const firstDigit = Mod11Alg.calculateCheckDigit(
+			digits,
+			this.FIRST_VERIFIER_DIGIT_WEIGHTS
+		);
+
+		const secondDigit = Mod11Alg.calculateCheckDigit(
+			digits + firstDigit,
+			this.SECOND_VERIFIER_DIGIT_WEIGHTS
+		);
+
+		return firstDigit.toString() + secondDigit.toString();
 	}
 }

@@ -1,3 +1,3 @@
-export { CPFUtils } from "./core/CPFUtils";
-export { CNPJUtils } from "./core/CNPJUtils";
-export { PISUtils } from "./core/PISUtils";
+export { CPF } from "./core/CPF";
+export { CNPJ } from "./core/CNPJ";
+export { PIS } from "./core/PIS";
