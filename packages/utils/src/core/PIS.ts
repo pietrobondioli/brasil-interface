@@ -1,7 +1,7 @@
 import { Mod11Alg } from "../helpers/Mod11Alg";
 
 export class PIS {
-	private static readonly ANY_NON_DIGIT_REGEX = /\D+/g;
+	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
 	private static readonly PIS_LENGTH = 11;
 
@@ -154,8 +154,11 @@ export class PIS {
 		);
 	}
 
-	private static generateVerifierDigits(digits: string): number {
-		const digit = Mod11Alg.calculateCheckDigit(digits, this.PIS_WEIGHTS);
+	private static generateVerifierDigits(digits: string): string {
+		const digit = Mod11Alg.calculateCheckDigit({
+			digits,
+			weights: this.PIS_WEIGHTS,
+		});
 
 		return digit;
 	}

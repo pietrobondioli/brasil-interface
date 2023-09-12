@@ -1,7 +1,7 @@
 import { Mod11Alg } from "../helpers/Mod11Alg";
 
 export class CNH {
-	private static readonly ANY_NON_DIGIT_REGEX = /\D+/g;
+	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
 	private static readonly CNH_BASE_NUMERALS_LENGTH = 9;
 
@@ -100,14 +100,14 @@ export class CNH {
 	}
 
 	private static generateVerifierDigits(digits: string): string {
-		const firstDigit = Mod11Alg.calculateCheckDigit(
+		const firstDigit = Mod11Alg.calculateCheckDigit({
 			digits,
-			this.FIRST_VERIFIER_DIGIT_WEIGHTS
-		);
-		const secondDigit = Mod11Alg.calculateCheckDigit(
-			firstDigit + digits,
-			this.SECOND_VERIFIER_DIGIT_WEIGHTS
-		);
+			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
+		});
+		const secondDigit = Mod11Alg.calculateCheckDigit({
+			digits: firstDigit + digits,
+			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
+		});
 
 		return `${firstDigit}${secondDigit}`;
 	}

@@ -17,20 +17,28 @@ export class Mod11Alg {
 	 *
 	 * @author Pietro Bondioli
 	 */
-	public static calculateCheckDigit(
-		number: string,
-		weights: number[],
-		direction: "fromLeft" | "fromRight" = "fromLeft"
-	): number {
+	public static calculateCheckDigit({
+		digits,
+		weights,
+		direction = "fromLeft",
+		resultFor10 = "0",
+		resultFor11 = "0",
+	}: {
+		digits: string;
+		weights: number[];
+		direction?: "fromLeft" | "fromRight";
+		resultFor10?: string;
+		resultFor11?: string;
+	}): string {
 		let sum = 0;
 		let weightIndex = 0;
 
 		// If direction is 'right', we'll reverse the number so the logic within the loop remains consistent.
-		const iterNumber =
-			direction === "fromRight" ? number.split("").reverse().join("") : number;
+		const iterDigits =
+			direction === "fromRight" ? digits.split("").reverse().join("") : digits;
 
-		for (let i = 0; i < iterNumber.length; i++) {
-			const digit = parseInt(iterNumber.charAt(i), 10);
+		for (let i = 0; i < iterDigits.length; i++) {
+			const digit = parseInt(iterDigits.charAt(i), 10);
 			sum += digit * weights[weightIndex];
 			weightIndex++;
 
@@ -40,6 +48,15 @@ export class Mod11Alg {
 		}
 
 		const mod = sum % 11;
-		return mod < 2 ? 0 : 11 - mod;
+
+		const checkDigit = 11 - mod;
+
+		if (checkDigit === 10) {
+			return resultFor10;
+		}
+		if (checkDigit === 11) {
+			return resultFor11;
+		}
+		return checkDigit.toString();
 	}
 }

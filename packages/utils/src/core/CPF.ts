@@ -1,8 +1,7 @@
-import { LuhnValidator } from "../helpers/LuhnValidator";
 import { Mod11Alg } from "../helpers/Mod11Alg";
 
 export class CPF {
-	private static readonly ANY_NON_DIGIT_REGEX = /\D+/g;
+	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
 	private static readonly CPF_LENGTH = 11;
 
@@ -175,15 +174,15 @@ export class CPF {
 	}
 
 	private static generateVerifierDigits(digits: string): string {
-		const firstDigit = Mod11Alg.calculateCheckDigit(
+		const firstDigit = Mod11Alg.calculateCheckDigit({
 			digits,
-			this.FIRST_VERIFIER_DIGIT_WEIGHTS
-		);
+			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
+		});
 
-		const secondDigit = Mod11Alg.calculateCheckDigit(
-			digits + firstDigit,
-			this.SECOND_VERIFIER_DIGIT_WEIGHTS
-		);
+		const secondDigit = Mod11Alg.calculateCheckDigit({
+			digits: digits + firstDigit,
+			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
+		});
 
 		return `${firstDigit}${secondDigit}`;
 	}

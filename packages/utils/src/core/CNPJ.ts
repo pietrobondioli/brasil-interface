@@ -1,7 +1,7 @@
 import { Mod11Alg } from "../helpers/Mod11Alg";
 
 export class CNPJ {
-	private static readonly ANY_NON_DIGIT_REGEX = /\D+/g;
+	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
 	private static readonly CNPJ_LENGTH = 14;
 
@@ -175,15 +175,15 @@ export class CNPJ {
 	}
 
 	private static generateVerifierDigits(digits: string) {
-		const firstDigit = Mod11Alg.calculateCheckDigit(
+		const firstDigit = Mod11Alg.calculateCheckDigit({
 			digits,
-			this.FIRST_VERIFIER_DIGIT_WEIGHTS
-		);
+			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
+		});
 
-		const secondDigit = Mod11Alg.calculateCheckDigit(
-			digits + firstDigit,
-			this.SECOND_VERIFIER_DIGIT_WEIGHTS
-		);
+		const secondDigit = Mod11Alg.calculateCheckDigit({
+			digits: digits + firstDigit,
+			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
+		});
 
 		return firstDigit.toString() + secondDigit.toString();
 	}
