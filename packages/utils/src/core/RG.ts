@@ -1,12 +1,15 @@
 import { Mod11Alg } from "../helpers/Mod11Alg";
+import { Random } from "../helpers/Random";
 
 export namespace RG {
 	export class SP {
 		private static readonly ANY_NON_DIGIT_REGEX = /[^\dX]/g;
+		private static readonly RG_BASE_NUMERALS_LENGTH = 8;
+		private static readonly RG_VERIFIER_DIGITS_LENGTH = 1;
 		private static readonly RG_LENGTH = 9;
 		private static readonly RG_BASE_NUMERALS_START = 0;
 		private static readonly RG_BASE_NUMERALS_END = 8;
-		private static readonly RG_WEIGHTS = [9, 8, 7, 6, 5, 4, 3, 2];
+		private static readonly RG_WEIGHTS = [2, 3, 4, 5, 6, 7, 8, 9];
 
 		private static readonly RG_DIGITS_REGEX = /(\d{2})(\d{3})(\d{3})([\dX])/;
 		private static readonly RG_MASK = "$1.$2.$3-$4";
@@ -89,6 +92,60 @@ export namespace RG {
 		 */
 		public static maskSensitive(rg: string | number): string {
 			return this.applyMask(rg, this.RG_MASK_SENSITIVE);
+		}
+
+		/**
+		 * PT-BR: Remove a máscara de um número de RG.
+		 *
+		 * EN: Removes the mask from an RG number.
+		 *
+		 * @param rg - PT-BR: O número de RG. EN: The RG number.
+		 * @returns PT-BR: O número de RG sem máscara. EN: The unmasked RG number.
+		 *
+		 * @example
+		 * ```
+		 * RG.SP.unmask("20.336.104-0"); // "203361040"
+		 * RG.SP.unmask("203361040"); // "203361040"
+		 * ```
+		 */
+		public static unmask(rg: string | number): string {
+			return this.clear(rg);
+		}
+
+		/**
+		 * PT-BR: Gera um número de RG aleatório.
+		 *
+		 * EN: Generates a random RG number.
+		 *
+		 * @returns PT-BR: O número de RG gerado. EN: The generated RG number.
+		 *
+		 * @example
+		 * ```
+		 * RG.SP.generate(); // "203361040"
+		 * ```
+		 */
+		public static generate(): string {
+			const digits = Random.generateRandomNumber(
+				this.RG_BASE_NUMERALS_LENGTH
+			).toString();
+
+			return digits + this.generateVerifierDigits(digits);
+		}
+
+		/**
+		 * PT-BR: Gera um número de RG aleatório com máscara.
+		 *
+		 * EN: Generates a random RG number with mask.
+		 *
+		 * @returns PT-BR: O número de RG gerado com máscara. EN: The generated RG number with mask.
+		 *
+		 * @example
+		 * ```
+		 * RG.SP.generateMasked(); // "20.336.104-0"
+		 * ```
+		 */
+		public static generateMasked(): string {
+			return this.mask(this.generate());
 		}
 
 		private static clear(rg: string | number): string {
