@@ -3,15 +3,20 @@ import { PIS } from "./PIS";
 const VALID_PIS = "52022242344";
 const VALID_PIS_MASKED = "520.22242.34-4";
 const VALID_PIS_MASKED_SENSITIVE = "520.22242.**-*";
-
 const INVALID_PIS = "00000000005";
 const INVALID_PIS_MASKED = "000.00000.00-5";
-
 const PIS_INVALID_LENGTH = "000.00000.00";
-
 const PIS_REPEATED_DIGITS = "11111111111";
-
 const MASKED_PIS_REGEX = /^\d{3}\.\d{5}\.\d{2}-\d{1}$/;
+
+const VALID_PIS_PASEPS = [
+	"46952280637",
+	"08657844336",
+	"08099684840",
+	"72317373380",
+	"44041942975",
+	"10379324919",
+];
 
 describe("PIS", () => {
 	describe("isValid", () => {
@@ -32,6 +37,12 @@ describe("PIS", () => {
 		it("should return true for valid PIS", () => {
 			expect(PIS.isValid(VALID_PIS)).toBe(true);
 			expect(PIS.isValid(VALID_PIS_MASKED)).toBe(true);
+		});
+
+		VALID_PIS_PASEPS.forEach((pis) => {
+			it(`should return true for valid PIS ${pis}`, () => {
+				expect(PIS.isValid(pis)).toBe(true);
+			});
 		});
 
 		it("should return false for PIS with invalid length", () => {

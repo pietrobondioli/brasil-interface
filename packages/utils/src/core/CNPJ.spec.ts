@@ -3,12 +3,18 @@ import { CNPJ } from "./CNPJ";
 const VALID_CNPJ = "52029894000146";
 const VALID_CNPJ_MASKED = "52.029.894/0001-46";
 const VALID_CNPJ_MASKED_SENSITIVE = "52.029.***/0001-**";
-
 const INVALID_CNPJ = "11111111111111";
-
 const CNPJ_REPEATED_DIGITS = "00000000000000";
-
 const CNPJ_INVALID_LENGTH = "5202989400014";
+
+const VALID_CNPJS = [
+	"64786204000182",
+	"14321045000172",
+	"49316444000120",
+	"30473968000104",
+	"71019990000158",
+	"70814882000104",
+];
 
 describe("CNPJ", () => {
 	describe("isValid", () => {
@@ -29,8 +35,14 @@ describe("CNPJ", () => {
 			expect(CNPJ.isValid(CNPJ_REPEATED_DIGITS)).toBe(false);
 		});
 
-		it("should return true for valid CNPJ without mask", () => {
+		it("should return true for valid CNPJ", () => {
 			expect(CNPJ.isValid(VALID_CNPJ)).toBe(true);
+		});
+
+		VALID_CNPJS.forEach((cnpj) => {
+			it(`should return true for valid CNPJ ${cnpj}`, () => {
+				expect(CNPJ.isValid(cnpj)).toBe(true);
+			});
 		});
 
 		it("should return true for valid CNPJ with mask", () => {

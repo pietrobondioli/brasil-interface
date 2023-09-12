@@ -3,14 +3,18 @@ import { CPF } from "./CPF";
 const VALID_CPF = "20993685030";
 const VALID_CPF_MASKED = "209.936.850-30";
 const VALID_CPF_MASKED_SENSITIVE = "209.936.***-**";
-
 const INVALID_CPF = "122.111.111-11";
-
 const CPF_REPEATED_DIGITS = "11111111111";
-
 const CPF_INVALID_LENGTH = "2099368503";
-
 const MASKED_CPF_REGEX = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+
+const VALID_CPFS = [
+	"04379547060",
+	"95687211004",
+	"06132865020",
+	"00781733022",
+	"11124230017",
+];
 
 describe("CPF", () => {
 	describe("isValid", () => {
@@ -20,7 +24,13 @@ describe("CPF", () => {
 
 		it("should return true for valid CPFs", () => {
 			expect(CPF.isValid(VALID_CPF)).toBe(true);
-			// expect(CPF.isValid(VALID_CPF_MASKED)).toBe(true);
+			expect(CPF.isValid(VALID_CPF_MASKED)).toBe(true);
+		});
+
+		VALID_CPFS.forEach((cpf) => {
+			it(`should return true for valid CPF ${cpf}`, () => {
+				expect(CPF.isValid(cpf)).toBe(true);
+			});
 		});
 
 		it("should return false for blacklisted CPFs", () => {

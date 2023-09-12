@@ -2,10 +2,18 @@ import { CNH } from "./CNH";
 
 const VALID_CNH = "76035184470";
 const INVALID_CNH = "89035184470";
-
 const CNH_REPEATED_DIGITS = "11111111111";
-
 const CNH_INVALID_LENGTH = "7603518447";
+
+const VALID_CNHS = [
+	"79143829831",
+	"03654878860",
+	"75272428105",
+	"35407626731",
+	"73002539121",
+	"09924165125",
+	"41029280567",
+];
 
 describe("CNH", () => {
 	describe("isValid", () => {
@@ -28,6 +36,12 @@ describe("CNH", () => {
 
 		it("should return true for valid CNHs", () => {
 			expect(CNH.isValid(VALID_CNH)).toBe(true);
+		});
+
+		VALID_CNHS.forEach((cnh) => {
+			it(`should return true for valid CNH ${cnh}`, () => {
+				expect(CNH.isValid(cnh)).toBe(true);
+			});
 		});
 
 		it("should return false for invalid CNHs", () => {
