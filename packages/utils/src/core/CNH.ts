@@ -1,4 +1,5 @@
 import { Mod11Alg } from "../helpers/Mod11Alg";
+import { Random } from "../helpers/Random";
 
 export class CNH {
 	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
@@ -74,12 +75,11 @@ export class CNH {
 	 * ```
 	 */
 	public static generate(): string {
-		const baseNumerals = Array.from(
-			{ length: this.CNH_BASE_NUMERALS_LENGTH },
-			() => Math.floor(Math.random() * 10)
-		).join("");
+		const digits = Random.generateRandomNumber(
+			this.CNH_BASE_NUMERALS_LENGTH
+		).toString();
 
-		return baseNumerals + this.generateVerifierDigits(baseNumerals);
+		return digits + this.generateVerifierDigits(digits);
 	}
 
 	private static clear(value: string | number): string {

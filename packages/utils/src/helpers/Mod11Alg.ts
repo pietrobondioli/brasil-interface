@@ -7,6 +7,9 @@ export class Mod11Alg {
 	 * @param number PT-BR: O número a ser calculado. EN: The number to be calculated.
 	 * @param weights PT-BR: Os pesos a serem usados no cálculo. EN: The weights to be used in the calculation.
 	 * @param direction PT-BR: A direção do cálculo. EN: The calculation direction. Default: "left".
+	 * @param resultFor10 PT-BR: O resultado que deve ser retornado caso o digito verificador seja 10. EN: The result to be returned if the check digit is 10. Default: "0".
+	 * @param resultFor11 PT-BR: O resultado que deve ser retornado caso o digito verificador seja 11. EN: The result to be returned if the check digit is 11. Default: "0".
+	 * @param returnMod PT-BR: Se o resto da divisão deve ser retornado ao invés do digito verificador. Em alguns casos, o digito verificador é calculado usando o resto da divisão. EN: If the remainder of the division should be returned instead of the check digit. In some cases, the check digit is calculated using the remainder of the division. Default: false.
 	 * @returns PT-BR: O digito verificador calculado. EN: The calculated check digit.
 	 *
 	 * @example

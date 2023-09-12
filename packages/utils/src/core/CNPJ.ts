@@ -1,8 +1,11 @@
 import { Mod11Alg } from "../helpers/Mod11Alg";
+import { Random } from "../helpers/Random";
 
 export class CNPJ {
 	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
+	private static readonly CNPJ_BASE_NUMERALS_LENGTH = 12;
+	private static readonly CNPJ_VERIFIER_DIGITS_LENGTH = 2;
 	private static readonly CNPJ_LENGTH = 14;
 	private static readonly CNPJ_BASE_NUMERALS_START = 0;
 	private static readonly CNPJ_BASE_NUMERALS_END = 12;
@@ -130,9 +133,9 @@ export class CNPJ {
 	 * ```
 	 */
 	public static generate(): string {
-		const digits = Array.from({ length: 12 }, () =>
-			Math.floor(Math.random() * 10)
-		).join("");
+		const digits = Random.generateRandomNumber(
+			this.CNPJ_BASE_NUMERALS_LENGTH
+		).toString();
 
 		return digits + this.generateVerifierDigits(digits);
 	}

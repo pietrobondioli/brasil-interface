@@ -1,8 +1,11 @@
 import { Mod11Alg } from "../helpers/Mod11Alg";
+import { Random } from "../helpers/Random";
 
 export class CPF {
 	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
+	private static readonly CPF_BASE_NUMERALS_LENGTH = 9;
+	private static readonly CPF_VERIFIER_DIGITS_LENGTH = 2;
 	private static readonly CPF_LENGTH = 11;
 	private static readonly CPF_BASE_NUMERALS_START = 0;
 	private static readonly CPF_BASE_NUMERALS_END = 9;
@@ -126,9 +129,9 @@ export class CPF {
 	 * ```
 	 */
 	public static generate(): string {
-		const digits = Array.from({ length: 9 }, () =>
-			Math.floor(Math.random() * 10)
-		).join("");
+		const digits = Random.generateRandomNumber(
+			this.CPF_BASE_NUMERALS_LENGTH
+		).toString();
 
 		return digits + this.generateVerifierDigits(digits);
 	}

@@ -1,8 +1,11 @@
 import { Mod11Alg } from "../helpers/Mod11Alg";
+import { Random } from "../helpers/Random";
 
 export class PIS {
 	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
+	private static readonly PIS_BASE_NUMERALS_LENGTH = 10;
+	private static readonly PIS_VERIFIER_DIGITS_LENGTH = 1;
 	private static readonly PIS_LENGTH = 11;
 	private static readonly PIS_BASE_NUMERALS_START = 0;
 	private static readonly PIS_BASE_NUMERALS_END = 10;
@@ -108,9 +111,9 @@ export class PIS {
 	 * ```
 	 */
 	public static generate(): string {
-		const digits = Array.from({ length: 10 }, () =>
-			Math.floor(Math.random() * 10)
-		).join("");
+		const digits = Random.generateRandomNumber(
+			this.PIS_BASE_NUMERALS_LENGTH
+		).toString();
 
 		return digits + this.generateVerifierDigits(digits);
 	}
