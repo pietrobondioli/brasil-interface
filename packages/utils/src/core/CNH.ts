@@ -4,23 +4,17 @@ export class CNH {
 	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
 	private static readonly CNH_BASE_NUMERALS_LENGTH = 9;
-
 	private static readonly CNH_VERIFIER_DIGITS_LENGTH = 2;
-
 	private static readonly CNH_LENGTH = 11;
-
 	private static readonly CNH_BASE_NUMERALS_START = 0;
-
 	private static readonly CNH_BASE_NUMERALS_END = 9;
 
 	private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
 		2, 3, 4, 5, 6, 7, 8, 9, 10,
 	];
-
 	private static readonly SECOND_VERIFIER_DIGIT_WEIGHTS = [
 		2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	];
-
 	private static readonly CNH_DIGITS_REGEX = /(\d{9})(\d{2})/;
 
 	private static readonly CNH_BLACKLIST = [

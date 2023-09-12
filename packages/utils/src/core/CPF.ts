@@ -4,23 +4,17 @@ export class CPF {
 	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
 	private static readonly CPF_LENGTH = 11;
-
 	private static readonly CPF_BASE_NUMERALS_START = 0;
-
 	private static readonly CPF_BASE_NUMERALS_END = 9;
-
 	private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
 		10, 9, 8, 7, 6, 5, 4, 3, 2,
 	];
-
 	private static readonly SECOND_VERIFIER_DIGIT_WEIGHTS = [
 		11, 10, 9, 8, 7, 6, 5, 4, 3, 2,
 	];
 
 	private static readonly CPF_DIGITS_REGEX = /(\d{3})(\d{3})(\d{3})(\d{2})/;
-
 	private static readonly CPF_MASK = "$1.$2.$3-$4";
-
 	private static readonly CPF_MASK_SENSITIVE = "$1.$2.***-**";
 
 	private static readonly CPF_BLACKLIST = [

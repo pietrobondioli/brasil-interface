@@ -4,17 +4,12 @@ export class PIS {
 	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
 	private static readonly PIS_LENGTH = 11;
-
 	private static readonly PIS_BASE_NUMERALS_START = 0;
-
 	private static readonly PIS_BASE_NUMERALS_END = 10;
-
 	private static readonly PIS_WEIGHTS = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
 	private static readonly PIS_DIGITS_REGEX = /(\d{3})(\d{5})(\d{2})(\d{1})/;
-
 	private static readonly PIS_MASK = "$1.$2.$3-$4";
-
 	private static readonly PIS_MASK_SENSITIVE = "$1.$2.**-*";
 
 	/**

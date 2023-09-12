@@ -4,24 +4,18 @@ export class CNPJ {
 	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
 
 	private static readonly CNPJ_LENGTH = 14;
-
 	private static readonly CNPJ_BASE_NUMERALS_START = 0;
-
 	private static readonly CNPJ_BASE_NUMERALS_END = 12;
-
 	private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
 		5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2,
 	];
-
 	private static readonly SECOND_VERIFIER_DIGIT_WEIGHTS = [
 		6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2,
 	];
 
 	private static readonly CNPJ_DIGITS_REGEX =
 		/(^\d{2})(\d{3})(\d{3})(\d{4})(\d{2}$)/;
-
 	private static readonly CNPJ_MASK = "$1.$2.$3/$4-$5";
-
 	private static readonly CNPJ_MASK_SENSITIVE = "$1.$2.***/$4-**";
 
 	private static readonly CNPJ_BLACKLIST = [
