@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "module": "CommonJS",
+        "target": "ES2017",
+        "module": "UMD",
         "declaration": true,
         "outDir": "./dist",
         "strict": true,
