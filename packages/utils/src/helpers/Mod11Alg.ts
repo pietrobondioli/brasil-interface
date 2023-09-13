@@ -7,9 +7,8 @@ export class Mod11Alg {
 	 * @param number PT-BR: O número a ser calculado. EN: The number to be calculated.
 	 * @param weights PT-BR: Os pesos a serem usados no cálculo. EN: The weights to be used in the calculation.
 	 * @param direction PT-BR: A direção do cálculo. EN: The calculation direction. Default: "left".
-	 * @param resultFor10 PT-BR: O resultado que deve ser retornado caso o digito verificador seja 10. EN: The result to be returned if the check digit is 10. Default: "0".
-	 * @param resultFor11 PT-BR: O resultado que deve ser retornado caso o digito verificador seja 11. EN: The result to be returned if the check digit is 11. Default: "0".
-	 * @param returnMod PT-BR: Se o resto da divisão deve ser retornado ao invés do digito verificador. Em alguns casos, o digito verificador é calculado usando o resto da divisão. EN: If the remainder of the division should be returned instead of the check digit. In some cases, the check digit is calculated using the remainder of the division. Default: false.
+	 * @param transform PT-BR: Um objeto que mapeia o resultado do módulo para um valor específico. Útil pois em diversos casos certos valores não são aceitos como dígito verificador. EN: An object that maps the module result to a specific value. Useful because in several cases certain values are not accepted as a check digit.
+	 * @param returnModDirectly PT-BR: Se verdadeiro, retorna o resultado do módulo ao invés do dígito verificador. Útil para casos onde o dígito verificador é calculado de forma diferente. EN: If true, returns the module result instead of the check digit. Useful for cases where the check digit is calculated differently.
 	 * @returns PT-BR: O digito verificador calculado. EN: The calculated check digit.
 	 *
 	 * @example
@@ -24,15 +23,21 @@ export class Mod11Alg {
 		digits,
 		weights,
 		direction = "fromLeft",
-		resultFor10 = "0",
-		resultFor11 = "0",
+		transform,
+		returnModDirectly = false,
 	}: {
 		digits: string;
 		weights: number[];
 		direction?: "fromLeft" | "fromRight";
-		resultFor10?: string;
-		resultFor11?: string;
+		transform?: { [k: number]: string };
+		returnModDirectly?: boolean;
 	}): string {
+		transform = {
+			10: "0",
+			11: "0",
+			...transform,
+		};
+
 		let sum = 0;
 		let weightIndex = 0;
 
@@ -52,14 +57,12 @@ export class Mod11Alg {
 
 		const mod = sum % 11;
 
-		const checkDigit = 11 - mod;
+		let checkDigit = returnModDirectly ? mod : 11 - mod;
 
-		if (checkDigit === 10) {
-			return resultFor10;
+		if (transform?.[checkDigit]) {
+			return transform[checkDigit];
 		}
-		if (checkDigit === 11) {
-			return resultFor11;
-		}
+
 		return checkDigit.toString();
 	}
 }
