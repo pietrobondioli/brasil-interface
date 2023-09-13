@@ -1,3 +1,4 @@
+import { EstadoSigla } from "../helpers/Estados";
 import { Mod11Alg } from "../helpers/Mod11Alg";
 import { Random } from "../helpers/Random";
 
@@ -48,8 +49,23 @@ export class TituloEleitor {
 		"26": "RR",
 		"27": "TO",
 		"28": "ZZ",
-	} as const;
+	} satisfies { [key: string]: EstadoSigla };
 
+	/**
+	 * PT-BR: Verifica se o título de eleitor é válido.
+	 *
+	 * EN: Checks if the voter registration is valid.
+	 *
+	 * @param tituloE Número do título de eleitor.
+	 * @returns Se o título de eleitor é válido.
+	 *
+	 * @example
+	 * ```
+	 * TituloEleitor.isValid("123456789012") // false
+	 * TituloEleitor.isValid("102385010671") // true
+	 * TituloEleitor.isValid("12345678901234") // false
+	 * ```
+	 */
 	public static isValid(tituloE: string): boolean {
 		if (!tituloE) return false;
 
@@ -76,6 +92,18 @@ export class TituloEleitor {
 		return tituloE.endsWith(verifierDigits);
 	}
 
+	/**
+	 * PT-BR: Gera um número de título de eleitor válido.
+	 *
+	 * EN: Generates a valid voter registration number.
+	 *
+	 * @returns Número de título de eleitor válido.
+	 *
+	 * @example
+	 * ```
+	 * TituloEleitor.generate() // "102385010671"
+	 * ```
+	 */
 	public static generate(): string {
 		const baseDigits = Random.generateRandomNumber(
 			this.TITULO_BASE_NUMERALS_LENGTH
@@ -95,6 +123,38 @@ export class TituloEleitor {
 			ufCode +
 			this.generateVerifierDigits(baseDigits, ufCode, ufName)
 		);
+	}
+
+	/**
+	 * PT-BR: Retorna o estado do título de eleitor.
+	 *
+	 * EN: Returns the state of the voter registration.
+	 *
+	 * @param tituloE Número do título de eleitor.
+	 * @returns Estado do título de eleitor ou null caso o título seja inválido.
+	 *
+	 * @example
+	 * ```
+	 * TituloEleitor.getEstado("102385010671") // "SP"
+	 * TituloEleitor.getEstado("123456789012") // null
+	 * ```
+	 */
+	public static getEstado(
+		tituloE: string
+	): (typeof this.UF_MAP)[keyof typeof this.UF_MAP] | null {
+		const isValid = this.isValid(tituloE);
+
+		if (!isValid) return null;
+
+		const parts = this.extractParts(tituloE);
+
+		if (!parts) return null;
+
+		const { ufCode } = parts;
+
+		if (!this.isUfKey(ufCode)) return null;
+
+		return this.UF_MAP[ufCode];
 	}
 
 	private static clear(value: string): string {
