@@ -9,7 +9,7 @@ export namespace RG {
 		private static readonly RG_LENGTH = 9;
 		private static readonly RG_BASE_NUMERALS_START = 0;
 		private static readonly RG_BASE_NUMERALS_END = 8;
-		private static readonly RG_WEIGHTS = [2, 3, 4, 5, 6, 7, 8, 9];
+		private static readonly RG_WEIGHTS = [9, 8, 7, 6, 5, 4, 3, 2];
 
 		private static readonly RG_DIGITS_REGEX = /(\d{2})(\d{3})(\d{3})([\dX])/;
 		private static readonly RG_MASK = "$1.$2.$3-$4";
@@ -167,7 +167,10 @@ export namespace RG {
 			const verifierDigit = Mod11Alg.calculateCheckDigit({
 				digits,
 				weights: this.RG_WEIGHTS,
-				resultFor10: "X",
+				transform: {
+					10: "X",
+				},
+				returnModDirectly: true,
 			});
 
 			return verifierDigit;
