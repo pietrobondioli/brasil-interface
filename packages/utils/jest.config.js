@@ -9,6 +9,6 @@ module.exports = {
 	testMatch: ["**/__tests__/*.(ts|tsx)", "**/?(*.)+(spec|test).(ts|tsx)"],
 	moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
 	moduleNameMapper: {
-		"^@brasil-interface/(.*)$": "<rootDir>/packages/$1/src",
+		"^@/helpers/(.*)$": "<rootDir>/src/helpers/$1",
 	},
 };
