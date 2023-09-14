@@ -1,5 +1,5 @@
-import { Mod11Alg } from "../helpers/Mod11Alg";
-import { Random } from "../helpers/Random";
+import { Mod11Alg } from "@/helpers/Mod11Alg";
+import { Random } from "@/helpers/Random";
 
 export class PIS {
 	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;

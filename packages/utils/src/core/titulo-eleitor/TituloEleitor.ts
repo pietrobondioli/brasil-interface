@@ -1,6 +1,6 @@
-import { EstadoSigla } from "../helpers/Estados";
-import { Mod11Alg } from "../helpers/Mod11Alg";
-import { Random } from "../helpers/Random";
+import { EstadoSigla } from "@/helpers/Estados";
+import { Mod11Alg } from "@/helpers/Mod11Alg";
+import { Random } from "@/helpers/Random";
 
 type TituloEleitorParts = {
 	baseNumerals: string;

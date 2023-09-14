@@ -2,7 +2,13 @@
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "rootDir": "src",
-        "outDir": "dist"
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "@/helpers/*": [
+                "./src/helpers/*"
+            ],
+        }
     },
     "include": [
         "src/**/*.ts"
