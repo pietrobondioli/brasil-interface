@@ -45,4 +45,14 @@ export namespace Assert {
 			return !!value && value.substring(start, end) === expectedValue;
 		}
 	}
+
+	export class Number {
+		public static isWithinRange(
+			value: number,
+			min: number,
+			max: number
+		): boolean {
+			return value >= min && value <= max;
+		}
+	}
 }
