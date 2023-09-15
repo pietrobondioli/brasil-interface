@@ -1,4 +1,4 @@
-import { InscricaoEstadual } from "./InscricaoEstadual";
+import { InscricaoEstadual } from "./Acre";
 
 describe("InscricaoEstadual.Acre", () => {
 	describe("isValid method", () => {
@@ -86,6 +86,4 @@ describe("InscricaoEstadual.Acre", () => {
 			expect(InscricaoEstadual.Acre.unmask(maskedValue)).toBe(unmaskedValue);
 		});
 	});
-
-	// Add more tests for other methods and validation rules
 });
