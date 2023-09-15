@@ -6,9 +6,9 @@
   - [Sumário](#sumário)
   - [Informações](#informações)
   - [Validação](#validação)
-    - [Cálculo do primeiro dígito verificador (10ª posição):](#cálculo-do-primeiro-dígito-verificador-10ª-posição)
-    - [Cálculo do segundo dígito verificador (11ª posição):](#cálculo-do-segundo-dígito-verificador-11ª-posição)
-    - [Resultado final:](#resultado-final)
+    - [Cálculo do primeiro dígito verificador (10ª posição)](#cálculo-do-primeiro-dígito-verificador-10ª-posição)
+    - [Cálculo do segundo dígito verificador (11ª posição)](#cálculo-do-segundo-dígito-verificador-11ª-posição)
+    - [Resultado final](#resultado-final)
     - [Observações](#observações)
   - [Alternativas](#alternativas)
 
@@ -28,7 +28,7 @@
 
 ## Validação
 
-### Cálculo do primeiro dígito verificador (10ª posição):
+### Cálculo do primeiro dígito verificador (10ª posição)
 
 Utiliza-se os 9 dígitos base, para o nosso exemplo temos: 043.795.470.
 
@@ -41,7 +41,7 @@ O dígito verificador é o resultado de 11 menos o resto da divisão do resultad
 
 O 1º dígito verificador é 6.
 
-### Cálculo do segundo dígito verificador (11ª posição):
+### Cálculo do segundo dígito verificador (11ª posição)
 
 Utiliza-se os 9 dígitos base + o primeiro dígito verificador, para o nosso exemplo temos: 043.795.470-6.
 
@@ -54,7 +54,7 @@ O dígito verificador é o resultado de 11 menos o resto da divisão do resultad
 
 O 2º dígito verificador é 0.
 
-### Resultado final:
+### Resultado final
 
 043.795.470-60
 
