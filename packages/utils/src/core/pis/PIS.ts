@@ -1,4 +1,4 @@
-import { Mod11Alg } from "@/helpers/Mod11Alg";
+import { ModAlg } from "@/helpers/ModAlg";
 import { Random } from "@/helpers/Random";
 
 export class PIS {
@@ -153,7 +153,8 @@ export class PIS {
 	}
 
 	private static generateVerifierDigits(digits: string): string {
-		const digit = Mod11Alg.calculateCheckDigit({
+		const digit = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits,
 			weights: this.PIS_WEIGHTS,
 		});

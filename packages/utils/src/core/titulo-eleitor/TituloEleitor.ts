@@ -1,5 +1,5 @@
 import { EstadoSigla } from "@/helpers/Estados";
-import { Mod11Alg } from "@/helpers/Mod11Alg";
+import { ModAlg } from "@/helpers/ModAlg";
 import { Random } from "@/helpers/Random";
 
 type TituloEleitorParts = {
@@ -188,7 +188,8 @@ export class TituloEleitor {
 	): string {
 		// Nos títulos emitidos em São Paulo e Minas Gerais, os Dígitos Verificadores assumem o valor 1, caso em seus respectivos processos de cálculo o resto da divisão por 11 seja zero.
 
-		const firstVerifierDigit = Mod11Alg.calculateCheckDigit({
+		const firstVerifierDigit = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits,
 			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 			transform: {
@@ -197,7 +198,8 @@ export class TituloEleitor {
 			returnModDirectly: true,
 		});
 
-		const secondVerifierDigit = Mod11Alg.calculateCheckDigit({
+		const secondVerifierDigit = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits: ufCode + firstVerifierDigit,
 			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
 			transform: {

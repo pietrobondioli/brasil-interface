@@ -1,5 +1,5 @@
 import { EstadoSigla } from "@/helpers/Estados";
-import { Mod11Alg } from "@/helpers/Mod11Alg";
+import { ModAlg } from "@/helpers/ModAlg";
 import { Random } from "@/helpers/Random";
 
 export class CPF {
@@ -225,12 +225,14 @@ export class CPF {
 	}
 
 	private static generateVerifierDigits(digits: string): string {
-		const firstDigit = Mod11Alg.calculateCheckDigit({
+		const firstDigit = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits,
 			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 		});
 
-		const secondDigit = Mod11Alg.calculateCheckDigit({
+		const secondDigit = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits: digits + firstDigit,
 			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
 		});

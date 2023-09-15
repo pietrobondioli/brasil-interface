@@ -1,5 +1,5 @@
 import { ANY_NON_DIGIT_REGEX } from "@/helpers/Constants";
-import { Mod11Alg } from "@/helpers/Mod11Alg";
+import { ModAlg } from "@/helpers/ModAlg";
 import { Pipes, ValidationWorker } from "@/helpers/Pipes";
 import { Transform } from "@/helpers/Transform";
 import { Assert } from "@/helpers/Assert";
@@ -81,7 +81,8 @@ export namespace InscricaoEstadual {
 		}
 
 		private static calculateFirstVerifierDigit(baseNumerals: string): string {
-			return Mod11Alg.calculateCheckDigit({
+			return ModAlg.calculateCheckDigit({
+				modAlg: 11,
 				digits: baseNumerals,
 				weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 			});

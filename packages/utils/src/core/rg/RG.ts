@@ -1,4 +1,4 @@
-import { Mod11Alg } from "@/helpers/Mod11Alg";
+import { ModAlg } from "@/helpers/ModAlg";
 import { Random } from "@/helpers/Random";
 
 export namespace RG {
@@ -164,7 +164,8 @@ export namespace RG {
 		}
 
 		private static generateVerifierDigits(digits: string): string {
-			const verifierDigit = Mod11Alg.calculateCheckDigit({
+			const verifierDigit = ModAlg.calculateCheckDigit({
+				modAlg: 11,
 				digits,
 				weights: this.RG_WEIGHTS,
 				transform: {

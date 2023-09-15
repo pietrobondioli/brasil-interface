@@ -1,4 +1,4 @@
-import { Mod11Alg } from "./Mod11Alg";
+import { ModAlg } from "./ModAlg";
 
 // Declare test values
 const VALID_DIGITS = "20359338";
@@ -13,9 +13,10 @@ const DIGITS_FOR_VERIFIER_DIG_11 = "70001044";
 const WEIGHTS_FOR_VERIFIER_DIG_11 = [2, 3, 4, 5, 6, 7, 8, 9];
 const EXPECTED_RESULT_FOR_11 = "11";
 
-describe("Mod11Alg Class", () => {
+describe("ModAlg Class", () => {
 	test("Calculate check digit for valid digits", () => {
-		const result = Mod11Alg.calculateCheckDigit({
+		const result = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits: VALID_DIGITS,
 			weights: VALID_WEIGHTS,
 		});
@@ -23,7 +24,8 @@ describe("Mod11Alg Class", () => {
 	});
 
 	test("Calculate check digit resulting in 10", () => {
-		const result = Mod11Alg.calculateCheckDigit({
+		const result = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits: DIGITS_FOR_VERIFIER_DIG_10,
 			weights: WEIGHTS_FOR_VERIFIER_DIG_10,
 			transform: {
@@ -34,7 +36,8 @@ describe("Mod11Alg Class", () => {
 	});
 
 	test("Calculate check digit resulting in 11", () => {
-		const result = Mod11Alg.calculateCheckDigit({
+		const result = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits: DIGITS_FOR_VERIFIER_DIG_11,
 			weights: WEIGHTS_FOR_VERIFIER_DIG_11,
 			transform: {
@@ -45,7 +48,8 @@ describe("Mod11Alg Class", () => {
 	});
 
 	test("Calculate check digit from the right", () => {
-		const result = Mod11Alg.calculateCheckDigit({
+		const result = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits: VALID_DIGITS.split("").reverse().join(""),
 			weights: VALID_WEIGHTS,
 			direction: "fromRight",
@@ -54,7 +58,8 @@ describe("Mod11Alg Class", () => {
 	});
 
 	test("Calculate check digit for valid digits with direct mod", () => {
-		const result = Mod11Alg.calculateCheckDigit({
+		const result = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits: VALID_DIGITS,
 			weights: VALID_WEIGHTS,
 			returnModDirectly: true,
@@ -71,7 +76,8 @@ describe("Mod11Alg Class", () => {
 	});
 
 	test("Calculate check digit resulting in 10 with direct mod", () => {
-		const result = Mod11Alg.calculateCheckDigit({
+		const result = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits: DIGITS_FOR_VERIFIER_DIG_10,
 			weights: WEIGHTS_FOR_VERIFIER_DIG_10,
 			returnModDirectly: true,
@@ -91,7 +97,8 @@ describe("Mod11Alg Class", () => {
 	});
 
 	test("Calculate check digit resulting in 11 with direct mod", () => {
-		const result = Mod11Alg.calculateCheckDigit({
+		const result = ModAlg.calculateCheckDigit({
+			modAlg: 11,
 			digits: DIGITS_FOR_VERIFIER_DIG_11,
 			weights: WEIGHTS_FOR_VERIFIER_DIG_11,
 			returnModDirectly: true,

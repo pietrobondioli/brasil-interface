@@ -1,5 +1,5 @@
 import { ANY_NON_DIGIT_REGEX } from "@/helpers/Constants";
-import { Mod11Alg } from "@/helpers/Mod11Alg";
+import { ModAlg } from "@/helpers/ModAlg";
 import { Pipes, ValidationWorker } from "@/helpers/Pipes";
 import { Random } from "@/helpers/Random";
 import { Transform } from "@/helpers/Transform";
@@ -75,6 +75,19 @@ export namespace InscricaoEstadual {
 			);
 		}
 
+		/**
+		 * PT-BR: Desmascara uma inscrição estadual do Acre.
+		 *
+		 * EN: Unmasks an Acre state registration.
+		 *
+		 * @param value - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
+		 * @returns PT-BR: A inscrição estadual desmascarada. EN: The unmasked state registration.
+		 *
+		 * @example
+		 * ```
+		 * InscricaoEstadual.Acre.unmask("01.954.726/538-84"); // "0195472653884"
+		 * ```
+		 */
 		public static unmask(value: any): string {
 			return Transform.clearString(value, ANY_NON_DIGIT_REGEX);
 		}
@@ -146,7 +159,8 @@ export namespace InscricaoEstadual {
 		}
 
 		private static calculateFirstVerifierDigit(baseNumerals: string): string {
-			return Mod11Alg.calculateCheckDigit({
+			return ModAlg.calculateCheckDigit({
+				modAlg: 11,
 				digits: baseNumerals,
 				weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 			});
@@ -156,7 +170,8 @@ export namespace InscricaoEstadual {
 			baseNumerals: string,
 			firstVerifierDigit: string
 		): string {
-			return Mod11Alg.calculateCheckDigit({
+			return ModAlg.calculateCheckDigit({
+				modAlg: 11,
 				digits: baseNumerals + firstVerifierDigit,
 				weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
 			});
