@@ -22,6 +22,12 @@
     - [Espírito Santo](#espírito-santo)
     - [Goiás](#goiás)
     - [Maranhão](#maranhão)
+    - [Mato Grosso](#mato-grosso)
+    - [Mato Grosso do Sul](#mato-grosso-do-sul)
+    - [Minas Gerais](#minas-gerais)
+    - [Pará](#pará)
+    - [Paraíba](#paraíba)
+    - [Paraná](#paraná)
 
 ## Estados
 
@@ -30,6 +36,10 @@
 #### Caso 1: Industriais e comerciantes
 
 - Tamanho: 12 dígitos
+- Método: Módulo 11
+- Pesos
+  - 1º dígito: 1, 3, 4, 5, 6, 7, 8, 10, calculados da esquerda para a direita
+  - 2º dígito: 3, 2, 10, 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 8 dígitos + 1 dígito verificador + 2 dígitos + 1 dígito verificador (XXX.XXX.XXD.YYD)
   - X: 8 dígitos utilizados para o cálculo do primeiro dígito verificador
   - D: Primeiro dígito verificador
@@ -65,6 +75,9 @@ Consequentemente, a inscrição estadual do produtor rural fica como 11004249011
 #### Caso 2: Inscrição estadual de Produtor Rural
 
 - Tamanho: 13 dígitos
+- Método: Módulo 11
+- Pesos
+  - 1º dígito: 1, 3, 4, 5, 6, 7, 8, 10, calculados da esquerda para a direita
 - Formato: P + 0 + 8 dígitos + 1 dígito verificador + 3 dígitos (P-0XXXXXXX.D/YYY)
   - P: A inscrição estadual de produtor rural inicia com a letra "P"
   - 0: Constante 0
@@ -90,8 +103,13 @@ Consequentemente, a inscrição estadual do produtor rural fica como P-01100424.
 ### Acre
 
 - Tamanho: 13 dígitos
-- Formato: 11 dígitos + 2 dígitos verificadores (XX.XXX.XXX/XXX-DD)
-  - X: 11 dígitos utilizados para o cálculo do primeiro dígito verificador
+- Método: Módulo 11
+- Pesos
+  - 1º dígito: 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+  - 2º dígito: 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, calculados da esquerda para a direita
+- Formato: 11 dígitos + 2 dígitos verificadores (01.XXX.XXX/XXX-DD)
+  - 01: Deve ser o valor constante 01
+  - X: 9 dígitos utilizados para o cálculo do primeiro dígito verificador (junta-se ao código 01)
   - D: Primeiro dígito verificador
   - D: Segundo dígito verificador
 - Máscara: XX.XXX.XXX/XXX-XX
@@ -122,6 +140,9 @@ Consequentemente, a inscrição estadual do Acre fica como 01.004.823/001-12.
 ### Alagoas
 
 - Tamanho: 9 dígitos
+- Método: Módulo 11
+- Pesos
+  - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 8 dígitos + 1 dígito verificador (24XXXXXX-D)
   - Primeiros 2 dígitos: Deve ser o valor constante 24
   - X: 6 dígitos utilizados para o cálculo do dígito verificador (junta-se ao código 24)
@@ -145,6 +166,9 @@ Consequentemente, a inscrição estadual para Alagoas fica como 240000048.
 ### Amapá
 
 - Tamanho: 9 dígitos
+- Método: Módulo 11
+- Pesos
+  - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 2 dígitos constantes (03) + 6 dígitos (empresa) + 1 dígito verificador (03XXXXXX-D)
   - 03: Deve ser o valor constante 03
   - X: 6 dígitos referentes à empresa
@@ -184,7 +208,7 @@ Caso o resultado seja 10, o dígito verificador será 0. Caso o resultado seja 1
 ### Amazonas
 
 - Tamanho: 9 dígitos
-- Estratégia: Módulo 11
+- Método: Módulo 11
 - Pesos
   - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 8 dígitos + 1 dígito verificador (XXXXXXXX-D)
@@ -209,7 +233,7 @@ O dígito verificador é o resultado de 11 menos o resto da divisão do resultad
 #### Caso 1: Inscrições com 8 digitos cujo primeiro dígito da I.E. é 0, 1, 2, 3, 4, 5 ou 8
 
 - Tamanho: 8 dígitos
-- Estratégia: Módulo 10
+- Método: Módulo 10
 - Pesos
   - 1º dígito: 2, 3, 4, 5, 6, 7, 8, calculados da direita para a esquerda
   - 2º dígito: 2, 3, 4, 5, 6, 7, calculados da direita para a esquerda
@@ -245,7 +269,7 @@ Consequentemente, a inscrição estadual da Bahia fica como 123456-63.
 #### Caso 2: Inscrições com 8 digitos cujo primeiro dígito da I.E. é 6, 7 ou 9
 
 - Tamanho: 8 dígitos
-- Estratégia: Módulo 11
+- Método: Módulo 11
 - Pesos
   - 1º dígito: 2, 3, 4, 5, 6, 7, 8, calculados da direita para a esquerda
   - 2º dígito: 2, 3, 4, 5, 6, 7, calculados da direita para a esquerda
@@ -280,7 +304,7 @@ Consequentemente, a inscrição estadual da Bahia fica como 612345-57.
 #### Caso 3: Inscrições com 9 digitos cujo primeiro dígito da I.E. é 0, 1, 2, 3, 4, 5 ou 8
 
 - Tamanho: 9 dígitos
-- Estratégia: Módulo 10
+- Método: Módulo 10
 - Pesos
   - 1º dígito: 2, 3, 4, 5, 6, 7, 8, calculados da direita para a esquerda
   - 2º dígito: 2, 3, 4, 5, 6, 7, 8, 9 calculados da direita para a esquerda
@@ -316,7 +340,7 @@ Consequentemente, a inscrição estadual da Bahia fica como 1000003-06.
 #### Caso 4: Inscrições com 9 digitos cujo primeiro dígito da I.E. é 6, 7 ou 9
 
 - Tamanho: 9 dígitos
-- Estratégia: Módulo 11
+- Método: Módulo 11
 - Pesos
   - 1º dígito: 2, 3, 4, 5, 6, 7, 8, calculados da direita para a esquerda
   - 2º dígito: 2, 3, 4, 5, 6, 7, 8, 9 calculados da direita para a esquerda
@@ -376,7 +400,7 @@ O dígito verificador é o resultado de 11 menos o resto da divisão do resultad
 
 Consequentemente, a inscrição estadual do Ceará fica como 06000001-5.
 
-OBS: Quando o resto for 10 ou 11, o dígito verificador será 0.
+OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
 
 ### Distrito Federal
 
@@ -403,7 +427,7 @@ OBS: Quando o resto for 10 ou 11, o dígito verificador será 0.
 
 O dígito verificador é o resultado de 11 menos o resto da divisão do resultado obtido acima (34) por 11. A divisão de 34 por 11 resulta em resto 1. Então, 11 - 1 = 10. O dígito verificador (12ª posição) é 0.
 
-OBS: Quando o resto for 10 ou 11, o dígito verificador será 0.
+OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
 
 2. Cálculo do segundo dígito verificador (13ª posição):
 
@@ -419,7 +443,7 @@ Consequentemente, a inscrição estadual do Distrito Federal fica como 07.300.00
 ### Espírito Santo
 
 - Tamanho: 9 dígitos
-- Estratégia: Módulo 11
+- Método: Módulo 11
 - Pesos
   - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 8 dígitos + 1 dígito verificador (XXXXXXXX-D)
@@ -441,12 +465,12 @@ O dígito verificador é o resultado de 11 menos o resto da divisão do resultad
 
 Consequentemente, a inscrição estadual do Espírito Santo fica como 30118832-7.
 
-OBS: Quando o resto for 10 ou 11, o dígito verificador será 0.
+OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
 
 ### Goiás
 
 - Tamanho: 9 dígitos
-- Estratégia: Módulo 11
+- Método: Módulo 11
 - Pesos
   - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 8 dígitos + 1 dígito verificador (XX.XXX.XXX-D)
@@ -468,12 +492,12 @@ O dígito verificador é o resultado de 11 menos o resto da divisão do resultad
 
 Consequentemente, a inscrição estadual de Goiás fica como 10.987.654-7.
 
-OBS: Quando o resto for 10 ou 11, o dígito verificador será 0.
+OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
 
 ### Maranhão
 
 - Tamanho: 9 dígitos
-- Estratégia: Módulo 11
+- Método: Módulo 11
 - Pesos
   - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 8 dígitos + 1 dígito verificador (XX.XXX.XXX-X)
@@ -495,4 +519,199 @@ O dígito verificador é o resultado de 11 menos o resto da divisão do resultad
 
 Consequentemente, a inscrição estadual do Maranhão fica como 12.000.038-5.
 
-OBS: Quando o resto for 10 ou 11, o dígito verificador será 0.
+OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
+
+### Mato Grosso
+
+- Tamanho: 11 dígitos
+- Método: Módulo 11
+- Pesos
+  - 1º dígito: 3, 2, 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+- Formato: 10 dígitos + 1 dígito verificador (XX.XXX.XXX-X)
+  - X: 10 dígitos utilizados para o cálculo do dígito verificador
+  - D: Dígito verificador
+- Máscara: XX.XXX.XXX-X
+- Exemplo: 0013000001-9
+
+**Validação**
+
+1. Cálculo do dígito verificador (11ª posição):
+
+| Inscrição | 0          | 0          | 1          | 3           | 0          | 0          | 0          | 0          | 0          | 1          | -    |
+| --------- | ---------- | ---------- | ---------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---- |
+| Pesos     | 3          | 2          | 9          | 8           | 7          | 6          | 5          | 4          | 3          | 2          | ---- |
+| Cálculo   | 0 \* 3 = 0 | 0 \* 2 = 0 | 1 \* 9 = 9 | 3 \* 8 = 24 | 0 \* 7 = 0 | 0 \* 6 = 0 | 0 \* 5 = 0 | 0 \* 4 = 0 | 0 \* 3 = 0 | 1 \* 2 = 2 | = 35 |
+
+O dígito verificador é o resultado de 11 menos o resto da divisão do resultado obtido acima (35) por 11. A divisão de 35 por 11 resulta em resto 2. Então, 11 - 2 = 9. O dígito verificador (11ª posição) é 9.
+
+Consequentemente, a inscrição estadual do Mato Grosso fica como 0013000001-9.
+
+OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
+
+### Mato Grosso do Sul
+
+- Tamanho: 9 dígitos
+- Método: Módulo 11
+- Pesos
+  - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+- Formato: 8 dígitos + 1 dígito verificador (28.XXX.XXX-X)
+  - 28: Código do estado, constante
+  - X: 6 dígitos utilizados para o cálculo do dígito verificador (junta-se ao código do estado)
+  - D: Dígito verificador
+- Máscara: XX.XXX.XXX-X
+- Exemplo: 28.040.538-3
+
+**Validação**
+
+1. Cálculo do dígito verificador (9ª posição):
+
+| Inscrição | 2           | 8           | 0          | 4           | 0          | 5           | 3          | 8           | -     |
+| --------- | ----------- | ----------- | ---------- | ----------- | ---------- | ----------- | ---------- | ----------- | ----- |
+| Pesos     | 9           | 8           | 7          | 6           | 5          | 4           | 3          | 2           | ----  |
+| Cálculo   | 2 \* 9 = 18 | 8 \* 8 = 64 | 0 \* 7 = 0 | 4 \* 6 = 24 | 0 \* 5 = 0 | 5 \* 4 = 20 | 3 \* 3 = 9 | 8 \* 2 = 16 | = 151 |
+
+O dígito verificador é o resultado de 11 menos o resto da divisão do resultado obtido acima (151) por 11. A divisão de 151 por 11 resulta em resto 8. Então, 11 - 8 = 3. O dígito verificador (9ª posição) é 3.
+
+Consequentemente, a inscrição estadual do Mato Grosso do Sul fica como 28.040.538-3.
+
+OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
+
+### Minas Gerais
+
+- Tamanho: 13 dígitos
+- Método: Módulo 10 e Módulo 11
+- Pesos
+  - 1º dígito: 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 calculados da esquerda para a direita
+  - 2º dígito: 3, 2, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 calculados da esquerda para a direita
+- Formato: 11 dígitos + 2 dígitos verificadores (MMM.UUU.UUU/CCDD)
+  - M: Código do município
+  - U: 8 dígitos utilizados para o cálculo do primeiro dígito verificador (junta-se ao código do município e a ordem do estabelecimento)
+  - C: Código de ordem do estabelecimento
+  - D: Dígito verificador
+- Máscara: XXX.XXX.XXX/CCC-DD
+- Exemplo: 062.307.904/0081
+
+**Validação**
+
+1. Cálculo do primeiro dígito verificador (12ª posição):
+
+Antes de calcular o primeiro dígito verificador, é necessário que o número base utilizado para a conta possua 12 dígitos, porém ao removermos os dígitos verificadores, o número base fica com 11 dígitos. Para que o número base possua 12 dígitos, é necessário que seja adicionado um zero à esquerda do número base (representado por U na fórmula acima). Então para nosso exemplo temos:
+
+062 -> Código do município
+0 -> Zero adicionado à esquerda do número base
+030790400 -> Número base
+
+| Inscrição | 0          | 6           | 2          | 0          | 3          | 0          | 7          | 9           | 0          | 4          | 0          | 0          | -    |
+| --------- | ---------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---- |
+| Pesos     | 1          | 2           | 1          | 2          | 1          | 2          | 1          | 2           | 1          | 2          | 1          | 2          | ---  |
+| Cálculo   | 0 \* 1 = 0 | 6 \* 2 = 12 | 2 \* 1 = 2 | 0 \* 2 = 0 | 3 \* 1 = 3 | 0 \* 2 = 0 | 7 \* 1 = 7 | 9 \* 2 = 18 | 0 \* 1 = 0 | 4 \* 2 = 8 | 0 \* 1 = 0 | 0 \* 2 = 0 | = 32 |
+
+O dígito verificador é o resultado de 10 menos o resto da divisão do resultado obtido acima (32) por 10. A divisão de 32 por 10 resulta em resto 2. Então, 10 - 2 = 8. O dígito verificador (12ª posição) é 8.
+
+2. Cálculo do segundo dígito verificador (13ª posição):
+
+Para o cálculo do segundo algoritmo não precisa-se mais do 0 adicionado à esquerda do número base, então o número base fica com 11 dígitos. Ao invés disso apenas acrescenta-se o primeiro dígito verificador ao número base. Então para nosso exemplo temos:
+
+| Inscrição | 0          | 6           | 2            | 3            | 0          | 7           | 9           | 0          | 4           | 0          | 0          | 8           | -     |
+| --------- | ---------- | ----------- | ------------ | ------------ | ---------- | ----------- | ----------- | ---------- | ----------- | ---------- | ---------- | ----------- | ----- |
+| Pesos     | 3          | 2           | 11           | 10           | 9          | 8           | 7           | 6          | 5           | 4          | 3          | 2           | ---   |
+| Cálculo   | 0 \* 3 = 0 | 6 \* 2 = 12 | 2 \* 11 = 22 | 3 \* 10 = 30 | 0 \* 9 = 0 | 7 \* 8 = 56 | 9 \* 7 = 63 | 0 \* 6 = 0 | 4 \* 5 = 20 | 0 \* 4 = 0 | 0 \* 3 = 0 | 8 \* 2 = 16 | = 219 |
+
+O dígito verificador é o resultado de 11 menos o resto da divisão do resultado obtido acima (219) por 11. A divisão de 219 por 11 resulta em resto 10. Então, 11 - 10 = 1. O dígito verificador (13ª posição) é 1.
+
+OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
+
+Consequentemente, a inscrição estadual de Minas Gerais fica como 062.307.904/0081.
+
+### Pará
+
+- Tamanho: 9 dígitos
+- Método: Módulo 11
+- Pesos
+  - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+- Formato: 8 dígitos + 1 dígito verificador (15.XXX.XXX-D)
+  - 15: Código do estado, constante
+  - X: 6 dígitos utilizados para o cálculo do dígito verificador (junta-se ao código do estado)
+  - D: Dígito verificador
+- Máscara: XX-XXXXXX-X
+- Exemplo: 15-999999-5
+
+**Validação**
+
+1. Cálculo do dígito verificador (9ª posição):
+
+| Inscrição | 1          | 5           | 9           | 9           | 9           | 9           | 9           | 9           | -     |
+| --------- | ---------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----- |
+| Pesos     | 9          | 8           | 7           | 6           | 5           | 4           | 3           | 2           | ----  |
+| Cálculo   | 1 \* 9 = 9 | 5 \* 8 = 40 | 9 \* 7 = 63 | 9 \* 6 = 54 | 9 \* 5 = 45 | 9 \* 4 = 36 | 9 \* 3 = 27 | 9 \* 2 = 18 | = 292 |
+
+O dígito verificador é o resultado da subtração do resto da divisão do resultado obtido acima (292) por 11 de 1. A divisão de 292 por 11 resulta em 26 com resto 6. Então, 11 - 6 = 5. O dígito verificador (9ª posição) é 5.
+
+Consequentemente, a inscrição estadual do Pará fica como 15-999999-5.
+
+### Paraíba
+
+- Tamanho: 9 dígitos
+- Método: Módulo 11
+- Pesos
+  - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2 calculados da esquerda para a direita
+- Formato: 8 dígitos + 1 dígito verificador (XXXXXXXX-D)
+  - X: 8 dígitos utilizados para o cálculo do dígito verificador
+  - D: Dígito verificador
+- Máscara: XXXXXXXX-X
+- Exemplo: 06000001-5
+
+**Validação**
+
+1. Cálculo do dígito verificador (9ª posição):
+
+| Inscrição | 0          | 6           | 0          | 0          | 0          | 0          | 0          | 1          | -    |
+| --------- | ---------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---- |
+| Pesos     | 9          | 8           | 7          | 6          | 5          | 4          | 3          | 2          | ---- |
+| Cálculo   | 0 \* 9 = 0 | 6 \* 8 = 48 | 0 \* 7 = 0 | 0 \* 6 = 0 | 0 \* 5 = 0 | 0 \* 4 = 0 | 0 \* 3 = 0 | 1 \* 2 = 2 | = 50 |
+
+O dígito verificador é o resultado de 11 menos o resto da divisão do resultado obtido acima (50) por 11. A divisão de 50 por 11 resulta em resto 6. Então, 11 - 6 = 5. O dígito verificador (9ª posição) é 5.
+
+Consequentemente, a inscrição estadual da Paraíba fica como 06000001-5.
+
+OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
+
+### Paraná
+
+- Tamanho: 10 dígitos
+- Método: Módulo 11
+- Pesos
+  - 1º dígito: 3, 2, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+  - 2º dígito: 4, 3, 2, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+- Formato: 8 dígitos + 2 dígitos verificadores (XXXXXXXX-DD)
+  - X: 8 dígitos utilizados para o cálculo do primeiro dígito verificador
+  - D: Primeiro dígito verificador
+  - D: Segundo dígito verificador
+- Máscara: XXXXXXXX-DD
+- Exemplo: 12345678-50
+
+**Validação**
+
+1. Cálculo do primeiro dígito verificador (9ª posição):
+
+| Inscrição | 1          | 2          | 3           | 4           | 5           | 6           | 7           | 8           | -     |
+| --------- | ---------- | ---------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----- |
+| Pesos     | 3          | 2          | 7           | 6           | 5           | 4           | 3           | 2           | ----  |
+| Cálculo   | 1 \* 3 = 3 | 2 \* 2 = 4 | 3 \* 7 = 21 | 4 \* 6 = 24 | 5 \* 5 = 25 | 6 \* 4 = 24 | 7 \* 3 = 21 | 8 \* 2 = 16 | = 138 |
+
+O dígito verificador é o resultado de 11 menos o resto da divisão do resultado obtido acima (138) por 11. A divisão de 138 por 11 resulta em resto 6. Então, 11 - 6 = 5. O dígito verificador (9ª posição) é 5.
+
+2. Cálculo do segundo dígito verificador (10ª posição):
+
+Acrescenta-se o primeiro dígito verificador ao final do número base e calcula-se o segundo dígito verificador.
+
+| Inscrição | 1          | 2          | 3          | 4           | 5           | 6           | 7           | 8           | 5           | -     |
+| --------- | ---------- | ---------- | ---------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----- |
+| Pesos     | 4          | 3          | 2          | 7           | 6           | 5           | 4           | 3           | 2           | ----  |
+| Cálculo   | 1 \* 4 = 4 | 2 \* 3 = 6 | 3 \* 2 = 6 | 4 \* 7 = 28 | 5 \* 6 = 30 | 6 \* 5 = 30 | 7 \* 4 = 28 | 8 \* 3 = 24 | 5 \* 2 = 10 | = 166 |
+
+O dígito verificador é o resultado de 11 menos o resto da divisão do resultado obtido acima (166) por 11. A divisão de 166 por 11 resulta em resto 0. Então, 11 - 0 = 11. O dígito verificador (10ª posição) é 0.
+
+Consequentemente, a inscrição estadual do Paraná fica como 12345678-50.
+
+OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
