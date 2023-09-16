@@ -29,4 +29,14 @@ export class Random {
 
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
+
+	public static fromArray<T>(array: T[]): T {
+		if (array.length === 0) {
+			throw new Error("Array must not be empty");
+		}
+
+		const randomIndex = this.generateRandomNumber([0, array.length - 1]);
+
+		return array[randomIndex];
+	}
 }
