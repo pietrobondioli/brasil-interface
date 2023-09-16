@@ -4,19 +4,21 @@ export class ModAlg {
 	 *
 	 * EN: Calculates the check digit of a numeric string using the Mod11 algorithm.
 	 *
-	 * @param modAlg PT-BR: O módulo a ser usado no cálculo. EN: The module to be used in the calculation.
+	 * @param modAlg PT-BR: O módulo a ser usado no cálculo. Útil para casos onde o dígito verificador é calculado utilizando apenas o resto da divisão. EN: The module to be used in the calculation. Useful for cases where the check digit is calculated using only the remainder of the division.
+	 * @param algReturnType PT-BR: O tipo de retorno do algoritmo. EN: The algorithm return type.
 	 * @param digits PT-BR: O número a ser calculado. EN: The number to be calculated.
 	 * @param weights PT-BR: Os pesos a serem usados no cálculo. EN: The weights to be used in the calculation.
 	 * @param direction PT-BR: A direção do cálculo. EN: The calculation direction. Default: "left".
 	 * @param transform PT-BR: Um objeto que mapeia o resultado do módulo para um valor específico. Útil pois em diversos casos certos valores não são aceitos como dígito verificador. EN: An object that maps the module result to a specific value. Useful because in several cases certain values are not accepted as a check digit.
-	 * @param returnModDirectly PT-BR: Se verdadeiro, retorna o resultado do módulo ao invés do dígito verificador. Útil para casos onde o dígito verificador é calculado de forma diferente. EN: If true, returns the module result instead of the check digit. Useful for cases where the check digit is calculated differently.
 	 * @param additionalSum PT-BR: Um array de valores a serem somados ao resultado final. Útil para casos onde o dígito verificador é calculado de forma diferente. EN: An array of values to be added to the final result. Useful for cases where the check digit is calculated differently.
 	 * @returns PT-BR: O digito verificador calculado. EN: The calculated check digit.
 	 *
 	 * @example
 	 * ```
 	 * ModAlg.calculateCheckDigit({
+	 *  algReturnType: "modComplement",
 	 *  modAlg: 11,
+	 *  direction: "fromLeft",
 	 *  digits: "20359338",
 	 *  weights: [2, 3, 4, 5, 6, 7, 8, 9],
 	 * }); // "8"
@@ -26,19 +28,19 @@ export class ModAlg {
 	 */
 	public static calculateCheckDigit({
 		modAlg,
+		algReturnType,
 		digits,
 		weights,
-		direction = "fromLeft",
-		transform,
-		returnModDirectly = false,
+		direction,
+		transform = {},
 		additionalSum = [],
 	}: {
 		modAlg: number;
+		algReturnType: "mod" | "modComplement";
 		digits: string;
 		weights: number[];
-		direction?: "fromLeft" | "fromRight";
+		direction: "fromLeft" | "fromRight";
 		transform?: { [k: number]: string };
-		returnModDirectly?: boolean;
 		additionalSum?: number[];
 	}): string {
 		transform = {
@@ -47,35 +49,125 @@ export class ModAlg {
 			...transform,
 		};
 
-		let sum = 0;
-		let weightIndex = 0;
+		const results = this.multiplyByWeights(digits, weights, direction);
 
-		// If direction is 'right', we'll reverse the number so the logic within the loop remains consistent.
+		const sum = this.sum([...results, ...additionalSum]);
+
+		const mod = this.mod(modAlg, sum);
+
+		const checkDigit =
+			algReturnType === "mod" ? mod : this.modComplement(modAlg, sum);
+
+		if (transform[checkDigit]) {
+			return transform[checkDigit];
+		}
+
+		return checkDigit.toString();
+	}
+
+	/**
+	 * PT-BR: Multiplica os dígitos de uma string numérica pelos pesos especificados.
+	 *
+	 * EN: Multiplies the digits of a numeric string by the specified weights.
+	 *
+	 * @param digits PT-BR: A string numérica a ser multiplicada. EN: The numeric string to be multiplied.
+	 * @param weights PT-BR: Os pesos a serem usados na multiplicação. EN: The weights to be used in the multiplication.
+	 * @returns PT-BR: Um array com os resultados da multiplicação. EN: An array with the multiplication results.
+	 *
+	 * @example
+	 * ```
+	 * ModAlg.multiplyByWeights("203593", [1, 2, 3, 4, 5, 6], "fromLeft"); // [2, 0, 9, 20, 45, 18]
+	 * ```
+	 */
+	public static multiplyByWeights(
+		digits: string,
+		weights: number[],
+		direction: "fromLeft" | "fromRight" = "fromLeft"
+	): number[] {
+		const results: number[] = [];
 		const iterDigits =
 			direction === "fromRight" ? digits.split("").reverse().join("") : digits;
 
 		for (let i = 0; i < iterDigits.length; i++) {
 			const digit = parseInt(iterDigits.charAt(i), 10);
-			sum += digit * weights[weightIndex];
-			weightIndex++;
-
-			if (weightIndex >= weights.length) {
-				weightIndex = 0;
-			}
+			const weight = weights[i % weights.length];
+			results.push(digit * weight);
 		}
 
-		additionalSum.forEach((value) => {
-			sum += value;
-		});
+		return results;
+	}
 
-		const mod = sum % modAlg;
+	/**
+	 * PT-BR: Soma os valores de um array de números.
+	 *
+	 * EN: Sums the values of an array of numbers.
+	 *
+	 * @param results PT-BR: O array de números a serem somados. EN: The array of numbers to be summed.
+	 * @returns PT-BR: A soma dos valores. EN: The sum of the values.
+	 *
+	 * @example
+	 * ```
+	 * ModAlg.sum([1, 2, 3]); // 6
+	 * ```
+	 */
+	public static sum(results: number[]): number {
+		return results.reduce((acc, curr) => acc + curr, 0);
+	}
 
-		let checkDigit = returnModDirectly ? mod : modAlg - mod;
+	/**
+	 * PT-BR: Soma os dígitos de um array de números.
+	 *
+	 * EN: Sums the digits of an array of numbers.
+	 *
+	 * @param results PT-BR: O array de números a serem somados. EN: The array of numbers to be summed.
+	 * @returns PT-BR: A soma dos dígitos. EN: The sum of the digits.
+	 *
+	 * @example
+	 * ```
+	 * ModAlg.sumNumerals([1, 24, 3]); // 10
+	 * ```
+	 */
+	public static sumNumerals(results: number[]): number {
+		return results
+			.map((n) => n.toString())
+			.reduce<string[]>((acc, curr) => [...acc, ...curr], [])
+			.map((n) => parseInt(n, 10))
+			.reduce((acc, curr) => acc + curr, 0);
+	}
 
-		if (transform?.[checkDigit]) {
-			return transform[checkDigit];
-		}
+	/**
+	 * PT-BR: Calcula o resto da divisão de um número por um módulo.
+	 *
+	 * EN: Calculates the remainder of a number divided by a module.
+	 *
+	 * @param modAlg PT-BR: O módulo a ser usado no cálculo. EN: The module to be used in the calculation.
+	 * @param sum PT-BR: O número a ser dividido. EN: The number to be divided.
+	 * @returns PT-BR: O resto da divisão. EN: The remainder of the division.
+	 *
+	 * @example
+	 * ```
+	 * ModAlg.mod(11, 100); // 1
+	 * ```
+	 */
+	public static mod(modAlg: number, sum: number): number {
+		return sum % modAlg;
+	}
 
-		return checkDigit.toString();
+	/**
+	 * PT-BR: Calcula o complemento de um número por um módulo.
+	 *
+	 * EN: Calculates the complement of a number by a module.
+	 *
+	 * @param modAlg PT-BR: O módulo a ser usado no cálculo. EN: The module to be used in the calculation.
+	 * @param sum PT-BR: O número a ser complementado. EN: The number to be complemented.
+	 * @returns PT-BR: O complemento. EN: The complement.
+	 *
+	 * @example
+	 * ```
+	 * ModAlg.modComplement(11, 100); // 10
+	 * ```
+	 */
+	public static modComplement(modAlg: number, sum: number): number {
+		return modAlg - (sum % modAlg);
 	}
 }
