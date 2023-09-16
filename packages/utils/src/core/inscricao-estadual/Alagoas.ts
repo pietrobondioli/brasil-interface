@@ -66,7 +66,7 @@ export namespace InscricaoEstadual {
 
 			const baseNumerals = this.STARTS_WITH + randomNumbers;
 
-			const firstVerifierDigit = this.calculateFirstVerifierDigit(baseNumerals);
+			const firstVerifierDigit = this.calculateVerifierDigit(baseNumerals);
 
 			return baseNumerals + firstVerifierDigit;
 		}
@@ -74,18 +74,20 @@ export namespace InscricaoEstadual {
 		private static shouldHaveValidVerifierDigits(inscricaoE: string): boolean {
 			const baseNumerals = this.getBaseNumerals(inscricaoE);
 
-			const firstVerifierDigit = this.calculateFirstVerifierDigit(baseNumerals);
+			const verifierDigit = this.calculateVerifierDigit(baseNumerals);
 
-			return inscricaoE.endsWith(firstVerifierDigit);
+			return inscricaoE.endsWith(verifierDigit);
 		}
 
 		private static getBaseNumerals(inscricaoE: string): string {
 			return inscricaoE.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
 		}
 
-		private static calculateFirstVerifierDigit(baseNumerals: string): string {
+		private static calculateVerifierDigit(baseNumerals: string): string {
 			return ModAlg.calculateCheckDigit({
+				algReturnType: "modComplement",
 				modAlg: this.MOD_ALG,
+				direction: "fromLeft",
 				digits: baseNumerals,
 				weights: this.VERIFIER_DIGIT_WEIGHTS,
 			});

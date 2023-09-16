@@ -114,7 +114,9 @@ export class CNH {
 
 	private static calculateFirstVerifierDigit(baseNumerals: string): string {
 		return ModAlg.calculateCheckDigit({
+			algReturnType: "modComplement",
 			modAlg: this.MOD_ALG,
+			direction: "fromLeft",
 			digits: baseNumerals,
 			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 		});
@@ -125,7 +127,9 @@ export class CNH {
 		firstVerifierDigit: string
 	): string {
 		return ModAlg.calculateCheckDigit({
+			algReturnType: "modComplement",
 			modAlg: this.MOD_ALG,
+			direction: "fromLeft",
 			digits: firstVerifierDigit + baseNumerals,
 			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
 		});

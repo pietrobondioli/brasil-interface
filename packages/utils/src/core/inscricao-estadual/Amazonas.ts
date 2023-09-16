@@ -13,9 +13,7 @@ export namespace InscricaoEstadual {
 		private static readonly BASE_NUMERALS_LENGTH = 8;
 		private static readonly BASE_NUMERALS_START = 0;
 		private static readonly BASE_NUMERALS_END = 8;
-		private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
-			9, 8, 7, 6, 5, 4, 3, 2,
-		];
+		private static readonly VERIFIER_DIGIT_WEIGHTS = [9, 8, 7, 6, 5, 4, 3, 2];
 
 		private static readonly FORMAT_REGEX = /^(\d{8})(\d{1})$/;
 		private static readonly FORMAT_PATTERN = "$1-$2";
@@ -145,9 +143,11 @@ export namespace InscricaoEstadual {
 
 		private static calculateVerifierDigit(baseNumerals: string): string {
 			return ModAlg.calculateCheckDigit({
+				algReturnType: "modComplement",
 				modAlg: this.MOD_ALG,
+				direction: "fromLeft",
 				digits: baseNumerals,
-				weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
+				weights: this.VERIFIER_DIGIT_WEIGHTS,
 			});
 		}
 	}

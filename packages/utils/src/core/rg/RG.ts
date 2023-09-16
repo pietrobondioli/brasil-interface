@@ -187,13 +187,14 @@ export namespace RG {
 
 		private static calculateVerifierDigit(baseNumerals: string): string {
 			return ModAlg.calculateCheckDigit({
+				algReturnType: "mod",
 				modAlg: this.MOD_ALG,
+				direction: "fromLeft",
 				digits: baseNumerals,
 				weights: this.WEIGHTS,
 				transform: {
 					10: "X",
 				},
-				returnModDirectly: true,
 			});
 		}
 	}

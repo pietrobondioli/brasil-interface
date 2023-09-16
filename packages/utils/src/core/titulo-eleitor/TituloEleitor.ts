@@ -236,13 +236,14 @@ export class TituloEleitor {
 		ufName: string
 	): string {
 		return ModAlg.calculateCheckDigit({
+			algReturnType: "mod",
 			modAlg: this.MOD_ALG,
+			direction: "fromLeft",
 			digits: baseNumerals,
 			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 			transform: {
 				0: ufName === "SP" || ufName === "MG" ? "1" : "0",
 			},
-			returnModDirectly: true,
 		});
 	}
 
@@ -252,13 +253,14 @@ export class TituloEleitor {
 		ufName: string
 	): string {
 		return ModAlg.calculateCheckDigit({
+			algReturnType: "mod",
 			modAlg: this.MOD_ALG,
+			direction: "fromLeft",
 			digits: ufCode + firstVerifierDigit,
 			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
 			transform: {
 				0: ufName === "SP" || ufName === "MG" ? "1" : "0",
 			},
-			returnModDirectly: true,
 		});
 	}
 }

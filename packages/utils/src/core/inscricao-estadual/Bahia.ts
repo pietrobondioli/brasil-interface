@@ -378,7 +378,9 @@ export namespace InscricaoEstadual {
 			const modAlg = this.getModAlg(case_);
 
 			return ModAlg.calculateCheckDigit({
+				algReturnType: "modComplement",
 				modAlg,
+				direction: "fromLeft",
 				digits: baseNumerals,
 				weights,
 			});
@@ -393,7 +395,9 @@ export namespace InscricaoEstadual {
 			const modAlg = this.getModAlg(case_);
 
 			return ModAlg.calculateCheckDigit({
+				algReturnType: "modComplement",
 				modAlg,
+				direction: "fromLeft",
 				digits: baseNumerals + secondVerifierDigit,
 				weights,
 			});

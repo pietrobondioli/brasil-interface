@@ -142,7 +142,9 @@ export namespace InscricaoEstadual {
 
 		private static calculateVerifierDigit(baseNumerals: string): string {
 			return ModAlg.calculateCheckDigit({
+				algReturnType: "modComplement",
 				modAlg: this.MOD_ALG,
+				direction: "fromLeft",
 				digits: baseNumerals,
 				weights: this.VERIFIER_DIGIT_WEIGHTS,
 			});
