@@ -535,10 +535,10 @@ OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
   - U: 8 dígitos utilizados para o cálculo do primeiro dígito verificador (junta-se ao código do município e a ordem do estabelecimento)
   - C: Código de ordem do estabelecimento
   - D: Dígito verificador
-- Máscara: XXX.XXX.XXX/CCC-DD
+- Máscara: XXX.XXX.XXX/CCCDD
 - Exemplo: 062.307.904/0081
 
-**Validação**
+  **Validação**
 
 1. Cálculo do primeiro dígito verificador (12ª posição):
 
