@@ -144,8 +144,8 @@ export namespace InscricaoEstadual {
 			return Transform.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
 		}
 
-		private static shouldHaveValidVerifierDigits(ie: string): boolean {
-			const baseNumerals = this.getBaseNumerals(ie);
+		private static shouldHaveValidVerifierDigits(inscricaoE: string): boolean {
+			const baseNumerals = this.getBaseNumerals(inscricaoE);
 
 			const firstVerifierDigit = this.calculateFirstVerifierDigit(baseNumerals);
 			const secondVerifierDigit = this.calculateSecondVerifierDigit(
@@ -155,11 +155,11 @@ export namespace InscricaoEstadual {
 
 			const verifierDigits = firstVerifierDigit + secondVerifierDigit;
 
-			return ie.endsWith(verifierDigits);
+			return inscricaoE.endsWith(verifierDigits);
 		}
 
-		private static getBaseNumerals(ie: string): string {
-			return ie.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
+		private static getBaseNumerals(inscricaoE: string): string {
+			return inscricaoE.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
 		}
 
 		private static calculateFirstVerifierDigit(baseNumerals: string): string {

@@ -73,16 +73,16 @@ export namespace InscricaoEstadual {
 			return baseNumerals + firstVerifierDigit;
 		}
 
-		private static shouldHaveValidVerifierDigits(ie: string): boolean {
-			const baseNumerals = this.getBaseNumerals(ie);
+		private static shouldHaveValidVerifierDigits(inscricaoE: string): boolean {
+			const baseNumerals = this.getBaseNumerals(inscricaoE);
 
 			const firstVerifierDigit = this.calculateFirstVerifierDigit(baseNumerals);
 
-			return ie.endsWith(firstVerifierDigit);
+			return inscricaoE.endsWith(firstVerifierDigit);
 		}
 
-		private static getBaseNumerals(ie: string): string {
-			return ie.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
+		private static getBaseNumerals(inscricaoE: string): string {
+			return inscricaoE.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
 		}
 
 		private static calculateFirstVerifierDigit(baseNumerals: string): string {

@@ -25,15 +25,13 @@ describe("InscricaoEstadual.Amazonas", () => {
 		});
 	});
 
-	describe("mask", () => {
+	describe("mask and unmask", () => {
 		it("should correctly mask an unmasked IE", () => {
 			expect(InscricaoEstadual.Amazonas.mask("476178410")).toBe("47617841-0");
 		});
-	});
 
-	describe("clear", () => {
-		it("should correctly clear a masked IE", () => {
-			expect(InscricaoEstadual.Amazonas.clear("35399910-5")).toBe("353999105");
+		it("should correctly unmask a masked IE", () => {
+			expect(InscricaoEstadual.Amazonas.unmask("47617841-0")).toBe("476178410");
 		});
 	});
 

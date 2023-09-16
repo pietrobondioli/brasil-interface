@@ -72,8 +72,21 @@ export namespace InscricaoEstadual {
 			);
 		}
 
-		public static clear(inscricaoE: string) {
-			return Transform.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
+		/**
+		 * PT-BR: Desmascara uma inscrição estadual do Amazonas.
+		 *
+		 * EN: Unmasks an Amazonas state registration.
+		 *
+		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
+		 * @returns PT-BR: A inscrição estadual desmascarada. EN: The unmasked state registration.
+		 *
+		 * @example
+		 * ```
+		 * InscricaoEstadual.Amazonas.unmask("85592747-0"); // "855927470"
+		 * ```
+		 */
+		public static unmask(inscricaoE: any): string {
+			return this.clear(inscricaoE);
 		}
 
 		/**
@@ -114,16 +127,20 @@ export namespace InscricaoEstadual {
 			return this.mask(this.generate());
 		}
 
-		private static shouldHaveValidVerifierDigits(ie: string): boolean {
-			const baseNumerals = this.getBaseNumerals(ie);
+		private static clear(inscricaoE: string) {
+			return Transform.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
+		}
+
+		private static shouldHaveValidVerifierDigits(inscricaoE: string): boolean {
+			const baseNumerals = this.getBaseNumerals(inscricaoE);
 
 			const firstVerifierDigit = this.calculateVerifierDigit(baseNumerals);
 
-			return ie.endsWith(firstVerifierDigit);
+			return inscricaoE.endsWith(firstVerifierDigit);
 		}
 
-		private static getBaseNumerals(ie: string): string {
-			return ie.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
+		private static getBaseNumerals(inscricaoE: string): string {
+			return inscricaoE.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
 		}
 
 		private static calculateVerifierDigit(baseNumerals: string): string {
