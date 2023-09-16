@@ -27,7 +27,7 @@
     - [Paraná](#paraná)
     - [Pernambuco](#pernambuco)
       - [Caso 1: Dígito Verificador da Inscrição Estadual no eFisco](#caso-1-dígito-verificador-da-inscrição-estadual-no-efisco)
-      - [Caso 2: Dígito Verificador da Inscrição Estadual Antiga](#caso-2-dígito-verificador-da-inscrição-estadual-antiga)
+      - [Caso 2: Dígito Verificador da Inscrição Estadual Antiga, Antes do eFisco, Somente para Fins Históricos](#caso-2-dígito-verificador-da-inscrição-estadual-antiga-antes-do-efisco-somente-para-fins-históricos)
     - [Piauí](#piauí)
     - [Rio de Janeiro](#rio-de-janeiro)
     - [Rio Grande do Norte](#rio-grande-do-norte)
@@ -671,6 +671,7 @@ OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
 - Método: Módulo 11
 - Pesos
   - 1º dígito: 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+  - 2º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 7 dígitos + 2 dígitos verificadores (XXXXXXX-DD)
   - X: 7 dígitos utilizados para o cálculo do primeiro dígito verificador
   - D: Primeiro dígito verificador
@@ -704,7 +705,7 @@ Consequentemente, a inscrição estadual de Pernambuco fica como 0321418-40.
 
 OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
 
-#### Caso 2: Dígito Verificador da Inscrição Estadual Antiga
+#### Caso 2: Dígito Verificador da Inscrição Estadual Antiga, Antes do eFisco, Somente para Fins Históricos
 
 - Tamanho: 14
 - Método: Módulo 11
