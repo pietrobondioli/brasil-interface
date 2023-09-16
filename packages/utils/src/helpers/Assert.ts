@@ -24,7 +24,7 @@ export namespace Assert {
 			return !!value && value.includes(contains);
 		}
 
-		public static shouldBeIn(value: string, values: string[]): boolean {
+		public static shouldBeIn<T>(value: T, values: T[]): boolean {
 			return !!value && values.some((v) => v === value);
 		}
 
