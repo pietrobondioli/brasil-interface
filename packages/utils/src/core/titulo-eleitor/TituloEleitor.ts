@@ -236,7 +236,7 @@ export class TituloEleitor {
 		ufName: string
 	): string {
 		return ModAlg.calculateCheckDigit({
-			algReturnType: "mod",
+			modStrategy: "mod",
 			modAlg: this.MOD_ALG,
 			direction: "fromLeft",
 			digits: baseNumerals,
@@ -253,7 +253,7 @@ export class TituloEleitor {
 		ufName: string
 	): string {
 		return ModAlg.calculateCheckDigit({
-			algReturnType: "mod",
+			modStrategy: "mod",
 			modAlg: this.MOD_ALG,
 			direction: "fromLeft",
 			digits: ufCode + firstVerifierDigit,

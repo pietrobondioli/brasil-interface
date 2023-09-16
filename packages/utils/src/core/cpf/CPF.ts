@@ -252,7 +252,7 @@ export class CPF {
 
 	private static calculateFirstVerifierDigit(baseNumerals: string): string {
 		return ModAlg.calculateCheckDigit({
-			algReturnType: "modComplement",
+			modStrategy: "modComplement",
 			modAlg: this.MOD_ALG,
 			direction: "fromLeft",
 			digits: baseNumerals,
@@ -265,7 +265,7 @@ export class CPF {
 		firstVerifierDigit: string
 	): string {
 		return ModAlg.calculateCheckDigit({
-			algReturnType: "modComplement",
+			modStrategy: "modComplement",
 			modAlg: this.MOD_ALG,
 			direction: "fromLeft",
 			digits: baseNumerals + firstVerifierDigit,

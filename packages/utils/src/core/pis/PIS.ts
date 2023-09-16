@@ -170,7 +170,7 @@ export class PIS {
 
 	private static generateVerifierDigit(digits: string): string {
 		const digit = ModAlg.calculateCheckDigit({
-			algReturnType: "modComplement",
+			modStrategy: "modComplement",
 			modAlg: this.MOD_ALG,
 			direction: "fromLeft",
 			digits,

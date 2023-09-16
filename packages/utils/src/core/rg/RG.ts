@@ -187,7 +187,7 @@ export namespace RG {
 
 		private static calculateVerifierDigit(baseNumerals: string): string {
 			return ModAlg.calculateCheckDigit({
-				algReturnType: "mod",
+				modStrategy: "mod",
 				modAlg: this.MOD_ALG,
 				direction: "fromLeft",
 				digits: baseNumerals,

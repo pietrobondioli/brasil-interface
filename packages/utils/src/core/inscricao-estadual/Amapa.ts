@@ -147,7 +147,7 @@ export namespace InscricaoEstadual {
 			}
 
 			return ModAlg.calculateCheckDigit({
-				algReturnType: "modComplement",
+				modStrategy: "modComplement",
 				modAlg: this.MOD_ALG,
 				direction: "fromLeft",
 				digits: baseNumerals,

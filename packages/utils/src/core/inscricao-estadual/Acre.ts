@@ -164,7 +164,7 @@ export namespace InscricaoEstadual {
 
 		private static calculateFirstVerifierDigit(baseNumerals: string): string {
 			return ModAlg.calculateCheckDigit({
-				algReturnType: "modComplement",
+				modStrategy: "modComplement",
 				modAlg: this.MOD_ALG,
 				direction: "fromLeft",
 				digits: baseNumerals,
@@ -177,7 +177,7 @@ export namespace InscricaoEstadual {
 			firstVerifierDigit: string
 		): string {
 			return ModAlg.calculateCheckDigit({
-				algReturnType: "modComplement",
+				modStrategy: "modComplement",
 				modAlg: this.MOD_ALG,
 				direction: "fromLeft",
 				digits: baseNumerals + firstVerifierDigit,

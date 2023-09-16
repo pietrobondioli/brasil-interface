@@ -203,7 +203,7 @@ export class CNPJ {
 
 	private static calculateFirstVerifierDigit(baseNumerals: string): string {
 		return ModAlg.calculateCheckDigit({
-			algReturnType: "modComplement",
+			modStrategy: "modComplement",
 			modAlg: this.MOD_ALG,
 			direction: "fromLeft",
 			digits: baseNumerals,
@@ -216,7 +216,7 @@ export class CNPJ {
 		firstVerifierDigit: string
 	): string {
 		return ModAlg.calculateCheckDigit({
-			algReturnType: "modComplement",
+			modStrategy: "modComplement",
 			modAlg: this.MOD_ALG,
 			direction: "fromLeft",
 			digits: baseNumerals + firstVerifierDigit,

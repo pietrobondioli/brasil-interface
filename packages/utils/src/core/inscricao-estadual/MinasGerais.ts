@@ -166,15 +166,14 @@ export namespace InscricaoEstadual {
 		}
 
 		private static calculateFirstVerifierDigit(baseNumerals: string): string {
-			const results = ModAlg.multiplyByWeights(
-				baseNumerals,
-				this.FIRST_VERIFIER_DIGIT_WEIGHTS,
-				"fromLeft"
-			);
-
-			const sum = ModAlg.sumNumerals(results);
-
-			return (this.FIRST_VD_MOD_ALG - (sum % this.FIRST_VD_MOD_ALG)).toString();
+			return ModAlg.calculateCheckDigit({
+				modStrategy: "modComplement",
+				modAlg: this.FIRST_VD_MOD_ALG,
+				direction: "fromLeft",
+				sumStrategy: "sumNumerals",
+				digits: baseNumerals,
+				weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
+			});
 		}
 
 		private static calculateSecondVerifierDigit(
@@ -182,7 +181,7 @@ export namespace InscricaoEstadual {
 			firstVerifierDigit: string
 		): string {
 			return ModAlg.calculateCheckDigit({
-				algReturnType: "modComplement",
+				modStrategy: "modComplement",
 				modAlg: this.SECOND_VD_MOD_ALG,
 				direction: "fromLeft",
 				digits: baseNumerals + firstVerifierDigit,
