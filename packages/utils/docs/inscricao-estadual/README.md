@@ -447,11 +447,11 @@ OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
 - Método: Módulo 11
 - Pesos
   - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
-- Formato: 8 dígitos + 1 dígito verificador (XX.XXX.XXX-X)
+- Formato: 8 dígitos + 1 dígito verificador (XXXXXXXX-X)
   - X: 8 dígitos utilizados para o cálculo do dígito verificador
   - D: Dígito verificador
-- Máscara: XX.XXX.XXX-X
-- Exemplo: 12.000.038-X
+- Máscara: XXXXXXXX-X
+- Exemplo: 12000038-5
 
 **Validação**
 

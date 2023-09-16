@@ -6,7 +6,7 @@ import { Assert } from "@/helpers/Assert";
 import { Random } from "@/helpers/Random";
 
 export namespace InscricaoEstadual {
-	export class Goias {
+	export class Maranhao {
 		private static readonly MOD_ALG = 11;
 
 		private static readonly VALID_LENGTH = 9;
@@ -15,8 +15,8 @@ export namespace InscricaoEstadual {
 		private static readonly BASE_NUMERALS_END = 8;
 		private static readonly VERIFIER_DIGIT_WEIGHTS = [9, 8, 7, 6, 5, 4, 3, 2];
 
-		private static readonly MASK_REGEX = /^(\d{2})(\d{3})(\d{3})(\d{1})$/;
-		private static readonly MASK_PATTERN = "$1.$2.$3-$4";
+		private static readonly MASK_REGEX = /^(\d{8})(\d{1})$/;
+		private static readonly MASK_PATTERN = "$1-$2";
 
 		private static readonly VALIDATION_RULES = [
 			Assert.String.shouldBeDefined,
@@ -27,17 +27,17 @@ export namespace InscricaoEstadual {
 		] satisfies ValidationWorker[];
 
 		/**
-		 * PT-BR: Verifica se uma inscrição estadual do Goiás é válida.
+		 * PT-BR: Verifica se uma inscrição estadual do Maranhão é válida.
 		 *
-		 * EN: Checks if an Goiás state registration is valid.
+		 * EN: Checks if an Maranhão state registration is valid.
 		 *
 		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: `true` se a inscrição estadual for válida. EN: `true` if the state registration is valid.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.Goias.isValid("1111110310"); // false
-		 * InscricaoEstadual.Goias.isValid("109876547"); // true
+		 * InscricaoEstadual.Maranhao.isValid("1111110310"); // false
+		 * InscricaoEstadual.Maranhao.isValid("301188327"); // true
 		 * ```
 		 */
 		public static isValid(inscricaoE: any): boolean {
@@ -56,7 +56,7 @@ export namespace InscricaoEstadual {
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.Goias.mask("109876547"); // "10.987.654-7"
+		 * InscricaoEstadual.Maranhao.mask("301188327"); // "30118832-7"
 		 * ```
 		 */
 		public static mask(inscricaoE: any): string {
@@ -79,7 +79,7 @@ export namespace InscricaoEstadual {
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.Goias.unmask("10.987.654-7"); // "109876547"
+		 * InscricaoEstadual.Maranhao.unmask("30118832-7"); // "301188327"
 		 * ```
 		 */
 		public static unmask(inscricaoE: any): string {
@@ -87,15 +87,15 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Gerar um número de inscrição estadual do Goiás válido.
+		 * PT-BR: Gerar um número de inscrição estadual do Maranhão válido.
 		 *
-		 * EN: Generate a valid Goiás state registration number.
+		 * EN: Generate a valid Maranhão state registration number.
 		 *
 		 * @returns PT-BR: O número de inscrição estadual gerado. EN: The generated state registration number.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.Goias.generate(); // "109876547"
+		 * InscricaoEstadual.Maranhao.generate(); // "301188327"
 		 * ```
 		 */
 		public static generate() {
@@ -109,15 +109,15 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Gera um número de inscrição estadual do Goiás válido e aleatório com máscara.
+		 * PT-BR: Gera um número de inscrição estadual do Maranhão válido e aleatório com máscara.
 		 *
-		 * EN: Generates a random valid Goiás state registration number with mask.
+		 * EN: Generates a random valid Maranhão state registration number with mask.
 		 *
 		 * @returns PT-BR: O número de inscrição estadual gerado com máscara. EN: The generated state registration number with mask.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.Goias.generateMasked(); // "10.987.654-7"
+		 * InscricaoEstadual.Maranhao.generateMasked(); // "30118832-7"
 		 * ```
 		 */
 		public static generateMasked() {
