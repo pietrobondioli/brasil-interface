@@ -24,6 +24,14 @@ export namespace Assert {
 			return !!value && value.includes(contains);
 		}
 
+		public static shouldBeIn(value: string, values: string[]): boolean {
+			return !!value && values.some((v) => v === value);
+		}
+
+		public static shouldNotBeIn(value: string, values: string[]): boolean {
+			return !!value && !values.some((v) => v === value);
+		}
+
 		public static shouldContainOnlyNumbers(value: string): boolean {
 			return /^\d+$/.test(value);
 		}

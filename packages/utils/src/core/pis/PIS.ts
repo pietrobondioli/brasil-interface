@@ -1,19 +1,32 @@
+import { Assert } from "@/helpers/Assert";
+import { ANY_NON_DIGIT_REGEX } from "@/helpers/Constants";
 import { ModAlg } from "@/helpers/ModAlg";
+import { Pipes, ValidationWorker } from "@/helpers/Pipes";
 import { Random } from "@/helpers/Random";
+import { Transform } from "@/helpers/Transform";
 
 export class PIS {
-	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
+	private static readonly MOD_ALG = 11;
 
-	private static readonly PIS_BASE_NUMERALS_LENGTH = 10;
-	private static readonly PIS_VERIFIER_DIGITS_LENGTH = 1;
-	private static readonly PIS_LENGTH = 11;
-	private static readonly PIS_BASE_NUMERALS_START = 0;
-	private static readonly PIS_BASE_NUMERALS_END = 10;
-	private static readonly PIS_WEIGHTS = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+	private static readonly LENGTH = 11;
+	private static readonly BASE_NUMERALS_LENGTH = 10;
+	private static readonly VERIFIER_DIGITS_LENGTH = 1;
 
-	private static readonly PIS_DIGITS_REGEX = /(\d{3})(\d{5})(\d{2})(\d{1})/;
-	private static readonly PIS_MASK = "$1.$2.$3-$4";
-	private static readonly PIS_MASK_SENSITIVE = "$1.$2.**-*";
+	private static readonly BASE_NUMERALS_START = 0;
+	private static readonly BASE_NUMERALS_END = 10;
+
+	private static readonly WEIGHTS = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+	private static readonly MASK_REGEX = /(\d{3})(\d{5})(\d{2})(\d{1})/;
+	private static readonly MASK_PATTERN = "$1.$2.$3-$4";
+	private static readonly MASK_SENSITIVE_PATTERN = "$1.$2.**-*";
+
+	private static readonly VALIDATION_RULES = [
+		Assert.String.shouldBeDefined,
+		Assert.String.shouldNotBeEmpty,
+		(v) => Assert.String.shouldHaveLengthOf(v, this.LENGTH),
+		this.shouldHaveValidVerifierDigits.bind(this),
+	] satisfies ValidationWorker[];
 
 	/**
 	 * PT-BR: Verifica se um número de PIS é válido.
@@ -32,16 +45,9 @@ export class PIS {
 	 * ```
 	 */
 	public static isValid(pis: string | number): boolean {
-		if (!pis) return false;
+		const transformedValue = this.clear(pis);
 
-		pis = this.clear(pis);
-		if (pis.length !== this.PIS_LENGTH) return false;
-
-		const verifierDigit = this.generateVerifierDigits(
-			this.getBaseNumerals(pis)
-		);
-
-		return pis.endsWith(verifierDigit.toString());
+		return Pipes.runValidations(transformedValue, this.VALIDATION_RULES);
 	}
 
 	/**
@@ -59,7 +65,13 @@ export class PIS {
 	 * ```
 	 */
 	public static mask(pis: string | number): string {
-		return this.applyMask(pis, this.PIS_MASK);
+		const cleanedValue = this.clear(pis);
+
+		return Transform.applyMask(
+			cleanedValue,
+			this.MASK_REGEX,
+			this.MASK_PATTERN
+		);
 	}
 
 	/**
@@ -77,7 +89,13 @@ export class PIS {
 	 * ```
 	 */
 	public static maskSensitive(pis: string | number): string {
-		return this.applyMask(pis, this.PIS_MASK_SENSITIVE);
+		const cleanedValue = this.clear(pis);
+
+		return Transform.applyMask(
+			cleanedValue,
+			this.MASK_REGEX,
+			this.MASK_SENSITIVE_PATTERN
+		);
 	}
 
 	/**
@@ -111,11 +129,11 @@ export class PIS {
 	 * ```
 	 */
 	public static generate(): string {
-		const digits = Random.generateRandomNumber(
-			this.PIS_BASE_NUMERALS_LENGTH
+		const baseNumerals = Random.generateRandomNumber(
+			this.BASE_NUMERALS_LENGTH
 		).toString();
 
-		return digits + this.generateVerifierDigits(digits);
+		return baseNumerals + this.generateVerifierDigit(baseNumerals);
 	}
 
 	/**
@@ -135,28 +153,26 @@ export class PIS {
 	}
 
 	private static clear(value: string | number): string {
-		return value.toString().replace(this.ANY_NON_DIGIT_REGEX, "");
+		return Transform.clearString(value, ANY_NON_DIGIT_REGEX);
 	}
 
-	private static applyMask(
-		value: string | number,
-		maskPattern: string
-	): string {
-		return this.clear(value).replace(this.PIS_DIGITS_REGEX, maskPattern);
+	private static shouldHaveValidVerifierDigits(digits: string): boolean {
+		const baseNumerals = this.getBaseNumerals(digits);
+
+		const verifierDigit = this.generateVerifierDigit(baseNumerals);
+
+		return digits.endsWith(verifierDigit);
 	}
 
 	private static getBaseNumerals(digits: string): string {
-		return digits.slice(
-			this.PIS_BASE_NUMERALS_START,
-			this.PIS_BASE_NUMERALS_END
-		);
+		return digits.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
 	}
 
-	private static generateVerifierDigits(digits: string): string {
+	private static generateVerifierDigit(digits: string): string {
 		const digit = ModAlg.calculateCheckDigit({
-			modAlg: 11,
+			modAlg: this.MOD_ALG,
 			digits,
-			weights: this.PIS_WEIGHTS,
+			weights: this.WEIGHTS,
 		});
 
 		return digit;

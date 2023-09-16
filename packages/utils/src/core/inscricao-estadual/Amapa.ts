@@ -32,7 +32,7 @@ export namespace InscricaoEstadual {
 		 *
 		 * EN: Checks if an Amapá state registration is valid.
 		 *
-		 * @param value - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
+		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: `true` se a inscrição estadual for válida. EN: `true` if the state registration is valid.
 		 *
 		 * @example
@@ -41,8 +41,11 @@ export namespace InscricaoEstadual {
 		 * InscricaoEstadual.Amapa.isValid("855927470"); // true
 		 * ```
 		 */
-		public static isValid(value: any): boolean {
-			const cleanedValue = Transform.clearString(value, ANY_NON_DIGIT_REGEX);
+		public static isValid(inscricaoE: any): boolean {
+			const cleanedValue = Transform.clearString(
+				inscricaoE,
+				ANY_NON_DIGIT_REGEX
+			);
 
 			return Pipes.runValidations(cleanedValue, this.VALIDATION_RULES);
 		}
@@ -52,7 +55,7 @@ export namespace InscricaoEstadual {
 		 *
 		 * EN: Masks an Amapá state registration.
 		 *
-		 * @param value - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
+		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: A inscrição estadual mascarada. EN: The masked state registration.
 		 *
 		 * @example
@@ -60,12 +63,16 @@ export namespace InscricaoEstadual {
 		 * InscricaoEstadual.Amapa.mask("855927470"); // "85.592.747-0"
 		 * ```
 		 */
-		public static mask(value: string) {
-			return Transform.applyMask(value, this.FORMAT_REGEX, this.FORMAT_PATTERN);
+		public static mask(inscricaoE: string) {
+			return Transform.applyMask(
+				inscricaoE,
+				this.FORMAT_REGEX,
+				this.FORMAT_PATTERN
+			);
 		}
 
-		public static clear(value: string) {
-			return Transform.clearString(value, ANY_NON_DIGIT_REGEX);
+		public static clear(inscricaoE: string) {
+			return Transform.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
 		}
 
 		/**

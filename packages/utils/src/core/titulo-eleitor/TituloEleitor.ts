@@ -1,6 +1,10 @@
+import { Assert } from "@/helpers/Assert";
+import { ANY_NON_DIGIT_REGEX } from "@/helpers/Constants";
 import { EstadoSigla } from "@/helpers/Estados";
 import { ModAlg } from "@/helpers/ModAlg";
+import { Pipes, ValidationWorker } from "@/helpers/Pipes";
 import { Random } from "@/helpers/Random";
+import { Transform } from "@/helpers/Transform";
 
 type TituloEleitorParts = {
 	baseNumerals: string;
@@ -9,11 +13,13 @@ type TituloEleitorParts = {
 };
 
 export class TituloEleitor {
-	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
+	private static readonly MOD_ALG = 11;
 
-	private static readonly TITULO_BASE_NUMERALS_LENGTH = 8;
-	private static readonly TITULO_UF_CODE_RANGE: [number, number] = [1, 28];
-	private static readonly TITULO_PARTS_REGEX = /^(\d{8,9})(\d{2})(\d{2})$/;
+	private static readonly LENGTH_1 = 12;
+	private static readonly LENGTH_2 = 13;
+	private static readonly BASE_NUMERALS_LENGTH = 8;
+	private static readonly UF_CODE_RANGE: [number, number] = [1, 28];
+	private static readonly PARTS_REGEX = /^(\d{8,9})(\d{2})(\d{2})$/;
 
 	private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
 		2, 3, 4, 5, 6, 7, 8, 9,
@@ -51,12 +57,22 @@ export class TituloEleitor {
 		"28": "ZZ",
 	} satisfies { [key: string]: EstadoSigla };
 
+	private static readonly VALIDATION_RULES = [
+		Assert.String.shouldBeDefined,
+		Assert.String.shouldNotBeEmpty,
+		(v) =>
+			Assert.String.shouldHaveLengthOf(v, this.LENGTH_1) ||
+			Assert.String.shouldHaveLengthOf(v, this.LENGTH_2),
+		this.shouldHaveValidUfCode.bind(this),
+		this.shouldHaveValidVerifierDigits.bind(this),
+	] satisfies ValidationWorker[];
+
 	/**
 	 * PT-BR: Verifica se o título de eleitor é válido.
 	 *
 	 * EN: Checks if the voter registration is valid.
 	 *
-	 * @param tituloE Número do título de eleitor.
+	 * @param value Número do título de eleitor.
 	 * @returns Se o título de eleitor é válido.
 	 *
 	 * @example
@@ -67,29 +83,9 @@ export class TituloEleitor {
 	 * ```
 	 */
 	public static isValid(tituloE: string): boolean {
-		if (!tituloE) return false;
+		const transformedValue = this.clear(tituloE);
 
-		tituloE = this.clear(tituloE);
-
-		if (tituloE.length !== 12 && tituloE.length !== 13) return false;
-
-		const parts = this.extractParts(tituloE);
-
-		if (!parts) return false;
-
-		const { baseNumerals, ufCode } = parts;
-
-		if (!this.isUfKey(ufCode)) return false;
-
-		const ufName = this.UF_MAP[ufCode];
-
-		const verifierDigits = this.generateVerifierDigits(
-			baseNumerals,
-			ufCode,
-			ufName
-		);
-
-		return tituloE.endsWith(verifierDigits);
+		return Pipes.runValidations(transformedValue, this.VALIDATION_RULES);
 	}
 
 	/**
@@ -105,10 +101,10 @@ export class TituloEleitor {
 	 * ```
 	 */
 	public static generate(): string {
-		const baseDigits = Random.generateRandomNumber(
-			this.TITULO_BASE_NUMERALS_LENGTH
+		const baseNumerals = Random.generateRandomNumber(
+			this.BASE_NUMERALS_LENGTH
 		).toString();
-		const ufCode = Random.generateRandomNumber(this.TITULO_UF_CODE_RANGE)
+		const ufCode = Random.generateRandomNumber(this.UF_CODE_RANGE)
 			.toString()
 			.padStart(2, "0");
 
@@ -118,11 +114,13 @@ export class TituloEleitor {
 
 		const ufName = this.UF_MAP[ufCode];
 
-		return (
-			baseDigits +
-			ufCode +
-			this.generateVerifierDigits(baseDigits, ufCode, ufName)
+		const verifierDigits = this.calculateVerifierDigits(
+			baseNumerals,
+			ufCode,
+			ufName
 		);
+
+		return baseNumerals + ufCode + verifierDigits;
 	}
 
 	/**
@@ -157,8 +155,8 @@ export class TituloEleitor {
 		return this.UF_MAP[ufCode];
 	}
 
-	private static clear(value: string): string {
-		return value.toString().replace(this.ANY_NON_DIGIT_REGEX, "");
+	private static clear(tituloE: string): string {
+		return Transform.clearString(tituloE, ANY_NON_DIGIT_REGEX);
 	}
 
 	private static isUfKey(
@@ -168,7 +166,7 @@ export class TituloEleitor {
 	}
 
 	private static extractParts(titulo: string): TituloEleitorParts | null {
-		const result = this.TITULO_PARTS_REGEX.exec(titulo);
+		const result = this.PARTS_REGEX.exec(titulo);
 
 		if (result) {
 			return {
@@ -181,25 +179,80 @@ export class TituloEleitor {
 		return null;
 	}
 
-	private static generateVerifierDigits(
-		digits: string,
-		ufCode: keyof typeof this.UF_MAP,
-		ufName: (typeof this.UF_MAP)[typeof ufCode]
-	): string {
-		// Nos títulos emitidos em São Paulo e Minas Gerais, os Dígitos Verificadores assumem o valor 1, caso em seus respectivos processos de cálculo o resto da divisão por 11 seja zero.
+	private static shouldHaveValidUfCode(tituloE: string): boolean {
+		const parts = this.extractParts(tituloE);
 
-		const firstVerifierDigit = ModAlg.calculateCheckDigit({
-			modAlg: 11,
-			digits,
+		if (!parts) return false;
+
+		const { ufCode } = parts;
+
+		if (!this.isUfKey(ufCode)) return false;
+
+		return true;
+	}
+
+	private static shouldHaveValidVerifierDigits(tituloE: string): boolean {
+		const parts = this.extractParts(tituloE);
+
+		if (!parts) {
+			return false;
+		}
+
+		const { baseNumerals, ufCode } = parts;
+
+		if (!this.isUfKey(ufCode)) return false;
+
+		const ufName = this.UF_MAP[ufCode];
+
+		const verifierDigits = this.calculateVerifierDigits(
+			baseNumerals,
+			ufCode,
+			ufName
+		);
+
+		return tituloE.endsWith(verifierDigits);
+	}
+
+	private static calculateVerifierDigits(
+		baseNumerals: string,
+		ufCode: string,
+		ufName: string
+	): string {
+		const firstVerifierDigit = this.calculateFirstVerifierDigit(
+			baseNumerals,
+			ufName
+		);
+		const secondVerifierDigit = this.calculateSecondVerifierDigit(
+			ufCode,
+			firstVerifierDigit,
+			ufName
+		);
+
+		return firstVerifierDigit + secondVerifierDigit;
+	}
+
+	private static calculateFirstVerifierDigit(
+		baseNumerals: string,
+		ufName: string
+	): string {
+		return ModAlg.calculateCheckDigit({
+			modAlg: this.MOD_ALG,
+			digits: baseNumerals,
 			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 			transform: {
 				0: ufName === "SP" || ufName === "MG" ? "1" : "0",
 			},
 			returnModDirectly: true,
 		});
+	}
 
-		const secondVerifierDigit = ModAlg.calculateCheckDigit({
-			modAlg: 11,
+	private static calculateSecondVerifierDigit(
+		ufCode: string,
+		firstVerifierDigit: string,
+		ufName: string
+	): string {
+		return ModAlg.calculateCheckDigit({
+			modAlg: this.MOD_ALG,
 			digits: ufCode + firstVerifierDigit,
 			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
 			transform: {
@@ -207,7 +260,5 @@ export class TituloEleitor {
 			},
 			returnModDirectly: true,
 		});
-
-		return firstVerifierDigit + secondVerifierDigit;
 	}
 }

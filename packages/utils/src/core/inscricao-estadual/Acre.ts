@@ -7,7 +7,10 @@ import { Assert } from "@/helpers/Assert";
 
 export namespace InscricaoEstadual {
 	export class Acre {
-		private static readonly VALID_LENGTH = 13;
+		private static readonly MOD_ALG = 11;
+
+		private static readonly LENGTH = 13;
+		private static readonly BASIC_NUMERALS_LENGTH = 11;
 		private static readonly BASE_NUMERALS_START = 0;
 		private static readonly BASE_NUMERALS_END = 11;
 		private static readonly STARTS_WITH = "01";
@@ -18,14 +21,14 @@ export namespace InscricaoEstadual {
 			5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2,
 		];
 
-		private static readonly FORMAT_REGEX =
+		private static readonly MASK_REGEX =
 			/^(\d{2})(\d{3})(\d{3})(\d{3})(\d{2})$/;
-		private static readonly FORMAT_PATTERN = "$1.$2.$3/$4-$5";
+		private static readonly MASK_PATTERN = "$1.$2.$3/$4-$5";
 
 		private static readonly VALIDATION_RULES = [
 			Assert.String.shouldBeDefined,
 			Assert.String.shouldNotBeEmpty,
-			(v) => Assert.String.shouldHaveLengthOf(v, this.VALID_LENGTH),
+			(v) => Assert.String.shouldHaveLengthOf(v, this.LENGTH),
 			(v) => Assert.String.shouldStartWith(v, this.STARTS_WITH),
 			this.shouldHaveValidVerifierDigits.bind(this),
 		] satisfies ValidationWorker[];
@@ -35,7 +38,7 @@ export namespace InscricaoEstadual {
 		 *
 		 * EN: Checks if an Acre state registration is valid.
 		 *
-		 * @param value - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
+		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: `true` se a inscrição estadual for válida. EN: `true` if the state registration is valid.
 		 *
 		 * @example
@@ -46,8 +49,8 @@ export namespace InscricaoEstadual {
 		 * InscricaoEstadual.Acre.isValid("0195472653884"); // true
 		 * ```
 		 */
-		public static isValid(value: any): boolean {
-			const transformedValue = this.clear(value);
+		public static isValid(inscricaoE: any): boolean {
+			const transformedValue = this.clear(inscricaoE);
 
 			return Pipes.runValidations(transformedValue, this.VALIDATION_RULES);
 		}
@@ -57,7 +60,7 @@ export namespace InscricaoEstadual {
 		 *
 		 * EN: Masks an Acre state registration.
 		 *
-		 * @param value - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
+		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: A inscrição estadual mascarada. EN: The masked state registration.
 		 *
 		 * @example
@@ -65,13 +68,13 @@ export namespace InscricaoEstadual {
 		 * InscricaoEstadual.Acre.mask("0195472653884"); // "01.954.726/538-84"
 		 * ```
 		 */
-		public static mask(value: any): string {
-			const cleanedValue = this.clear(value);
+		public static mask(inscricaoE: any): string {
+			const cleanedValue = this.clear(inscricaoE);
 
 			return Transform.applyMask(
 				cleanedValue,
-				this.FORMAT_REGEX,
-				this.FORMAT_PATTERN
+				this.MASK_REGEX,
+				this.MASK_PATTERN
 			);
 		}
 
@@ -80,7 +83,7 @@ export namespace InscricaoEstadual {
 		 *
 		 * EN: Unmasks an Acre state registration.
 		 *
-		 * @param value - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
+		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: A inscrição estadual desmascarada. EN: The unmasked state registration.
 		 *
 		 * @example
@@ -88,8 +91,8 @@ export namespace InscricaoEstadual {
 		 * InscricaoEstadual.Acre.unmask("01.954.726/538-84"); // "0195472653884"
 		 * ```
 		 */
-		public static unmask(value: any): string {
-			return Transform.clearString(value, ANY_NON_DIGIT_REGEX);
+		public static unmask(inscricaoE: any): string {
+			return this.clear(inscricaoE);
 		}
 
 		/**
@@ -105,7 +108,8 @@ export namespace InscricaoEstadual {
 		 * ```
 		 */
 		public static generate() {
-			const BASE_NUMERALS_LENGTH = 11 - this.STARTS_WITH.length;
+			const BASE_NUMERALS_LENGTH =
+				this.BASIC_NUMERALS_LENGTH - this.STARTS_WITH.length;
 			const randomNumbers =
 				Random.generateRandomNumber(BASE_NUMERALS_LENGTH).toString();
 
@@ -136,8 +140,8 @@ export namespace InscricaoEstadual {
 			return this.mask(this.generate());
 		}
 
-		private static clear(value: any): string {
-			return Transform.clearString(value, ANY_NON_DIGIT_REGEX);
+		private static clear(inscricaoE: any): string {
+			return Transform.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
 		}
 
 		private static shouldHaveValidVerifierDigits(ie: string): boolean {
@@ -160,7 +164,7 @@ export namespace InscricaoEstadual {
 
 		private static calculateFirstVerifierDigit(baseNumerals: string): string {
 			return ModAlg.calculateCheckDigit({
-				modAlg: 11,
+				modAlg: this.MOD_ALG,
 				digits: baseNumerals,
 				weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 			});
@@ -171,7 +175,7 @@ export namespace InscricaoEstadual {
 			firstVerifierDigit: string
 		): string {
 			return ModAlg.calculateCheckDigit({
-				modAlg: 11,
+				modAlg: this.MOD_ALG,
 				digits: baseNumerals + firstVerifierDigit,
 				weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
 			});

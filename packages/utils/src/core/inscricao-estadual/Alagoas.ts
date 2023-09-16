@@ -29,7 +29,7 @@ export namespace InscricaoEstadual {
 		 *
 		 * EN: Checks if an Alagoas state registration is valid.
 		 *
-		 * @param value - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
+		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: `true` se a inscrição estadual for válida. EN: `true` if the state registration is valid.
 		 *
 		 * @example
@@ -38,8 +38,11 @@ export namespace InscricaoEstadual {
 		 * InscricaoEstadual.Alagoas.isValid("2483730310"); // true
 		 * ```
 		 */
-		public static isValid(value: any): boolean {
-			const cleanedValue = Transform.clearString(value, ANY_NON_DIGIT_REGEX);
+		public static isValid(inscricaoE: any): boolean {
+			const cleanedValue = Transform.clearString(
+				inscricaoE,
+				ANY_NON_DIGIT_REGEX
+			);
 
 			return Pipes.runValidations(cleanedValue, this.VALIDATION_RULES);
 		}

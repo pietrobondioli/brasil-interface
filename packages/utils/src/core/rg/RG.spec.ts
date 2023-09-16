@@ -55,13 +55,34 @@ describe("RG.SP", () => {
 		});
 	});
 
-	describe("mask", () => {
+	describe("mask and unmask", () => {
 		it("should correctly mask an RG", () => {
 			expect(RG.SP.mask(VALID_RG)).toBe(VALID_RG_MASKED);
 		});
 
 		it("should return the same masked RG if already masked", () => {
 			expect(RG.SP.mask(VALID_RG_MASKED)).toBe(VALID_RG_MASKED);
+		});
+
+		it("should correctly unmask an RG", () => {
+			expect(RG.SP.unmask(VALID_RG_MASKED)).toBe(VALID_RG);
+		});
+
+		it("should return the same unmasked RG if already unmasked", () => {
+			expect(RG.SP.unmask(VALID_RG)).toBe(VALID_RG);
+		});
+	});
+
+	describe("generate and generateMasked", () => {
+		it("should generate a valid RG", () => {
+			const generatedRG = RG.SP.generate();
+			expect(RG.SP.isValid(generatedRG)).toBe(true);
+		});
+
+		it("should generate a valid masked RG", () => {
+			const generatedRG = RG.SP.generateMasked();
+			expect(MASKED_RG_REGEX.test(generatedRG)).toBe(true);
+			expect(RG.SP.isValid(RG.SP.unmask(generatedRG))).toBe(true);
 		});
 	});
 

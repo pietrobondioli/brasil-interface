@@ -1,21 +1,29 @@
+import { Assert } from "@/helpers/Assert";
 import { ModAlg } from "@/helpers/ModAlg";
+import { Pipes, ValidationWorker } from "@/helpers/Pipes";
 import { Random } from "@/helpers/Random";
+import { Transform } from "@/helpers/Transform";
 
 export namespace RG {
 	export class SP {
-		private static readonly ANY_NON_DIGIT_REGEX = /[^\dX]/g;
-		private static readonly RG_BASE_NUMERALS_LENGTH = 8;
-		private static readonly RG_VERIFIER_DIGITS_LENGTH = 1;
-		private static readonly RG_LENGTH = 9;
-		private static readonly RG_BASE_NUMERALS_START = 0;
-		private static readonly RG_BASE_NUMERALS_END = 8;
-		private static readonly RG_WEIGHTS = [9, 8, 7, 6, 5, 4, 3, 2];
+		private static readonly MOD_ALG = 11;
 
-		private static readonly RG_DIGITS_REGEX = /(\d{2})(\d{3})(\d{3})([\dX])/;
-		private static readonly RG_MASK = "$1.$2.$3-$4";
-		private static readonly RG_MASK_SENSITIVE = "$1.$2.***-*";
+		static CLEAR_REGEX = /[^\dX]/g;
 
-		private static readonly RG_BLACKLIST = [
+		private static readonly LENGTH = 9;
+		private static readonly BASE_NUMERALS_LENGTH = 8;
+		private static readonly VERIFIER_DIGITS_LENGTH = 1;
+
+		private static readonly BASE_NUMERALS_START = 0;
+		private static readonly BASE_NUMERALS_END = 8;
+
+		private static readonly WEIGHTS = [9, 8, 7, 6, 5, 4, 3, 2];
+
+		private static readonly MASK_REGEX = /(\d{2})(\d{3})(\d{3})([\dX])/;
+		private static readonly MASK_PATTERN = "$1.$2.$3-$4";
+		private static readonly MASK_SENSITIVE_PATTERN = "$1.$2.***-*";
+
+		private static readonly BLACKLIST = [
 			"000000000",
 			"111111111",
 			"222222222",
@@ -27,6 +35,14 @@ export namespace RG {
 			"888888888",
 			"999999999",
 		];
+
+		private static readonly VALIDATION_RULES = [
+			Assert.String.shouldBeDefined,
+			Assert.String.shouldNotBeEmpty,
+			(v) => Assert.String.shouldHaveLengthOf(v, this.LENGTH),
+			(v) => Assert.String.shouldNotBeIn(v, this.BLACKLIST),
+			this.shouldHaveValidVerifierDigits.bind(this),
+		] satisfies ValidationWorker[];
 
 		/**
 		 * PT-BR: Verifica se um número de RG é válido.
@@ -45,17 +61,9 @@ export namespace RG {
 		 * ```
 		 */
 		public static isValid(rg: string | number): boolean {
-			if (!rg) return false;
+			const transformedValue = this.clear(rg);
 
-			rg = this.clear(rg);
-			if (rg.length !== this.RG_LENGTH) return false;
-			if (this.RG_BLACKLIST.some((bl) => bl === rg)) return false;
-
-			const verifierDigit = this.generateVerifierDigits(
-				this.getBaseNumerals(rg)
-			);
-
-			return rg.endsWith(verifierDigit);
+			return Pipes.runValidations(transformedValue, this.VALIDATION_RULES);
 		}
 
 		/**
@@ -73,7 +81,13 @@ export namespace RG {
 		 * ```
 		 */
 		public static mask(rg: string | number): string {
-			return this.applyMask(rg, this.RG_MASK);
+			const cleanedValue = this.clear(rg);
+
+			return Transform.applyMask(
+				cleanedValue,
+				this.MASK_REGEX,
+				this.MASK_PATTERN
+			);
 		}
 
 		/**
@@ -91,7 +105,13 @@ export namespace RG {
 		 * ```
 		 */
 		public static maskSensitive(rg: string | number): string {
-			return this.applyMask(rg, this.RG_MASK_SENSITIVE);
+			const cleanedValue = this.clear(rg);
+
+			return Transform.applyMask(
+				cleanedValue,
+				this.MASK_REGEX,
+				this.MASK_SENSITIVE_PATTERN
+			);
 		}
 
 		/**
@@ -126,10 +146,12 @@ export namespace RG {
 		 */
 		public static generate(): string {
 			const digits = Random.generateRandomNumber(
-				this.RG_BASE_NUMERALS_LENGTH
+				this.BASE_NUMERALS_LENGTH
 			).toString();
 
-			return digits + this.generateVerifierDigits(digits);
+			const verifierDigit = this.calculateVerifierDigit(digits);
+
+			return digits + verifierDigit;
 		}
 
 		/**
@@ -149,32 +171,30 @@ export namespace RG {
 		}
 
 		private static clear(rg: string | number): string {
-			return rg.toString().replace(this.ANY_NON_DIGIT_REGEX, "");
+			return Transform.clearString(rg, this.CLEAR_REGEX);
 		}
 
-		private static applyMask(rg: string | number, maskPattern: string): string {
-			return this.clear(rg).replace(this.RG_DIGITS_REGEX, maskPattern);
+		private static shouldHaveValidVerifierDigits(rg: string): boolean {
+			const baseNumerals = this.getBaseNumerals(rg);
+			const verifierDigit = this.calculateVerifierDigit(baseNumerals);
+
+			return rg.endsWith(verifierDigit);
 		}
 
 		private static getBaseNumerals(digits: string): string {
-			return digits.slice(
-				this.RG_BASE_NUMERALS_START,
-				this.RG_BASE_NUMERALS_END
-			);
+			return digits.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
 		}
 
-		private static generateVerifierDigits(digits: string): string {
-			const verifierDigit = ModAlg.calculateCheckDigit({
-				modAlg: 11,
-				digits,
-				weights: this.RG_WEIGHTS,
+		private static calculateVerifierDigit(baseNumerals: string): string {
+			return ModAlg.calculateCheckDigit({
+				modAlg: this.MOD_ALG,
+				digits: baseNumerals,
+				weights: this.WEIGHTS,
 				transform: {
 					10: "X",
 				},
 				returnModDirectly: true,
 			});
-
-			return verifierDigit;
 		}
 	}
 }

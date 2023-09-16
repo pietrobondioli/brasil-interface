@@ -1,14 +1,20 @@
+import { Assert } from "@/helpers/Assert";
+import { ANY_NON_DIGIT_REGEX } from "@/helpers/Constants";
 import { ModAlg } from "@/helpers/ModAlg";
+import { Pipes, ValidationWorker } from "@/helpers/Pipes";
 import { Random } from "@/helpers/Random";
+import { Transform } from "@/helpers/Transform";
 
 export class CNPJ {
-	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
+	private static readonly MOD_ALG = 11;
 
-	private static readonly CNPJ_BASE_NUMERALS_LENGTH = 12;
-	private static readonly CNPJ_VERIFIER_DIGITS_LENGTH = 2;
-	private static readonly CNPJ_LENGTH = 14;
-	private static readonly CNPJ_BASE_NUMERALS_START = 0;
-	private static readonly CNPJ_BASE_NUMERALS_END = 12;
+	private static readonly LENGTH = 14;
+	private static readonly BASE_NUMERALS_LENGTH = 12;
+	private static readonly VERIFIER_DIGITS_LENGTH = 2;
+
+	private static readonly BASE_NUMERALS_START = 0;
+	private static readonly BASE_NUMERALS_END = 12;
+
 	private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
 		5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2,
 	];
@@ -16,12 +22,11 @@ export class CNPJ {
 		6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2,
 	];
 
-	private static readonly CNPJ_DIGITS_REGEX =
-		/(^\d{2})(\d{3})(\d{3})(\d{4})(\d{2}$)/;
-	private static readonly CNPJ_MASK = "$1.$2.$3/$4-$5";
-	private static readonly CNPJ_MASK_SENSITIVE = "$1.$2.***/$4-**";
+	private static readonly MASK_REGEX = /(^\d{2})(\d{3})(\d{3})(\d{4})(\d{2}$)/;
+	private static readonly MASK_PATTERN = "$1.$2.$3/$4-$5";
+	private static readonly MASK_SENSITIVE_PATTERN = "$1.$2.***/$4-**";
 
-	private static readonly CNPJ_BLACKLIST = [
+	private static readonly BLACKLIST = [
 		"00000000000000",
 		"11111111111111",
 		"22222222222222",
@@ -33,6 +38,14 @@ export class CNPJ {
 		"88888888888888",
 		"99999999999999",
 	];
+
+	private static readonly VALIDATION_RULES = [
+		Assert.String.shouldBeDefined,
+		Assert.String.shouldNotBeEmpty,
+		(v) => Assert.String.shouldHaveLengthOf(v, this.LENGTH),
+		(v) => Assert.String.shouldNotBeIn(v, this.BLACKLIST),
+		this.shouldHaveValidVerifierDigits.bind(this),
+	] satisfies ValidationWorker[];
 
 	/**
 	 * PT-BR: Verifica se um número de CNPJ é válido.
@@ -48,17 +61,9 @@ export class CNPJ {
 	 * ```
 	 */
 	public static isValid(cnpj: string): boolean {
-		if (!cnpj) return false;
+		const transformedValue = this.clear(cnpj);
 
-		const cleanedCnpj = this.clear(cnpj);
-		if (cleanedCnpj.length !== this.CNPJ_LENGTH) return false;
-		if (this.CNPJ_BLACKLIST.some((bl) => bl === cleanedCnpj)) return false;
-
-		const verifierDigits = this.generateVerifierDigits(
-			this.getBaseNumerals(cleanedCnpj)
-		);
-
-		return cleanedCnpj.endsWith(verifierDigits);
+		return Pipes.runValidations(transformedValue, this.VALIDATION_RULES);
 	}
 
 	/**
@@ -81,7 +86,13 @@ export class CNPJ {
 	 * ```
 	 */
 	public static mask(cnpj: string): string {
-		return this.applyMask(cnpj, this.CNPJ_MASK);
+		const cleanedValue = this.clear(cnpj);
+
+		return Transform.applyMask(
+			cleanedValue,
+			this.MASK_REGEX,
+			this.MASK_PATTERN
+		);
 	}
 
 	/**
@@ -100,7 +111,13 @@ export class CNPJ {
 	 * ```
 	 */
 	public static maskSensitive(cnpj: string): string {
-		return this.applyMask(cnpj, this.CNPJ_MASK_SENSITIVE);
+		const cleanedValue = this.clear(cnpj);
+
+		return Transform.applyMask(
+			cleanedValue,
+			this.MASK_REGEX,
+			this.MASK_SENSITIVE_PATTERN
+		);
 	}
 
 	/**
@@ -134,10 +151,12 @@ export class CNPJ {
 	 */
 	public static generate(): string {
 		const digits = Random.generateRandomNumber(
-			this.CNPJ_BASE_NUMERALS_LENGTH
+			this.BASE_NUMERALS_LENGTH
 		).toString();
 
-		return digits + this.generateVerifierDigits(digits);
+		const verifierDigits = this.calculateVerifierDigits(digits);
+
+		return digits + verifierDigits;
 	}
 
 	/**
@@ -156,34 +175,48 @@ export class CNPJ {
 		return this.mask(this.generate());
 	}
 
-	private static clear(cpf: string): string {
-		return cpf.replace(this.ANY_NON_DIGIT_REGEX, "");
+	private static clear(cnpj: string): string {
+		return Transform.clearString(cnpj, ANY_NON_DIGIT_REGEX);
 	}
 
-	private static applyMask(cnpj: string, maskPattern: string): string {
-		return this.clear(cnpj).replace(this.CNPJ_DIGITS_REGEX, maskPattern);
+	private static shouldHaveValidVerifierDigits(cnpj: string): boolean {
+		const baseNumerals = this.getBaseNumerals(cnpj);
+
+		const verifierDigits = this.calculateVerifierDigits(baseNumerals);
+
+		return cnpj.endsWith(verifierDigits);
 	}
 
 	private static getBaseNumerals(digits: string): string {
-		return digits.slice(
-			this.CNPJ_BASE_NUMERALS_START,
-			this.CNPJ_BASE_NUMERALS_END
-		);
+		return digits.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
 	}
 
-	private static generateVerifierDigits(digits: string) {
-		const firstDigit = ModAlg.calculateCheckDigit({
-			modAlg: 11,
-			digits,
+	private static calculateVerifierDigits(baseNumerals: string): string {
+		const firstVerifierDigit = this.calculateFirstVerifierDigit(baseNumerals);
+		const secondVerifierDigit = this.calculateSecondVerifierDigit(
+			baseNumerals,
+			firstVerifierDigit
+		);
+
+		return firstVerifierDigit + secondVerifierDigit;
+	}
+
+	private static calculateFirstVerifierDigit(baseNumerals: string): string {
+		return ModAlg.calculateCheckDigit({
+			modAlg: this.MOD_ALG,
+			digits: baseNumerals,
 			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 		});
+	}
 
-		const secondDigit = ModAlg.calculateCheckDigit({
-			modAlg: 11,
-			digits: digits + firstDigit,
+	private static calculateSecondVerifierDigit(
+		baseNumerals: string,
+		firstVerifierDigit: string
+	): string {
+		return ModAlg.calculateCheckDigit({
+			modAlg: this.MOD_ALG,
+			digits: baseNumerals + firstVerifierDigit,
 			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
 		});
-
-		return firstDigit.toString() + secondDigit.toString();
 	}
 }

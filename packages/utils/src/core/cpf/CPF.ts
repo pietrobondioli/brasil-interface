@@ -1,14 +1,17 @@
+import { Assert } from "@/helpers/Assert";
+import { ANY_NON_DIGIT_REGEX } from "@/helpers/Constants";
 import { EstadoSigla } from "@/helpers/Estados";
 import { ModAlg } from "@/helpers/ModAlg";
+import { Pipes, ValidationWorker } from "@/helpers/Pipes";
 import { Random } from "@/helpers/Random";
+import { Transform } from "@/helpers/Transform";
 
 export class CPF {
-	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
+	private static readonly MOD_ALG = 11;
 
+	private static readonly LENGTH = 11;
 	private static readonly BASE_NUMERALS_LENGTH = 9;
 	private static readonly VERIFIER_DIGITS_LENGTH = 2;
-	private static readonly LENGTH =
-		this.BASE_NUMERALS_LENGTH + this.VERIFIER_DIGITS_LENGTH;
 
 	private static readonly UF_DIGIT_POSITION = 8;
 
@@ -22,9 +25,9 @@ export class CPF {
 		11, 10, 9, 8, 7, 6, 5, 4, 3, 2,
 	];
 
-	private static readonly DIGITS_REGEX = /(\d{3})(\d{3})(\d{3})(\d{2})/;
-	private static readonly MASK = "$1.$2.$3-$4";
-	private static readonly MASK_SENSITIVE = "$1.$2.***-**";
+	private static readonly MASK_REGEX = /(\d{3})(\d{3})(\d{3})(\d{2})/;
+	private static readonly MASK_PATTERN = "$1.$2.$3-$4";
+	private static readonly MASK_SENSITIVE_PATTERN = "$1.$2.***-**";
 
 	private static readonly BLACKLIST = [
 		"00000000000",
@@ -52,6 +55,14 @@ export class CPF {
 		"9": ["PR", "SC"],
 	} satisfies { [key: string]: EstadoSigla[] };
 
+	private static readonly VALIDATION_RULES = [
+		Assert.String.shouldBeDefined,
+		Assert.String.shouldNotBeEmpty,
+		(v) => Assert.String.shouldHaveLengthOf(v, this.LENGTH),
+		(v) => Assert.String.shouldNotBeIn(v, this.BLACKLIST),
+		this.shouldHaveValidVerifierDigits.bind(this),
+	] satisfies ValidationWorker[];
+
 	/**
 	 * PT-BR: Verifica se um número de CPF é válido.
 	 *
@@ -69,17 +80,9 @@ export class CPF {
 	 * ```
 	 */
 	public static isValid(cpf: string | number): boolean {
-		if (!cpf) return false;
+		const transformedValue = this.clear(cpf);
 
-		cpf = this.clear(cpf);
-		if (cpf.length !== this.LENGTH) return false;
-		if (this.BLACKLIST.some((bl) => bl === cpf)) return false;
-
-		const verifierDigits = this.generateVerifierDigits(
-			this.getBaseNumerals(cpf)
-		);
-
-		return cpf.endsWith(verifierDigits);
+		return Pipes.runValidations(transformedValue, this.VALIDATION_RULES);
 	}
 
 	/**
@@ -96,7 +99,13 @@ export class CPF {
 	 * ```
 	 */
 	public static mask(cpf: string | number): string {
-		return this.applyMask(cpf, this.MASK);
+		const cleanedValue = this.clear(cpf);
+
+		return Transform.applyMask(
+			cleanedValue,
+			this.MASK_REGEX,
+			this.MASK_PATTERN
+		);
 	}
 
 	/**
@@ -115,7 +124,13 @@ export class CPF {
 	 * ```
 	 */
 	public static maskSensitive(cpf: string | number): string {
-		return this.applyMask(cpf, this.MASK_SENSITIVE);
+		const cleanedValue = this.clear(cpf);
+
+		return Transform.applyMask(
+			cleanedValue,
+			this.MASK_REGEX,
+			this.MASK_SENSITIVE_PATTERN
+		);
 	}
 
 	/**
@@ -148,11 +163,13 @@ export class CPF {
 	 * ```
 	 */
 	public static generate(): string {
-		const digits = Random.generateRandomNumber(
+		const baseNumerals = Random.generateRandomNumber(
 			this.BASE_NUMERALS_LENGTH
 		).toString();
 
-		return digits + this.generateVerifierDigits(digits);
+		const verifierDigits = this.calculateVerifierDigits(baseNumerals);
+
+		return baseNumerals + verifierDigits;
 	}
 
 	/**
@@ -194,9 +211,7 @@ export class CPF {
 		const ufCode = this.getUfCode(cpf);
 		if (!ufCode) return null;
 
-		if (!this.isUfKey(ufCode)) {
-			return null;
-		}
+		if (!this.isUfKey(ufCode)) return null;
 
 		return this.UF_MAP[ufCode];
 	}
@@ -205,38 +220,52 @@ export class CPF {
 		return key in this.UF_MAP;
 	}
 
-	private static clear(value: string | number): string {
-		return value.toString().replace(this.ANY_NON_DIGIT_REGEX, "");
-	}
-
-	private static applyMask(
-		value: string | number,
-		maskPattern: string
-	): string {
-		return this.clear(value).replace(this.DIGITS_REGEX, maskPattern);
+	private static clear(cpf: any): string {
+		return Transform.clearString(cpf, ANY_NON_DIGIT_REGEX);
 	}
 
 	private static getUfCode(cpf: string | number): string | null {
 		return this.clear(cpf).charAt(this.UF_DIGIT_POSITION);
 	}
 
+	private static shouldHaveValidVerifierDigits(cpf: string): boolean {
+		const baseNumerals = this.getBaseNumerals(cpf);
+
+		const verifierDigits = this.calculateVerifierDigits(baseNumerals);
+
+		return cpf.endsWith(verifierDigits);
+	}
+
 	private static getBaseNumerals(digits: string): string {
 		return digits.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
 	}
 
-	private static generateVerifierDigits(digits: string): string {
-		const firstDigit = ModAlg.calculateCheckDigit({
-			modAlg: 11,
-			digits,
+	private static calculateVerifierDigits(baseNumerals: string): string {
+		const firstVerifierDigit = this.calculateFirstVerifierDigit(baseNumerals);
+		const secondVerifierDigit = this.calculateSecondVerifierDigit(
+			baseNumerals,
+			firstVerifierDigit
+		);
+
+		return firstVerifierDigit + secondVerifierDigit;
+	}
+
+	private static calculateFirstVerifierDigit(baseNumerals: string): string {
+		return ModAlg.calculateCheckDigit({
+			modAlg: this.MOD_ALG,
+			digits: baseNumerals,
 			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 		});
+	}
 
-		const secondDigit = ModAlg.calculateCheckDigit({
-			modAlg: 11,
-			digits: digits + firstDigit,
+	private static calculateSecondVerifierDigit(
+		baseNumerals: string,
+		firstVerifierDigit: string
+	): string {
+		return ModAlg.calculateCheckDigit({
+			modAlg: this.MOD_ALG,
+			digits: baseNumerals + firstVerifierDigit,
 			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
 		});
-
-		return `${firstDigit}${secondDigit}`;
 	}
 }

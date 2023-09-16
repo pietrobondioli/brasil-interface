@@ -1,14 +1,18 @@
+import { Assert } from "@/helpers/Assert";
+import { ANY_NON_DIGIT_REGEX } from "@/helpers/Constants";
 import { ModAlg } from "@/helpers/ModAlg";
+import { Pipes, ValidationWorker } from "@/helpers/Pipes";
 import { Random } from "@/helpers/Random";
+import { Transform } from "@/helpers/Transform";
 
 export class CNH {
-	private static readonly ANY_NON_DIGIT_REGEX = /[^\d]/g;
+	private static readonly MOD_ALG = 11;
 
-	private static readonly CNH_BASE_NUMERALS_LENGTH = 9;
-	private static readonly CNH_VERIFIER_DIGITS_LENGTH = 2;
-	private static readonly CNH_LENGTH = 11;
-	private static readonly CNH_BASE_NUMERALS_START = 0;
-	private static readonly CNH_BASE_NUMERALS_END = 9;
+	private static readonly LENGTH = 11;
+	private static readonly BASE_NUMERALS_LENGTH = 9;
+	private static readonly VERIFIER_DIGITS_LENGTH = 2;
+	private static readonly BASE_NUMERALS_START = 0;
+	private static readonly BASE_NUMERALS_END = 9;
 
 	private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
 		2, 3, 4, 5, 6, 7, 8, 9, 10,
@@ -16,9 +20,8 @@ export class CNH {
 	private static readonly SECOND_VERIFIER_DIGIT_WEIGHTS = [
 		2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	];
-	private static readonly CNH_DIGITS_REGEX = /(\d{9})(\d{2})/;
 
-	private static readonly CNH_BLACKLIST = [
+	private static readonly BLACKLIST = [
 		"00000000000",
 		"11111111111",
 		"22222222222",
@@ -30,6 +33,14 @@ export class CNH {
 		"88888888888",
 		"99999999999",
 	];
+
+	private static readonly VALIDATION_RULES = [
+		Assert.String.shouldBeDefined,
+		Assert.String.shouldNotBeEmpty,
+		(v) => Assert.String.shouldHaveLengthOf(v, this.LENGTH),
+		(v) => Assert.String.shouldNotBeIn(v, this.BLACKLIST),
+		this.shouldHaveValidVerifierDigits.bind(this),
+	] satisfies ValidationWorker[];
 
 	/**
 	 * PT-BR: Verifica se um número de CNH é válido.
@@ -48,18 +59,9 @@ export class CNH {
 	 * ```
 	 */
 	public static isValid(cnh: string): boolean {
-		if (!cnh) return false;
+		const transformedValue = this.clear(cnh);
 
-		cnh = this.clear(cnh);
-
-		if (cnh.length !== this.CNH_LENGTH) return false;
-		if (this.CNH_BLACKLIST.some((bl) => bl === cnh)) return false;
-
-		const verifierDigits = this.generateVerifierDigits(
-			this.getBaseNumerals(cnh)
-		);
-
-		return cnh.endsWith(verifierDigits);
+		return Pipes.runValidations(transformedValue, this.VALIDATION_RULES);
 	}
 
 	/**
@@ -75,36 +77,57 @@ export class CNH {
 	 * ```
 	 */
 	public static generate(): string {
-		const digits = Random.generateRandomNumber(
-			this.CNH_BASE_NUMERALS_LENGTH
+		const baseNumerals = Random.generateRandomNumber(
+			this.BASE_NUMERALS_LENGTH
 		).toString();
 
-		return digits + this.generateVerifierDigits(digits);
+		const verifierDigits = this.calculateVerifierDigits(baseNumerals);
+
+		return baseNumerals + verifierDigits;
 	}
 
-	private static clear(value: string | number): string {
-		return value.toString().replace(this.ANY_NON_DIGIT_REGEX, "");
+	private static clear(cnh: string | number): string {
+		return Transform.clearString(cnh, ANY_NON_DIGIT_REGEX);
 	}
 
 	private static getBaseNumerals(digits: string): string {
-		return digits.slice(
-			this.CNH_BASE_NUMERALS_START,
-			this.CNH_BASE_NUMERALS_END
-		);
+		return digits.slice(this.BASE_NUMERALS_START, this.BASE_NUMERALS_END);
 	}
 
-	private static generateVerifierDigits(digits: string): string {
-		const firstDigit = ModAlg.calculateCheckDigit({
-			modAlg: 11,
-			digits,
+	private static shouldHaveValidVerifierDigits(cnh: string): boolean {
+		const baseNumerals = this.getBaseNumerals(cnh);
+
+		const verifierDigits = this.calculateVerifierDigits(baseNumerals);
+
+		return cnh.endsWith(verifierDigits);
+	}
+
+	private static calculateVerifierDigits(baseNumerals: string): string {
+		const firstVerifierDigit = this.calculateFirstVerifierDigit(baseNumerals);
+		const secondVerifierDigit = this.calculateSecondVerifierDigit(
+			baseNumerals,
+			firstVerifierDigit
+		);
+
+		return firstVerifierDigit + secondVerifierDigit;
+	}
+
+	private static calculateFirstVerifierDigit(baseNumerals: string): string {
+		return ModAlg.calculateCheckDigit({
+			modAlg: this.MOD_ALG,
+			digits: baseNumerals,
 			weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 		});
-		const secondDigit = ModAlg.calculateCheckDigit({
-			modAlg: 11,
-			digits: firstDigit + digits,
+	}
+
+	private static calculateSecondVerifierDigit(
+		baseNumerals: string,
+		firstVerifierDigit: string
+	): string {
+		return ModAlg.calculateCheckDigit({
+			modAlg: this.MOD_ALG,
+			digits: firstVerifierDigit + baseNumerals,
 			weights: this.SECOND_VERIFIER_DIGIT_WEIGHTS,
 		});
-
-		return `${firstDigit}${secondDigit}`;
 	}
 }
