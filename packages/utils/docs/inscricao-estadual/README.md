@@ -182,8 +182,8 @@ O dígito verificador é o resultado de 11 menos o resto da divisão do resultad
 - Tamanho: 8 dígitos
 - Método: Módulo 10
 - Pesos
-  - 1º dígito: 2, 3, 4, 5, 6, 7, 8, calculados da direita para a esquerda
-  - 2º dígito: 2, 3, 4, 5, 6, 7, calculados da direita para a esquerda
+  - 1º dígito: 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+  - 2º dígito: 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 6 dígitos + 1 dígito verificador + 1 dígito verificador (XXXXXXX-DD)
   - X: 6 dígitos utilizados para o cálculo do primeiro dígito verificador
   - D: Primeiro dígito verificador
@@ -218,8 +218,8 @@ Consequentemente, a inscrição estadual da Bahia fica como 123456-63.
 - Tamanho: 8 dígitos
 - Método: Módulo 11
 - Pesos
-  - 1º dígito: 2, 3, 4, 5, 6, 7, 8, calculados da direita para a esquerda
-  - 2º dígito: 2, 3, 4, 5, 6, 7, calculados da direita para a esquerda
+  - 1º dígito: 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+  - 2º dígito: 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 6 dígitos + 1 dígito verificador + 1 dígito verificador (XXXXXXX-DD)
 - Máscara: XXXXXXXX-XX
 - Exemplo: 612345-57
@@ -253,8 +253,8 @@ Consequentemente, a inscrição estadual da Bahia fica como 612345-57.
 - Tamanho: 9 dígitos
 - Método: Módulo 10
 - Pesos
-  - 1º dígito: 2, 3, 4, 5, 6, 7, 8, calculados da direita para a esquerda
-  - 2º dígito: 2, 3, 4, 5, 6, 7, 8, 9 calculados da direita para a esquerda
+  - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+  - 2º dígito: 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 7 dígitos + 1 dígito verificador + 1 dígito verificador (XXXXXXXX-DD)
   - X: 7 dígitos utilizados para o cálculo do primeiro dígito verificador
   - D: Primeiro dígito verificador
@@ -289,8 +289,8 @@ Consequentemente, a inscrição estadual da Bahia fica como 1000003-06.
 - Tamanho: 9 dígitos
 - Método: Módulo 11
 - Pesos
-  - 1º dígito: 2, 3, 4, 5, 6, 7, 8, calculados da direita para a esquerda
-  - 2º dígito: 2, 3, 4, 5, 6, 7, 8, 9 calculados da direita para a esquerda
+  - 1º dígito: 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
+  - 2º dígito: 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
 - Formato: 7 dígitos + 1 dígito verificador + 1 dígito verificador (XXXXXXXX-DD)
   - X: 7 dígitos utilizados para o cálculo do primeiro dígito verificador
   - D: Primeiro dígito verificador
@@ -331,7 +331,7 @@ OBS: Quando o resto for 0 ou 1, o segundo dígito é igual a 0.
 - Formato: 8 dígitos + 1 dígito verificador (XXXXXXXX-D)
   - X: 8 dígitos utilizados para o cálculo do dígito verificador
   - D: Dígito verificador
-- Máscara: XXXXXXXX-X
+- Máscara: XXXXXXXX-D
 - Exemplo: 06000001-5
 
 **Validação**
@@ -356,12 +356,12 @@ OBS: Quando o dígito tiver valor 10 ou 11, utilizamos o valor "0" no lugar.
 - Pesos
   - 1º dígito: 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
   - 2º dígito: 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
-- Formato: 11 dígitos + 2 dígitos verificadores (XX.XXXXXXX/XXX-DD)
+- Formato: 11 dígitos + 2 dígitos verificadores (XXXXXXXXXXXX-DD)
   - X: 11 dígitos utilizados para o cálculo do primeiro dígito verificador
   - D: Primeiro dígito verificador
   - D: Segundo dígito verificador
-- Máscara: XX.XXXXXXX/XXX-XX
-- Exemplo: 07.300.001/001-09
+- Máscara: XXXXXXXXXXXX-XX
+- Exemplo: 07300001001-09
 
 **Validação**
 

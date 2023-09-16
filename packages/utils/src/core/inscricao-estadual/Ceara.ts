@@ -73,7 +73,7 @@ export namespace InscricaoEstadual {
 		/**
 		 * PT-BR: Desmascara uma inscrição estadual do Ceara.
 		 *
-		 * EN: Unmasks an Acre state registration.
+		 * EN: Unmasks an Ceará state registration.
 		 *
 		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: A inscrição estadual desmascarada. EN: The unmasked state registration.

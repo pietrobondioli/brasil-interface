@@ -17,6 +17,12 @@ describe("InscricaoEstadual.Amazonas", () => {
 			});
 		});
 
+		VALID_MASKED_IES.forEach((ie) => {
+			it(`should validate masked IE ${ie} as true`, () => {
+				expect(InscricaoEstadual.Amazonas.isValid(ie)).toBe(true);
+			});
+		});
+
 		const invalidIEs = ["123111789", "555555555"];
 		invalidIEs.forEach((ie) => {
 			it(`should validate ${ie} as false`, () => {
