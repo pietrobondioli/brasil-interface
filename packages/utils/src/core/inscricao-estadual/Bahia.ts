@@ -174,14 +174,13 @@ export namespace InscricaoEstadual {
 			] satisfies Case[]);
 
 			const randomBaseNumerals = Random.generateRandomNumber(
-				this.getBaseNumeralsLength(case_)
+				this.getBaseNumeralsLength(case_) - 1
 			).toString();
 
 			// Need to ensure that the generated number starts with a valid digit for the chosen case
 			// É necessário garantir que o número gerado comece com um dígito válido para o caso escolhido
 			const baseNumerals =
-				Random.fromArray(this.getBaseStartsWith(case_)) +
-				randomBaseNumerals.slice(1);
+				Random.fromArray(this.getBaseStartsWith(case_)) + randomBaseNumerals;
 
 			const verifierDigits = this.calculateVerifierDigits(baseNumerals, case_);
 

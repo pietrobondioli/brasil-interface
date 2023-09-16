@@ -6,40 +6,40 @@ import { Assert } from "@/helpers/Assert";
 import { Random } from "@/helpers/Random";
 
 export namespace InscricaoEstadual {
-	export class MatoGrosso {
+	export class MatoGrossoDoSul {
 		private static readonly MOD_ALG = 11;
 
-		private static readonly VALID_LENGTH = 11;
-		private static readonly BASE_NUMERALS_LENGTH = 10;
+		private static readonly VALID_LENGTH = 9;
+		private static readonly BASE_NUMERALS_LENGTH = 8;
 		private static readonly BASE_NUMERALS_START = 0;
-		private static readonly BASE_NUMERALS_END = 10;
-		private static readonly VERIFIER_DIGIT_WEIGHTS = [
-			3, 2, 9, 8, 7, 6, 5, 4, 3, 2,
-		];
+		private static readonly BASE_NUMERALS_END = 8;
+		private static readonly STARTS_WITH = "28";
+		private static readonly VERIFIER_DIGIT_WEIGHTS = [9, 8, 7, 6, 5, 4, 3, 2];
 
-		private static readonly MASK_REGEX = /^(\d{10})(\d{1})$/;
+		private static readonly MASK_REGEX = /^(\d{8})(\d{1})$/;
 		private static readonly MASK_PATTERN = "$1-$2";
 
 		private static readonly VALIDATION_RULES = [
 			Assert.String.shouldBeDefined,
 			Assert.String.shouldNotBeEmpty,
 			(v) => Assert.String.shouldHaveLengthOf(v, this.VALID_LENGTH),
+			(v) => Assert.String.shouldStartWith(v, this.STARTS_WITH),
 			(v) => Assert.String.shouldContainOnlyNumbers(v),
 			this.shouldHaveValidVerifierDigits.bind(this),
 		] satisfies ValidationWorker[];
 
 		/**
-		 * PT-BR: Verifica se uma inscrição estadual do Mato Grosso é válida.
+		 * PT-BR: Verifica se uma inscrição estadual do Mato Grosso do Sul é válida.
 		 *
-		 * EN: Checks if an Mato Grosso state registration is valid.
+		 * EN: Checks if an Mato Grosso do Sul state registration is valid.
 		 *
 		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: `true` se a inscrição estadual for válida. EN: `true` if the state registration is valid.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.MatoGrosso.isValid("1111110310"); // false
-		 * InscricaoEstadual.MatoGrosso.isValid("00130000019"); // true
+		 * InscricaoEstadual.MatoGrossoDoSul.isValid("1111110310"); // false
+		 * InscricaoEstadual.MatoGrossoDoSul.isValid("301188327"); // true
 		 * ```
 		 */
 		public static isValid(inscricaoE: any): boolean {
@@ -49,16 +49,16 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Máscara uma inscrição estadual do Mato Grosso.
+		 * PT-BR: Máscara uma inscrição estadual do Mato Grosso do Sul.
 		 *
-		 * EN: Masks an Mato Grosso state registration.
+		 * EN: Masks an Mato Grosso do Sul state registration.
 		 *
 		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: A inscrição estadual mascarada. EN: The masked state registration.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.MatoGrosso.mask("00130000019"); // "0013000001-9"
+		 * InscricaoEstadual.MatoGrossoDoSul.mask("301188327"); // "30118832-7"
 		 * ```
 		 */
 		public static mask(inscricaoE: any): string {
@@ -72,16 +72,16 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Desmascara uma inscrição estadual do Mato Grosso.
+		 * PT-BR: Desmascara uma inscrição estadual do Mato Grosso do Sul.
 		 *
-		 * EN: Unmasks an Mato Grosso state registration.
+		 * EN: Unmasks an Mato Grosso do Sul state registration.
 		 *
 		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: A inscrição estadual desmascarada. EN: The unmasked state registration.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.MatoGrosso.unmask("0013000001-9"); // "00130000019"
+		 * InscricaoEstadual.MatoGrossoDoSul.unmask("30118832-7"); // "301188327"
 		 * ```
 		 */
 		public static unmask(inscricaoE: any): string {
@@ -89,21 +89,25 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Gerar um número de inscrição estadual do Mato Grosso válido.
+		 * PT-BR: Gerar um número de inscrição estadual do Mato Grosso do Sul válido.
 		 *
-		 * EN: Generate a valid Mato Grosso state registration number.
+		 * EN: Generate a valid Mato Grosso do Sul state registration number.
 		 *
 		 * @returns PT-BR: O número de inscrição estadual gerado. EN: The generated state registration number.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.MatoGrosso.generate(); // "00130000019"
+		 * InscricaoEstadual.MatoGrossoDoSul.generate(); // "301188327"
 		 * ```
 		 */
 		public static generate() {
-			const baseNumerals = Random.generateRandomNumber(
-				this.BASE_NUMERALS_LENGTH
+			const randomBaseNumerals = Random.generateRandomNumber(
+				this.BASE_NUMERALS_LENGTH - 2
 			).toString();
+
+			// Ensure that the generated number starts with the correct digits
+			// Assegura que o número gerado comece com os dígitos corretos
+			const baseNumerals = this.STARTS_WITH + randomBaseNumerals;
 
 			const verifierDigit = this.calculateVerifierDigit(baseNumerals);
 
@@ -111,15 +115,15 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Gera um número de inscrição estadual do Mato Grosso válido e aleatório com máscara.
+		 * PT-BR: Gera um número de inscrição estadual do Mato Grosso do Sul válido e aleatório com máscara.
 		 *
-		 * EN: Generates a random valid Mato Grosso state registration number with mask.
+		 * EN: Generates a random valid Mato Grosso do Sul state registration number with mask.
 		 *
 		 * @returns PT-BR: O número de inscrição estadual gerado com máscara. EN: The generated state registration number with mask.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.MatoGrosso.generateMasked(); // "0013000001-9"
+		 * InscricaoEstadual.MatoGrossoDoSul.generateMasked(); // "30118832-7"
 		 * ```
 		 */
 		public static generateMasked() {
