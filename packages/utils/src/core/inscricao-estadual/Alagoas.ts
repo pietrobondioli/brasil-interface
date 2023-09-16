@@ -13,9 +13,7 @@ export namespace InscricaoEstadual {
 		private static readonly BASE_NUMERALS_START = 0;
 		private static readonly BASE_NUMERALS_END = 8;
 		private static readonly STARTS_WITH = "24";
-		private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
-			9, 8, 7, 6, 5, 4, 3, 2,
-		];
+		private static readonly VERIFIER_DIGIT_WEIGHTS = [9, 8, 7, 6, 5, 4, 3, 2];
 
 		private static readonly VALIDATION_RULES = [
 			Assert.String.shouldBeDefined,
@@ -89,7 +87,7 @@ export namespace InscricaoEstadual {
 			return ModAlg.calculateCheckDigit({
 				modAlg: this.MOD_ALG,
 				digits: baseNumerals,
-				weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
+				weights: this.VERIFIER_DIGIT_WEIGHTS,
 			});
 		}
 	}
