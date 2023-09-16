@@ -16,7 +16,7 @@ const EXPECTED_RESULT_FOR_11 = "11";
 describe("ModAlg Class", () => {
 	test("Calculate check digit for valid digits", () => {
 		const result = ModAlg.calculateCheckDigit({
-			algReturnType: "modComplement",
+			modStrategy: "modComplement",
 			modAlg: 11,
 			direction: "fromLeft",
 			digits: VALID_DIGITS,
@@ -27,7 +27,7 @@ describe("ModAlg Class", () => {
 
 	test("Calculate check digit resulting in 10", () => {
 		const result = ModAlg.calculateCheckDigit({
-			algReturnType: "modComplement",
+			modStrategy: "modComplement",
 			modAlg: 11,
 			direction: "fromLeft",
 			digits: DIGITS_FOR_VERIFIER_DIG_10,
@@ -41,7 +41,7 @@ describe("ModAlg Class", () => {
 
 	test("Calculate check digit resulting in 11", () => {
 		const result = ModAlg.calculateCheckDigit({
-			algReturnType: "modComplement",
+			modStrategy: "modComplement",
 			modAlg: 11,
 			direction: "fromLeft",
 			digits: DIGITS_FOR_VERIFIER_DIG_11,
@@ -55,7 +55,7 @@ describe("ModAlg Class", () => {
 
 	test("Calculate check digit from the right", () => {
 		const result = ModAlg.calculateCheckDigit({
-			algReturnType: "modComplement",
+			modStrategy: "modComplement",
 			modAlg: 11,
 			direction: "fromRight",
 			digits: VALID_DIGITS.split("").reverse().join(""),
@@ -66,7 +66,7 @@ describe("ModAlg Class", () => {
 
 	test("Calculate check digit for valid digits with direct mod", () => {
 		const result = ModAlg.calculateCheckDigit({
-			algReturnType: "mod",
+			modStrategy: "mod",
 			modAlg: 11,
 			direction: "fromLeft",
 			digits: VALID_DIGITS,
@@ -85,7 +85,7 @@ describe("ModAlg Class", () => {
 
 	test("Calculate check digit resulting in 10 with direct mod", () => {
 		const result = ModAlg.calculateCheckDigit({
-			algReturnType: "mod",
+			modStrategy: "mod",
 			modAlg: 11,
 			direction: "fromLeft",
 			digits: DIGITS_FOR_VERIFIER_DIG_10,
@@ -107,7 +107,7 @@ describe("ModAlg Class", () => {
 
 	test("Calculate check digit resulting in 11 with direct mod", () => {
 		const result = ModAlg.calculateCheckDigit({
-			algReturnType: "mod",
+			modStrategy: "mod",
 			modAlg: 11,
 			direction: "fromLeft",
 			digits: DIGITS_FOR_VERIFIER_DIG_11,

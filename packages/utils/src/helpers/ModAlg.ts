@@ -5,18 +5,19 @@ export class ModAlg {
 	 * EN: Calculates the check digit of a numeric string using the Mod11 algorithm.
 	 *
 	 * @param modAlg PT-BR: O módulo a ser usado no cálculo. Útil para casos onde o dígito verificador é calculado utilizando apenas o resto da divisão. EN: The module to be used in the calculation. Useful for cases where the check digit is calculated using only the remainder of the division.
-	 * @param algReturnType PT-BR: O tipo de retorno do algoritmo. EN: The algorithm return type.
+	 * @param modStrategy PT-BR: O tipo de retorno do algoritmo. EN: The algorithm return type.
 	 * @param digits PT-BR: O número a ser calculado. EN: The number to be calculated.
 	 * @param weights PT-BR: Os pesos a serem usados no cálculo. EN: The weights to be used in the calculation.
 	 * @param direction PT-BR: A direção do cálculo. EN: The calculation direction. Default: "left".
 	 * @param transform PT-BR: Um objeto que mapeia o resultado do módulo para um valor específico. Útil pois em diversos casos certos valores não são aceitos como dígito verificador. EN: An object that maps the module result to a specific value. Useful because in several cases certain values are not accepted as a check digit.
+	 * @param sumStrategy PT-BR: A estratégia de soma a ser usada. Útil para casos onde a soma é feita utilizando os digitos do resultado, exemplo: 12 -> 1 + 2 = 3. EN: The sum strategy to be used. Useful for cases where the sum is done using the digits of the result, example: 12 -> 1 + 2 = 3.
 	 * @param additionalSum PT-BR: Um array de valores a serem somados ao resultado final. Útil para casos onde o dígito verificador é calculado de forma diferente. EN: An array of values to be added to the final result. Useful for cases where the check digit is calculated differently.
 	 * @returns PT-BR: O digito verificador calculado. EN: The calculated check digit.
 	 *
 	 * @example
 	 * ```
 	 * ModAlg.calculateCheckDigit({
-	 *  algReturnType: "modComplement",
+	 *  modStrategy: "modComplement",
 	 *  modAlg: 11,
 	 *  direction: "fromLeft",
 	 *  digits: "20359338",
@@ -28,19 +29,21 @@ export class ModAlg {
 	 */
 	public static calculateCheckDigit({
 		modAlg,
-		algReturnType,
+		modStrategy,
 		digits,
 		weights,
 		direction,
 		transform = {},
+		sumStrategy = "sum",
 		additionalSum = [],
 	}: {
 		modAlg: number;
-		algReturnType: "mod" | "modComplement";
+		modStrategy: "mod" | "modComplement";
 		digits: string;
 		weights: number[];
 		direction: "fromLeft" | "fromRight";
 		transform?: { [k: number]: string };
+		sumStrategy?: "sum" | "sumNumerals";
 		additionalSum?: number[];
 	}): string {
 		transform = {
@@ -51,12 +54,15 @@ export class ModAlg {
 
 		const results = this.multiplyByWeights(digits, weights, direction);
 
-		const sum = this.sum([...results, ...additionalSum]);
+		const toSum = [...results, ...additionalSum];
 
-		const mod = this.mod(modAlg, sum);
+		const sum =
+			sumStrategy === "sum" ? this.sum(toSum) : this.sumNumerals(toSum);
 
 		const checkDigit =
-			algReturnType === "mod" ? mod : this.modComplement(modAlg, sum);
+			modStrategy === "mod"
+				? this.mod(modAlg, sum)
+				: this.modComplement(modAlg, sum);
 
 		if (transform[checkDigit]) {
 			return transform[checkDigit];
