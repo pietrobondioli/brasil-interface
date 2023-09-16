@@ -6,41 +6,40 @@ import { Assert } from "@/helpers/Assert";
 import { Random } from "@/helpers/Random";
 
 export namespace InscricaoEstadual {
-	export class Amapa {
+	export class Amazonas {
 		private static readonly MOD_ALG = 11;
 
 		private static readonly VALID_LENGTH = 9;
+		private static readonly BASE_NUMERALS_LENGTH = 8;
 		private static readonly BASE_NUMERALS_START = 0;
 		private static readonly BASE_NUMERALS_END = 8;
-		private static readonly STARTS_WITH = "03";
 		private static readonly FIRST_VERIFIER_DIGIT_WEIGHTS = [
 			9, 8, 7, 6, 5, 4, 3, 2,
 		];
 
-		private static readonly FORMAT_REGEX = /^(\d{2})(\d{3})(\d{3})(\d{1})$/;
-		private static readonly FORMAT_PATTERN = "$1.$2.$3-$4";
+		private static readonly FORMAT_REGEX = /^(\d{8})(\d{1})$/;
+		private static readonly FORMAT_PATTERN = "$1-$2";
 
 		private static readonly VALIDATION_RULES = [
 			Assert.String.shouldBeDefined,
 			Assert.String.shouldNotBeEmpty,
 			(v) => Assert.String.shouldHaveLengthOf(v, this.VALID_LENGTH),
-			(v) => Assert.String.shouldStartWith(v, this.STARTS_WITH),
 			(v) => Assert.String.shouldContainOnlyNumbers(v),
 			this.shouldHaveValidVerifierDigits.bind(this),
 		] satisfies ValidationWorker[];
 
 		/**
-		 * PT-BR: Verifica se uma inscrição estadual do Amapá é válida.
+		 * PT-BR: Verifica se uma inscrição estadual do Amazonas é válida.
 		 *
-		 * EN: Checks if an Amapá state registration is valid.
+		 * EN: Checks if an Amazonas state registration is valid.
 		 *
 		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: `true` se a inscrição estadual for válida. EN: `true` if the state registration is valid.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.Amapa.isValid("111117470"); // false
-		 * InscricaoEstadual.Amapa.isValid("855927470"); // true
+		 * InscricaoEstadual.Amazonas.isValid("111117470"); // false
+		 * InscricaoEstadual.Amazonas.isValid("855927470"); // true
 		 * ```
 		 */
 		public static isValid(inscricaoE: any): boolean {
@@ -53,16 +52,16 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Máscara uma inscrição estadual do Amapá.
+		 * PT-BR: Máscara uma inscrição estadual do Amazonas.
 		 *
-		 * EN: Masks an Amapá state registration.
+		 * EN: Masks an Amazonas state registration.
 		 *
 		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: A inscrição estadual mascarada. EN: The masked state registration.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.Amapa.mask("855927470"); // "85.592.747-0"
+		 * InscricaoEstadual.Amazonas.mask("855927470"); // "85.592.747-0"
 		 * ```
 		 */
 		public static mask(inscricaoE: string) {
@@ -78,23 +77,21 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Gerar um número de inscrição estadual do Amapá válido.
+		 * PT-BR: Gerar um número de inscrição estadual do Amazonas válido.
 		 *
-		 * EN: Generate a valid Amapá state registration number.
+		 * EN: Generate a valid Amazonas state registration number.
 		 *
 		 * @returns PT-BR: O número de inscrição estadual gerado. EN: The generated state registration number.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.Amapa.generate(); // "855927470"
+		 * InscricaoEstadual.Amazonas.generate(); // "855927470"
 		 * ```
 		 */
 		public static generate() {
-			const BASE_NUMERALS_LENGTH = 8 - this.STARTS_WITH.length;
-			const randomNumbers =
-				Random.generateRandomNumber(BASE_NUMERALS_LENGTH).toString();
-
-			const baseNumerals = this.STARTS_WITH + randomNumbers;
+			const baseNumerals = Random.generateRandomNumber(
+				this.BASE_NUMERALS_LENGTH
+			).toString();
 
 			const firstVerifierDigit = this.calculateVerifierDigit(baseNumerals);
 
@@ -102,15 +99,15 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Gerar um número de inscrição estadual do Amapá válido, aleatório e com máscara.
+		 * PT-BR: Gerar um número de inscrição estadual do Amazonas válido e aleatório.
 		 *
-		 * EN: Generate a valid, random and masked Amapá state registration number.
+		 * EN: Generate a valid and random Amazonas state registration number.
 		 *
 		 * @returns PT-BR: O número de inscrição estadual gerado com máscara. EN: The generated state registration number with mask.
 		 *
 		 * @example
 		 * ```
-		 * InscricaoEstadual.Amapa.generateMasked(); // "85.592.747-0"
+		 * InscricaoEstadual.Amazonas.generateMasked(); // "85.592.747-0"
 		 * ```
 		 */
 		public static generateMasked() {
@@ -130,33 +127,10 @@ export namespace InscricaoEstadual {
 		}
 
 		private static calculateVerifierDigit(baseNumerals: string): string {
-			let P = 0;
-			let D = 0;
-
-			if (Assert.Number.isWithinRange(Number(baseNumerals), 3000001, 3017000)) {
-				P = 5;
-				D = 0;
-			} else if (
-				Assert.Number.isWithinRange(Number(baseNumerals), 3017001, 3019022)
-			) {
-				P = 9;
-				D = 1;
-			} else if (
-				Assert.Number.isWithinRange(Number(baseNumerals), 3019023, 3019999)
-			) {
-				P = 0;
-				D = 0;
-			}
-
 			return ModAlg.calculateCheckDigit({
 				modAlg: this.MOD_ALG,
 				digits: baseNumerals,
 				weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
-				additionalSum: [P],
-				transform: {
-					10: "0",
-					11: D.toString(),
-				},
 			});
 		}
 	}

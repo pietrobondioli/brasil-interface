@@ -7,6 +7,8 @@ import { Random } from "@/helpers/Random";
 
 export namespace InscricaoEstadual {
 	export class Alagoas {
+		private static readonly MOD_ALG = 11;
+
 		private static readonly VALID_LENGTH = 9;
 		private static readonly BASE_NUMERALS_START = 0;
 		private static readonly BASE_NUMERALS_END = 8;
@@ -85,7 +87,7 @@ export namespace InscricaoEstadual {
 
 		private static calculateFirstVerifierDigit(baseNumerals: string): string {
 			return ModAlg.calculateCheckDigit({
-				modAlg: 11,
+				modAlg: this.MOD_ALG,
 				digits: baseNumerals,
 				weights: this.FIRST_VERIFIER_DIGIT_WEIGHTS,
 			});
