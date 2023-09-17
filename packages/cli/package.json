@@ -1,0 +1,79 @@
+{
+  "name": "@brasil-interface/cli",
+  "version": "0.0.0",
+  "description": "",
+  "license": "MIT",
+  "author": "Pietro Bondioli <dev@pietrobondioli.com.br>",
+  "homepage": "https://github.com/bondiolipietro/brasil-interface#readme",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bondiolipietro/brasil-interface.git"
+  },
+  "keywords": [
+    "brasil",
+    "interface",
+    "cli",
+    "cpf",
+    "cnpj",
+    "cnh",
+    "inscricao-estadual",
+    "rg",
+    "titulo-eleitor",
+    "pis",
+    "pasep",
+    "Acre",
+    "Alagoas",
+    "Amapá",
+    "Amazonas",
+    "Bahia",
+    "Ceará",
+    "Distrito Federal",
+    "Espírito Santo",
+    "Goiás",
+    "Maranhão",
+    "Mato Grosso",
+    "Mato Grosso do Sul",
+    "Minas Gerais",
+    "Pará",
+    "Paraíba",
+    "Paraná",
+    "Pernambuco",
+    "Piauí",
+    "Rio de Janeiro",
+    "Rio Grande do Norte",
+    "Rio Grande do Sul",
+    "Rondônia",
+    "Roraima",
+    "Santa Catarina",
+    "São Paulo",
+    "Sergipe",
+    "Tocantins"
+  ],
+  "scripts": {
+    "clean": "rimraf ./lib",
+    "build": "pnpm run clean && tsc",
+    "test": "jest --coverage --no-cache --passWithNoTests"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.4",
+    "jest": "^29.6.4",
+    "rimraf": "^5.0.1",
+    "ts-jest": "^29.1.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "cli-table": "^0.3.11",
+    "commander": "^11.0.0",
+    "figlet": "^1.6.0",
+    "inquirer": "^9.2.11"
+  }
+}
