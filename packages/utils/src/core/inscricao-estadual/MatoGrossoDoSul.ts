@@ -20,11 +20,11 @@ export namespace InscricaoEstadual {
 		private static readonly MASK_PATTERN = "$1-$2";
 
 		private static readonly VALIDATION_RULES = [
-			Assert.String.shouldBeDefined,
-			Assert.String.shouldNotBeEmpty,
-			(v) => Assert.String.shouldHaveLengthOf(v, this.VALID_LENGTH),
-			(v) => Assert.String.shouldStartWith(v, this.STARTS_WITH),
-			(v) => Assert.String.shouldContainOnlyNumbers(v),
+			Assert.String.isDefined,
+			Assert.String.isNotEmpty,
+			(v) => Assert.String.hasLengthOf(v, this.VALID_LENGTH),
+			(v) => Assert.String.startsWith(v, this.STARTS_WITH),
+			(v) => Assert.String.containsOnlyNumbers(v),
 			this.shouldHaveValidVerifierDigits.bind(this),
 		] satisfies ValidationWorker[];
 

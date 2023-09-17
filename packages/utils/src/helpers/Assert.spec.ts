@@ -1,147 +1,143 @@
 import { Assert } from "./Assert";
 
 describe("Assert.String class", () => {
-	describe("shouldBeDefined method", () => {
+	describe("isDefined method", () => {
 		it("should return false for null and undefined values", () => {
-			expect(Assert.String.shouldBeDefined(null)).toBe(false);
-			expect(Assert.String.shouldBeDefined(undefined)).toBe(false);
+			expect(Assert.String.isDefined(null)).toBe(false);
+			expect(Assert.String.isDefined(undefined)).toBe(false);
 		});
 
 		it("should return true for other values", () => {
-			expect(Assert.String.shouldBeDefined("test")).toBe(true);
+			expect(Assert.String.isDefined("test")).toBe(true);
 		});
 	});
 
-	describe("shouldNotBeEmpty method", () => {
+	describe("isNotEmpty method", () => {
 		it("should return false for empty strings", () => {
-			expect(Assert.String.shouldNotBeEmpty("")).toBe(false);
+			expect(Assert.String.isNotEmpty("")).toBe(false);
 		});
 
 		it("should return true for non-empty strings", () => {
-			expect(Assert.String.shouldNotBeEmpty("test")).toBe(true);
+			expect(Assert.String.isNotEmpty("test")).toBe(true);
 		});
 
 		it("should return false for null and undefined values", () => {
-			expect(Assert.String.shouldNotBeEmpty(null as any)).toBe(false);
-			expect(Assert.String.shouldNotBeEmpty(undefined as any)).toBe(false);
+			expect(Assert.String.isNotEmpty(null as any)).toBe(false);
+			expect(Assert.String.isNotEmpty(undefined as any)).toBe(false);
 		});
 	});
 
-	describe("shouldHaveLengthOf method", () => {
+	describe("hasLengthOf method", () => {
 		it("should return true if the string has the specified length", () => {
-			expect(Assert.String.shouldHaveLengthOf("abcd", 4)).toBe(true);
+			expect(Assert.String.hasLengthOf("abcd", 4)).toBe(true);
 		});
 
 		it("should return false if the string does not have the specified length", () => {
-			expect(Assert.String.shouldHaveLengthOf("abc", 4)).toBe(false);
+			expect(Assert.String.hasLengthOf("abc", 4)).toBe(false);
 		});
 
 		it("should return false for null and undefined values", () => {
-			expect(Assert.String.shouldHaveLengthOf(null as any, 4)).toBe(false);
-			expect(Assert.String.shouldHaveLengthOf(undefined as any, 4)).toBe(false);
+			expect(Assert.String.hasLengthOf(null as any, 4)).toBe(false);
+			expect(Assert.String.hasLengthOf(undefined as any, 4)).toBe(false);
 		});
 	});
 
-	describe("shouldStartWith method", () => {
+	describe("startsWith method", () => {
 		it("should return true if the string starts with the specified value", () => {
-			expect(Assert.String.shouldStartWith("abcdef", "ab")).toBe(true);
+			expect(Assert.String.startsWith("abcdef", "ab")).toBe(true);
 		});
 
 		it("should return false if the string does not start with the specified value", () => {
-			expect(Assert.String.shouldStartWith("abcdef", "cd")).toBe(false);
+			expect(Assert.String.startsWith("abcdef", "cd")).toBe(false);
 		});
 
 		it("should return false for null and undefined values", () => {
-			expect(Assert.String.shouldStartWith(null as any, "ab")).toBe(false);
-			expect(Assert.String.shouldStartWith(undefined as any, "ab")).toBe(false);
+			expect(Assert.String.startsWith(null as any, "ab")).toBe(false);
+			expect(Assert.String.startsWith(undefined as any, "ab")).toBe(false);
 		});
 	});
 
-	describe("shouldEndWith method", () => {
+	describe("endsWith method", () => {
 		it("should return true if the string ends with the specified value", () => {
-			expect(Assert.String.shouldEndWith("abcdef", "ef")).toBe(true);
+			expect(Assert.String.endsWith("abcdef", "ef")).toBe(true);
 		});
 
 		it("should return false if the string does not end with the specified value", () => {
-			expect(Assert.String.shouldEndWith("abcdef", "cd")).toBe(false);
+			expect(Assert.String.endsWith("abcdef", "cd")).toBe(false);
 		});
 
 		it("should return false for null and undefined values", () => {
-			expect(Assert.String.shouldEndWith(null as any, "ef")).toBe(false);
-			expect(Assert.String.shouldEndWith(undefined as any, "ef")).toBe(false);
+			expect(Assert.String.endsWith(null as any, "ef")).toBe(false);
+			expect(Assert.String.endsWith(undefined as any, "ef")).toBe(false);
 		});
 	});
 
-	describe("shouldContain method", () => {
+	describe("contains method", () => {
 		it("should return true if the string contains the specified value", () => {
-			expect(Assert.String.shouldContain("abcdef", "cd")).toBe(true);
+			expect(Assert.String.contains("abcdef", "cd")).toBe(true);
 		});
 
 		it("should return false if the string does not contain the specified value", () => {
-			expect(Assert.String.shouldContain("abcdef", "gh")).toBe(false);
+			expect(Assert.String.contains("abcdef", "gh")).toBe(false);
 		});
 
 		it("should return false for null and undefined values", () => {
-			expect(Assert.String.shouldContain(null as any, "cd")).toBe(false);
-			expect(Assert.String.shouldContain(undefined as any, "cd")).toBe(false);
+			expect(Assert.String.contains(null as any, "cd")).toBe(false);
+			expect(Assert.String.contains(undefined as any, "cd")).toBe(false);
 		});
 	});
 
-	describe("shouldContainOnlyNumbers method", () => {
+	describe("containsOnlyNumbers method", () => {
 		it("should return true for strings containing only numbers", () => {
-			expect(Assert.String.shouldContainOnlyNumbers("12345")).toBe(true);
+			expect(Assert.String.containsOnlyNumbers("12345")).toBe(true);
 		});
 
 		it("should return false for strings containing non-numeric characters", () => {
-			expect(Assert.String.shouldContainOnlyNumbers("123a5")).toBe(false);
+			expect(Assert.String.containsOnlyNumbers("123a5")).toBe(false);
 		});
 
 		it("should return false for null and undefined values", () => {
-			expect(Assert.String.shouldContainOnlyNumbers(null as any)).toBe(false);
-			expect(Assert.String.shouldContainOnlyNumbers(undefined as any)).toBe(
-				false
-			);
+			expect(Assert.String.containsOnlyNumbers(null as any)).toBe(false);
+			expect(Assert.String.containsOnlyNumbers(undefined as any)).toBe(false);
 		});
 	});
 
-	describe("shouldContainValueAt method", () => {
+	describe("containsValueAt method", () => {
 		it("should return true if the value at the specified index matches", () => {
-			expect(Assert.String.shouldContainValueAt("abcdef", 2, "c")).toBe(true);
+			expect(Assert.String.containsValueAt("abcdef", 2, "c")).toBe(true);
 		});
 
 		it("should return false if the value at the specified index does not match", () => {
-			expect(Assert.String.shouldContainValueAt("abcdef", 2, "x")).toBe(false);
+			expect(Assert.String.containsValueAt("abcdef", 2, "x")).toBe(false);
 		});
 
 		it("should return false for null and undefined values", () => {
-			expect(Assert.String.shouldContainValueAt(null as any, 2, "c")).toBe(
-				false
-			);
-			expect(Assert.String.shouldContainValueAt(undefined as any, 2, "c")).toBe(
+			expect(Assert.String.containsValueAt(null as any, 2, "c")).toBe(false);
+			expect(Assert.String.containsValueAt(undefined as any, 2, "c")).toBe(
 				false
 			);
 		});
 	});
 
-	describe("shouldContainValueAtRange method", () => {
+	describe("containsValueAtRange method", () => {
 		it("should return true if the value in the specified range matches", () => {
-			expect(
-				Assert.String.shouldContainValueAtRange("abcdef", 1, 3, "bc")
-			).toBe(true);
+			expect(Assert.String.containsValueAtRange("abcdef", 1, 3, "bc")).toBe(
+				true
+			);
 		});
 
 		it("should return false if the value in the specified range does not match", () => {
-			expect(
-				Assert.String.shouldContainValueAtRange("abcdef", 1, 3, "mn")
-			).toBe(false);
+			expect(Assert.String.containsValueAtRange("abcdef", 1, 3, "mn")).toBe(
+				false
+			);
 		});
 
 		it("should return false for null and undefined values", () => {
+			expect(Assert.String.containsValueAtRange(null as any, 1, 3, "bc")).toBe(
+				false
+			);
 			expect(
-				Assert.String.shouldContainValueAtRange(null as any, 1, 3, "bc")
-			).toBe(false);
-			expect(
-				Assert.String.shouldContainValueAtRange(undefined as any, 1, 3, "bc")
+				Assert.String.containsValueAtRange(undefined as any, 1, 3, "bc")
 			).toBe(false);
 		});
 	});

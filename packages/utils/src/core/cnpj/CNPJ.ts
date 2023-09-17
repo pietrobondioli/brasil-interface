@@ -40,10 +40,10 @@ export class CNPJ {
 	];
 
 	private static readonly VALIDATION_RULES = [
-		Assert.String.shouldBeDefined,
-		Assert.String.shouldNotBeEmpty,
-		(v) => Assert.String.shouldHaveLengthOf(v, this.LENGTH),
-		(v) => Assert.String.shouldNotBeIn(v, this.BLACKLIST),
+		Assert.String.isDefined,
+		Assert.String.isNotEmpty,
+		(v) => Assert.String.hasLengthOf(v, this.LENGTH),
+		(v) => Assert.Array.notContains(v, this.BLACKLIST),
 		this.shouldHaveValidVerifierDigits.bind(this),
 	] satisfies ValidationWorker[];
 

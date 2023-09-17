@@ -35,12 +35,12 @@ export namespace InscricaoEstadual {
 		private static readonly CASE_2_MASK_PATTERN = "$1.$2.$3.$4-$5";
 
 		private static readonly VALIDATION_RULES = [
-			Assert.String.shouldBeDefined,
-			Assert.String.shouldNotBeEmpty,
+			Assert.String.isDefined,
+			Assert.String.isNotEmpty,
 			(v) =>
-				Assert.String.shouldHaveLengthOf(v, this.CASE_1_LENGTH) ||
-				Assert.String.shouldHaveLengthOf(v, this.CASE_2_LENGTH),
-			(v) => Assert.String.shouldStartWith(v, this.STARTS_WITH),
+				Assert.String.hasLengthOf(v, this.CASE_1_LENGTH) ||
+				Assert.String.hasLengthOf(v, this.CASE_2_LENGTH),
+			(v) => Assert.String.startsWith(v, this.STARTS_WITH),
 			this.shouldHaveValidVerifierDigits.bind(this),
 		] satisfies ValidationWorker[];
 

@@ -19,10 +19,10 @@ export namespace InscricaoEstadual {
 		private static readonly MASK_PATTERN = "$1.$2.$3-$4";
 
 		private static readonly VALIDATION_RULES = [
-			Assert.String.shouldBeDefined,
-			Assert.String.shouldNotBeEmpty,
-			(v) => Assert.String.shouldHaveLengthOf(v, this.VALID_LENGTH),
-			(v) => Assert.String.shouldContainOnlyNumbers(v),
+			Assert.String.isDefined,
+			Assert.String.isNotEmpty,
+			(v) => Assert.String.hasLengthOf(v, this.VALID_LENGTH),
+			(v) => Assert.String.containsOnlyNumbers(v),
 			this.shouldHaveValidVerifierDigits.bind(this),
 		] satisfies ValidationWorker[];
 
@@ -47,9 +47,9 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Máscara uma inscrição estadual do Espirito Santo.
+		 * PT-BR: Máscara uma inscrição estadual do Goiás.
 		 *
-		 * EN: Masks an Espirito Santo state registration.
+		 * EN: Masks an Goiás state registration.
 		 *
 		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: A inscrição estadual mascarada. EN: The masked state registration.
@@ -70,9 +70,9 @@ export namespace InscricaoEstadual {
 		}
 
 		/**
-		 * PT-BR: Desmascara uma inscrição estadual do Espirito Santo.
+		 * PT-BR: Desmascara uma inscrição estadual do Goiás.
 		 *
-		 * EN: Unmasks an Espirito Santo state registration.
+		 * EN: Unmasks an Goiás state registration.
 		 *
 		 * @param inscricaoE - PT-BR: A inscrição estadual. Com ou sem máscara. EN: The state registration. With or without mask.
 		 * @returns PT-BR: A inscrição estadual desmascarada. EN: The unmasked state registration.

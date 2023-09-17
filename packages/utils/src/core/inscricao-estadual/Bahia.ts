@@ -81,14 +81,14 @@ export namespace InscricaoEstadual {
 		private static readonly FORMAT_PATTERN = "$1-$2";
 
 		private static readonly VALIDATION_RULES = [
-			Assert.String.shouldBeDefined,
-			Assert.String.shouldNotBeEmpty,
+			Assert.String.isDefined,
+			Assert.String.isNotEmpty,
 			(v) =>
-				Assert.String.shouldHaveLengthOf(v, this.CASE_1_LENGTH) ||
-				Assert.String.shouldHaveLengthOf(v, this.CASE_2_LENGTH) ||
-				Assert.String.shouldHaveLengthOf(v, this.CASE_3_LENGTH) ||
-				Assert.String.shouldHaveLengthOf(v, this.CASE_4_LENGTH),
-			(v) => Assert.String.shouldContainOnlyNumbers(v),
+				Assert.String.hasLengthOf(v, this.CASE_1_LENGTH) ||
+				Assert.String.hasLengthOf(v, this.CASE_2_LENGTH) ||
+				Assert.String.hasLengthOf(v, this.CASE_3_LENGTH) ||
+				Assert.String.hasLengthOf(v, this.CASE_4_LENGTH),
+			(v) => Assert.String.containsOnlyNumbers(v),
 			this.shouldHaveValidVerifierDigits.bind(this),
 		] satisfies ValidationWorker[];
 
@@ -227,33 +227,25 @@ export namespace InscricaoEstadual {
 			const cleanedValue = this.clear(inscricaoE);
 
 			if (cleanedValue.length === this.CASE_1_LENGTH) {
-				if (
-					Assert.String.shouldBeIn(cleanedValue[0], this.CASE_1_STARTS_WITH)
-				) {
+				if (Assert.Array.contains(cleanedValue[0], this.CASE_1_STARTS_WITH)) {
 					return "case_1";
 				}
 			}
 
 			if (cleanedValue.length === this.CASE_2_LENGTH) {
-				if (
-					Assert.String.shouldBeIn(cleanedValue[0], this.CASE_2_STARTS_WITH)
-				) {
+				if (Assert.Array.contains(cleanedValue[0], this.CASE_2_STARTS_WITH)) {
 					return "case_2";
 				}
 			}
 
 			if (cleanedValue.length === this.CASE_3_LENGTH) {
-				if (
-					Assert.String.shouldBeIn(cleanedValue[0], this.CASE_3_STARTS_WITH)
-				) {
+				if (Assert.Array.contains(cleanedValue[0], this.CASE_3_STARTS_WITH)) {
 					return "case_3";
 				}
 			}
 
 			if (cleanedValue.length === this.CASE_4_LENGTH) {
-				if (
-					Assert.String.shouldBeIn(cleanedValue[0], this.CASE_4_STARTS_WITH)
-				) {
+				if (Assert.Array.contains(cleanedValue[0], this.CASE_4_STARTS_WITH)) {
 					return "case_4";
 				}
 			}

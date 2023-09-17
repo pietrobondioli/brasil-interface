@@ -1,42 +1,34 @@
 export namespace Assert {
 	export class String {
-		public static shouldBeDefined(value: unknown): boolean {
+		public static isDefined(value: unknown): boolean {
 			return !!value && value !== undefined && value !== null;
 		}
 
-		public static shouldNotBeEmpty(value: string): boolean {
+		public static isNotEmpty(value: string): boolean {
 			return !!value && value.length > 0;
 		}
 
-		public static shouldHaveLengthOf(value: string, length: number): boolean {
+		public static hasLengthOf(value: string, length: number): boolean {
 			return !!value && value.length === length;
 		}
 
-		public static shouldStartWith(value: string, start: string): boolean {
+		public static startsWith(value: string, start: string): boolean {
 			return !!value && value.startsWith(start);
 		}
 
-		public static shouldEndWith(value: string, end: string): boolean {
+		public static endsWith(value: string, end: string): boolean {
 			return !!value && value.endsWith(end);
 		}
 
-		public static shouldContain(value: string, contains: string): boolean {
+		public static contains(value: string, contains: string): boolean {
 			return !!value && value.includes(contains);
 		}
 
-		public static shouldBeIn<T>(value: T, values: T[]): boolean {
-			return !!value && values.some((v) => v === value);
-		}
-
-		public static shouldNotBeIn(value: string, values: string[]): boolean {
-			return !!value && !values.some((v) => v === value);
-		}
-
-		public static shouldContainOnlyNumbers(value: string): boolean {
+		public static containsOnlyNumbers(value: string): boolean {
 			return /^\d+$/.test(value);
 		}
 
-		public static shouldContainValueAt(
+		public static containsValueAt(
 			value: string,
 			index: number,
 			expectedValue: string
@@ -44,7 +36,7 @@ export namespace Assert {
 			return !!value && value.charAt(index) === expectedValue;
 		}
 
-		public static shouldContainValueAtRange(
+		public static containsValueAtRange(
 			value: string,
 			start: number,
 			end: number,
@@ -61,6 +53,16 @@ export namespace Assert {
 			max: number
 		): boolean {
 			return value >= min && value <= max;
+		}
+	}
+
+	export class Array {
+		public static contains<T>(value: T, values: T[]): boolean {
+			return values.some((v) => v === value);
+		}
+
+		public static notContains(value: string, values: string[]): boolean {
+			return !values.some((v) => v === value);
 		}
 	}
 }

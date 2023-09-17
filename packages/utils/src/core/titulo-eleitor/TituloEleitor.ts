@@ -58,11 +58,11 @@ export class TituloEleitor {
 	} satisfies { [key: string]: EstadoSigla };
 
 	private static readonly VALIDATION_RULES = [
-		Assert.String.shouldBeDefined,
-		Assert.String.shouldNotBeEmpty,
+		Assert.String.isDefined,
+		Assert.String.isNotEmpty,
 		(v) =>
-			Assert.String.shouldHaveLengthOf(v, this.LENGTH_1) ||
-			Assert.String.shouldHaveLengthOf(v, this.LENGTH_2),
+			Assert.String.hasLengthOf(v, this.LENGTH_1) ||
+			Assert.String.hasLengthOf(v, this.LENGTH_2),
 		this.shouldHaveValidUfCode.bind(this),
 		this.shouldHaveValidVerifierDigits.bind(this),
 	] satisfies ValidationWorker[];
