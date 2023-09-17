@@ -2,11 +2,20 @@
   "name": "@brasil-interface/utils",
   "version": "0.0.0",
   "description": "",
-  "main": "src/index.ts",
-  "scripts": {
-    "clean": "rimraf dist",
-    "build": "pnpm run clean && tsc",
-    "test": "jest --coverage --no-cache"
+  "license": "MIT",
+  "author": "Pietro Bondioli <dev@pietrobondioli.com.br>",
+  "homepage": "https://github.com/bondiolipietro/brasil-interface#readme",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bondiolipietro/brasil-interface.git"
   },
   "keywords": [
     "brasil",
@@ -48,8 +57,11 @@
     "Sergipe",
     "Tocantins"
   ],
-  "author": "Pietro Bondioli",
-  "license": "MIT",
+  "scripts": {
+    "clean": "rimraf ./lib",
+    "build": "pnpm run clean && tsc",
+    "test": "jest --coverage --no-cache"
+  },
   "devDependencies": {
     "rimraf": "^5.0.1",
     "tsconfig-paths": "^4.2.0",

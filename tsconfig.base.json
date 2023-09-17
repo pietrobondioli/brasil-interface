@@ -1,24 +1,30 @@
 {
     "compilerOptions": {
-        "target": "ES2017",
-        "module": "UMD",
+        "module": "commonjs",
         "declaration": true,
-        "outDir": "./dist",
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "target": "es6",
+        "sourceMap": true,
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
+        "lib": [
+            "es6"
+        ],
+        "outDir": "./lib",
         "baseUrl": ".",
-        "paths": {
-            "@brasil-interface/*": [
-                "./packages/*/src"
-            ]
-        },
         "types": [
-            "jest"
+            "jest",
+            "node"
         ]
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "**/*.spec.ts"
     ]
 }

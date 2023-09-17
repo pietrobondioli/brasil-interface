@@ -3,12 +3,15 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "publish": "pnpm run build && lerna publish",
     "test": "lerna run test --stream --concurrency 1 --",
+    "build": "lerna run build",
     "prepare": "husky install"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
+    "@types/node": "^20.6.2",
     "husky": "^8.0.0",
     "lerna": "^7.2.0"
   }
