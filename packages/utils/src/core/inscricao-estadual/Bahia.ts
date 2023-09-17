@@ -262,26 +262,24 @@ export namespace InscricaoEstadual {
 		}
 
 		private static getBaseNumerals(inscricaoE: string, case_: Case): string {
-			const cleanedValue = this.clear(inscricaoE);
-
 			switch (case_) {
 				case "case_1":
-					return cleanedValue.substring(
+					return inscricaoE.substring(
 						this.CASE_1_BASE_NUMERALS_START,
 						this.CASE_1_BASE_NUMERALS_END
 					);
 				case "case_2":
-					return cleanedValue.substring(
+					return inscricaoE.substring(
 						this.CASE_2_BASE_NUMERALS_START,
 						this.CASE_2_BASE_NUMERALS_END
 					);
 				case "case_3":
-					return cleanedValue.substring(
+					return inscricaoE.substring(
 						this.CASE_3_BASE_NUMERALS_START,
 						this.CASE_3_BASE_NUMERALS_END
 					);
 				case "case_4":
-					return cleanedValue.substring(
+					return inscricaoE.substring(
 						this.CASE_4_BASE_NUMERALS_START,
 						this.CASE_4_BASE_NUMERALS_END
 					);

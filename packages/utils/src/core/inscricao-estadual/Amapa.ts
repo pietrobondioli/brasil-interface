@@ -152,7 +152,7 @@ export namespace InscricaoEstadual {
 				direction: "fromLeft",
 				digits: baseNumerals,
 				weights: this.VERIFIER_DIGIT_WEIGHTS,
-				additionalSum: [P],
+				transformSum: (sum) => sum + P,
 				transform: {
 					10: "0",
 					11: D.toString(),
