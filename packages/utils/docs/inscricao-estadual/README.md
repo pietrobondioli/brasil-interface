@@ -908,10 +908,10 @@ OBS: Quando o dígito tiver valor 10, utilizamos o valor "0" no lugar. Quando o 
 - Método: Módulo 11
 - Pesos
   - 1º dígito: 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2, calculados da esquerda para a direita
-- Formato: 13 dígitos + 1 dígito verificador (XX.XXX.XXX-XXX)
+- Formato: 13 dígitos + 1 dígito verificador (XXXXXXXXXXXXX-D)
   - X: 13 dígitos utilizados para o cálculo do dígito verificador
   - D: Dígito verificador
-- Máscara: XX.XXX.XXX-XXX
+- Máscara: XXXXXXXXXXXXX-D
 - Exemplo: 0000000062521-3
 
 **Validação**
