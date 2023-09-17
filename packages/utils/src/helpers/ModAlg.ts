@@ -35,7 +35,7 @@ export class ModAlg {
 		direction,
 		transform = {},
 		sumStrategy = "sum",
-		additionalSum = [],
+		transformSum,
 	}: {
 		modAlg: number;
 		modStrategy: "mod" | "modComplement";
@@ -44,7 +44,7 @@ export class ModAlg {
 		direction: "fromLeft" | "fromRight";
 		transform?: { [k: number]: string };
 		sumStrategy?: "sum" | "sumNumerals";
-		additionalSum?: number[];
+		transformSum?: (sum: number) => number;
 	}): string {
 		transform = {
 			10: "0",
@@ -54,10 +54,13 @@ export class ModAlg {
 
 		const results = this.multiplyByWeights(digits, weights, direction);
 
-		const toSum = [...results, ...additionalSum];
+		const toSum = [...results];
 
-		const sum =
-			sumStrategy === "sum" ? this.sum(toSum) : this.sumNumerals(toSum);
+		let sum = sumStrategy === "sum" ? this.sum(toSum) : this.sumNumerals(toSum);
+
+		if (transformSum) {
+			sum = transformSum(sum);
+		}
 
 		const checkDigit =
 			modStrategy === "mod"
