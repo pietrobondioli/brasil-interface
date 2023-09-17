@@ -1004,10 +1004,9 @@ Consequentemente, a inscrição estadual do produtor rural fica como 11004249011
 - Método: Módulo 11
 - Pesos
   - 1º dígito: 1, 3, 4, 5, 6, 7, 8, 10, calculados da esquerda para a direita
-- Formato: P + 0 + 8 dígitos + 1 dígito verificador + 3 dígitos (P-0XXXXXXX.D/YYY)
+- Formato: P + 8 dígitos + 1 dígito verificador + 3 dígitos (P-0XXXXXXX.D/YYY)
   - P: A inscrição estadual de produtor rural inicia com a letra "P"
-  - 0: Constante 0
-  - X: 7 dígitos utilizados para o cálculo do dígito verificador (junta-se ao dígito 0)
+  - X: 8 dígitos utilizados para o cálculo do dígito verificador
   - D: Dígito verificador
   - Y: 3 dígitos que compõem o número de inscrição, mas que não são utilizados no cálculo do dígito verificador
 - Máscara: X-XXXXXXXX-X/XXX
