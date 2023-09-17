@@ -12,7 +12,7 @@ export namespace InscricaoEstadual {
 		private static strategy: ICaseStrategy;
 
 		private static decideStrategy(inscricaoE: string) {
-			const cleanedInscricaoE = Transform.clearString(
+			const cleanedInscricaoE = Transform.String.clearString(
 				inscricaoE,
 				this.CLEAR_REGEX
 			);
@@ -160,7 +160,7 @@ export namespace InscricaoEstadual {
 		public mask(inscricaoE: any): string {
 			const cleanedValue = this.clear(inscricaoE);
 
-			return Transform.applyMask(
+			return Transform.String.applyMask(
 				cleanedValue,
 				this.MASK_REGEX,
 				this.MASK_PATTERN
@@ -198,7 +198,7 @@ export namespace InscricaoEstadual {
 		}
 
 		private clear(inscricaoE: any): string {
-			return Transform.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
+			return Transform.String.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
 		}
 
 		private getParts(inscricaoE: string) {
@@ -311,7 +311,7 @@ export namespace InscricaoEstadual {
 		public mask(inscricaoE: any): string {
 			const cleanedValue = this.clear(inscricaoE);
 
-			return Transform.applyMask(
+			return Transform.String.applyMask(
 				cleanedValue,
 				this.MASK_REGEX,
 				this.MASK_PATTERN
@@ -341,7 +341,7 @@ export namespace InscricaoEstadual {
 		}
 
 		private clear(inscricaoE: any): string {
-			return Transform.clearString(inscricaoE, this.CLEAR_REGEX);
+			return Transform.String.clearString(inscricaoE, this.CLEAR_REGEX);
 		}
 
 		private shouldHaveValidVerifierDigits(inscricaoE: string): boolean {

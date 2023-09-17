@@ -42,7 +42,7 @@ export namespace InscricaoEstadual {
 		 * ```
 		 */
 		public static isValid(inscricaoE: any): boolean {
-			const cleanedValue = Transform.clearString(
+			const cleanedValue = Transform.String.clearString(
 				inscricaoE,
 				ANY_NON_DIGIT_REGEX
 			);
@@ -64,7 +64,7 @@ export namespace InscricaoEstadual {
 		 * ```
 		 */
 		public static mask(inscricaoE: string) {
-			return Transform.applyMask(
+			return Transform.String.applyMask(
 				inscricaoE,
 				this.FORMAT_REGEX,
 				this.FORMAT_PATTERN
@@ -72,7 +72,7 @@ export namespace InscricaoEstadual {
 		}
 
 		public static clear(inscricaoE: string) {
-			return Transform.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
+			return Transform.String.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
 		}
 
 		/**

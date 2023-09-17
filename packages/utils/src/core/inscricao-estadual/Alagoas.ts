@@ -39,7 +39,7 @@ export namespace InscricaoEstadual {
 		 * ```
 		 */
 		public static isValid(inscricaoE: any): boolean {
-			const cleanedValue = Transform.clearString(
+			const cleanedValue = Transform.String.clearString(
 				inscricaoE,
 				ANY_NON_DIGIT_REGEX
 			);

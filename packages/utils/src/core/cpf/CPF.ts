@@ -101,7 +101,7 @@ export class CPF {
 	public static mask(cpf: string | number): string {
 		const cleanedValue = this.clear(cpf);
 
-		return Transform.applyMask(
+		return Transform.String.applyMask(
 			cleanedValue,
 			this.MASK_REGEX,
 			this.MASK_PATTERN
@@ -126,7 +126,7 @@ export class CPF {
 	public static maskSensitive(cpf: string | number): string {
 		const cleanedValue = this.clear(cpf);
 
-		return Transform.applyMask(
+		return Transform.String.applyMask(
 			cleanedValue,
 			this.MASK_REGEX,
 			this.MASK_SENSITIVE_PATTERN
@@ -221,7 +221,7 @@ export class CPF {
 	}
 
 	private static clear(cpf: any): string {
-		return Transform.clearString(cpf, ANY_NON_DIGIT_REGEX);
+		return Transform.String.clearString(cpf, ANY_NON_DIGIT_REGEX);
 	}
 
 	private static getUfCode(cpf: string | number): string | null {

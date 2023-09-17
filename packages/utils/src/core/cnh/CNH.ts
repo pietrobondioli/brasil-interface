@@ -87,7 +87,7 @@ export class CNH {
 	}
 
 	private static clear(cnh: string | number): string {
-		return Transform.clearString(cnh, ANY_NON_DIGIT_REGEX);
+		return Transform.String.clearString(cnh, ANY_NON_DIGIT_REGEX);
 	}
 
 	private static getBaseNumerals(digits: string): string {

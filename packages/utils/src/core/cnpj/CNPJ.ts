@@ -88,7 +88,7 @@ export class CNPJ {
 	public static mask(cnpj: string): string {
 		const cleanedValue = this.clear(cnpj);
 
-		return Transform.applyMask(
+		return Transform.String.applyMask(
 			cleanedValue,
 			this.MASK_REGEX,
 			this.MASK_PATTERN
@@ -113,7 +113,7 @@ export class CNPJ {
 	public static maskSensitive(cnpj: string): string {
 		const cleanedValue = this.clear(cnpj);
 
-		return Transform.applyMask(
+		return Transform.String.applyMask(
 			cleanedValue,
 			this.MASK_REGEX,
 			this.MASK_SENSITIVE_PATTERN
@@ -176,7 +176,7 @@ export class CNPJ {
 	}
 
 	private static clear(cnpj: string): string {
-		return Transform.clearString(cnpj, ANY_NON_DIGIT_REGEX);
+		return Transform.String.clearString(cnpj, ANY_NON_DIGIT_REGEX);
 	}
 
 	private static shouldHaveValidVerifierDigits(cnpj: string): boolean {

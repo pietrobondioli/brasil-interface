@@ -67,7 +67,7 @@ export class PIS {
 	public static mask(pis: string | number): string {
 		const cleanedValue = this.clear(pis);
 
-		return Transform.applyMask(
+		return Transform.String.applyMask(
 			cleanedValue,
 			this.MASK_REGEX,
 			this.MASK_PATTERN
@@ -91,7 +91,7 @@ export class PIS {
 	public static maskSensitive(pis: string | number): string {
 		const cleanedValue = this.clear(pis);
 
-		return Transform.applyMask(
+		return Transform.String.applyMask(
 			cleanedValue,
 			this.MASK_REGEX,
 			this.MASK_SENSITIVE_PATTERN
@@ -153,7 +153,7 @@ export class PIS {
 	}
 
 	private static clear(value: string | number): string {
-		return Transform.clearString(value, ANY_NON_DIGIT_REGEX);
+		return Transform.String.clearString(value, ANY_NON_DIGIT_REGEX);
 	}
 
 	private static shouldHaveValidVerifierDigits(digits: string): boolean {

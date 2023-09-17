@@ -65,7 +65,7 @@ export namespace InscricaoEstadual {
 		public static mask(inscricaoE: any): string {
 			const cleanedValue = this.clear(inscricaoE);
 
-			return Transform.applyMask(
+			return Transform.String.applyMask(
 				cleanedValue,
 				this.MASK_REGEX,
 				this.MASK_PATTERN
@@ -130,7 +130,7 @@ export namespace InscricaoEstadual {
 		}
 
 		private static clear(inscricaoE: any): string {
-			return Transform.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
+			return Transform.String.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
 		}
 
 		private static shouldHaveValidVerifierDigits(inscricaoE: string): boolean {

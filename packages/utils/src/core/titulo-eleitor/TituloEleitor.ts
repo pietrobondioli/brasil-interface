@@ -156,7 +156,7 @@ export class TituloEleitor {
 	}
 
 	private static clear(tituloE: string): string {
-		return Transform.clearString(tituloE, ANY_NON_DIGIT_REGEX);
+		return Transform.String.clearString(tituloE, ANY_NON_DIGIT_REGEX);
 	}
 
 	private static isUfKey(

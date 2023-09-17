@@ -86,7 +86,7 @@ export namespace InscricaoEstadual {
 
 			if (!case_) return inscricaoE;
 
-			return Transform.applyMask(
+			return Transform.String.applyMask(
 				cleanedValue,
 				this.getMaskRegex(case_),
 				this.getMaskPattern(case_)
@@ -156,7 +156,7 @@ export namespace InscricaoEstadual {
 		}
 
 		private static clear(inscricaoE: any): string {
-			return Transform.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
+			return Transform.String.clearString(inscricaoE, ANY_NON_DIGIT_REGEX);
 		}
 
 		private static shouldHaveValidVerifierDigits(inscricaoE: string): boolean {

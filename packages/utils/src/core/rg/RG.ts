@@ -83,7 +83,7 @@ export namespace RG {
 		public static mask(rg: string | number): string {
 			const cleanedValue = this.clear(rg);
 
-			return Transform.applyMask(
+			return Transform.String.applyMask(
 				cleanedValue,
 				this.MASK_REGEX,
 				this.MASK_PATTERN
@@ -107,7 +107,7 @@ export namespace RG {
 		public static maskSensitive(rg: string | number): string {
 			const cleanedValue = this.clear(rg);
 
-			return Transform.applyMask(
+			return Transform.String.applyMask(
 				cleanedValue,
 				this.MASK_REGEX,
 				this.MASK_SENSITIVE_PATTERN
@@ -171,7 +171,7 @@ export namespace RG {
 		}
 
 		private static clear(rg: string | number): string {
-			return Transform.clearString(rg, this.CLEAR_REGEX);
+			return Transform.String.clearString(rg, this.CLEAR_REGEX);
 		}
 
 		private static shouldHaveValidVerifierDigits(rg: string): boolean {

@@ -7,7 +7,11 @@ describe("Transform class", () => {
 			const formatRegex = /^(\d{3})(\d{3})(\d{4})$/;
 			const formatPattern = "($1) $2-$3";
 
-			const result = Transform.applyMask(value, formatRegex, formatPattern);
+			const result = Transform.String.applyMask(
+				value,
+				formatRegex,
+				formatPattern
+			);
 			expect(result).toBe("(123) 456-7890");
 		});
 	});
@@ -17,7 +21,7 @@ describe("Transform class", () => {
 			const value = "(123) 456-7890";
 			const cutOffRegex = /\D/g; // Remove non-digit characters
 
-			const result = Transform.clearString(value, cutOffRegex);
+			const result = Transform.String.clearString(value, cutOffRegex);
 			expect(result).toBe("1234567890");
 		});
 
@@ -25,7 +29,7 @@ describe("Transform class", () => {
 			const value = null;
 			const cutOffRegex = /\D/g;
 
-			const result = Transform.clearString(value, cutOffRegex);
+			const result = Transform.String.clearString(value, cutOffRegex);
 			expect(result).toBe("");
 		});
 
@@ -33,7 +37,7 @@ describe("Transform class", () => {
 			const value = undefined;
 			const cutOffRegex = /\D/g;
 
-			const result = Transform.clearString(value, cutOffRegex);
+			const result = Transform.String.clearString(value, cutOffRegex);
 			expect(result).toBe("");
 		});
 	});
