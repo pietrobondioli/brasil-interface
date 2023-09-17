@@ -3,7 +3,7 @@
         "module": "commonjs",
         "declaration": true,
         "noImplicitAny": false,
-        "removeComments": true,
+        "removeComments": false,
         "noLib": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
@@ -16,7 +16,6 @@
         "lib": [
             "es6"
         ],
-        "outDir": "./lib",
         "baseUrl": ".",
         "types": [
             "jest",

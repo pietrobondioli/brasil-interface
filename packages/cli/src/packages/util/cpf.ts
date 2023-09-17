@@ -1,8 +1,13 @@
 import { program } from "commander";
+import { CPF } from "@brasil-interface/utils";
 
-program
-	.command("cpf <cpf>")
-	.description("Valida um CPF")
-	.action((cpf) => {
-		console.log("CPF", cpf);
+const cpf = program.command("cpf").description("CPF utilities.");
+
+cpf
+	.command("generate")
+	.description("Generate a random CPF number.")
+	.action(() => {
+		console.log("CPF Generator");
+
+		console.log(CPF.generate());
 	});

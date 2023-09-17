@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	displayName: "Brasil Interface - Sdks",
 	preset: "ts-jest",
 	testEnvironment: "node",

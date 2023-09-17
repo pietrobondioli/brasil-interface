@@ -2,10 +2,14 @@
   "name": "brasil-interface",
   "version": "0.0.0",
   "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "publish": "pnpm run build && lerna publish",
-    "test": "lerna run test --stream --concurrency 1 --",
-    "build": "lerna run build",
+    "test": "lerna run test --stream",
+    "build": "lerna run build --stream",
+    "publish": "lerna publish",
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -13,6 +17,6 @@
     "@commitlint/config-conventional": "^17.7.0",
     "@types/node": "^20.6.2",
     "husky": "^8.0.0",
-    "lerna": "^7.2.0"
+    "lerna": "^7.3.0"
   }
 }

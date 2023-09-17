@@ -1,17 +1,25 @@
 {
-  "name": "@brasil-interface/skds",
+  "name": "@brasil-interface/sdks",
   "version": "0.0.0",
   "description": "",
   "license": "MIT",
   "author": "Pietro Bondioli <dev@pietrobondioli.com.br>",
   "homepage": "https://github.com/bondiolipietro/brasil-interface#readme",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "type": "module",
+  "main": "./dist/@brasil-interface/sdks.umd.js",
+  "module": "./dist/@brasil-interface/sdks.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/@brasil-interface/sdks.es.js",
+      "require": "./dist/@brasil-interface/sdks.umd.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
   "directories": {
-    "lib": "lib"
+    "dist": "dist"
   },
   "repository": {
     "type": "git",
@@ -23,16 +31,19 @@
     "sdk"
   ],
   "scripts": {
-    "clean": "rimraf lib",
-    "build": "pnpm run clean && tsc",
+    "clean": "rimraf dist",
+    "build": "pnpm run clean && vite build",
     "test": "jest --coverage --passWithNoTests"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.4",
+    "@types/node": "^20.6.2",
+    "jest": "^29.6.4",
     "rimraf": "^5.0.1",
+    "ts-jest": "^29.1.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2",
-    "@types/jest": "^29.5.4",
-    "jest": "^29.6.4",
-    "ts-jest": "^29.1.1"
+    "vite": "^4.4.9",
+    "vite-plugin-dts": "^3.5.3"
   }
 }
