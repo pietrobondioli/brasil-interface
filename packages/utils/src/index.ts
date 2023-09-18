@@ -16,6 +16,15 @@ export { TituloEleitor } from "./core/titulo-eleitor/TituloEleitor";
 import { CNH } from "./core/cnh/CNH";
 export { CNH } from "./core/cnh/CNH";
 
+export { Estados } from "./core/estados/Estados";
+
+export type {
+	Estado,
+	EstadoNome,
+	EstadoSigla,
+	EstadoSlug,
+} from "./core/estados/Estados";
+
 export default {
 	CPF,
 	CNPJ,

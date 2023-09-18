@@ -1,10 +1,10 @@
 import { Assert } from "@/helpers/Assert";
 import { ANY_NON_DIGIT_REGEX } from "@/helpers/Constants";
-import { EstadoSigla } from "@/helpers/Estados";
 import { ModAlg } from "@/helpers/ModAlg";
 import { Pipes, ValidationWorker } from "@/helpers/Pipes";
 import { Random } from "@/helpers/Random";
 import { Transform } from "@/helpers/Transform";
+import { EstadoSigla } from "../estados/Estados";
 
 export class CPF {
 	private static readonly MOD_ALG = 11;
