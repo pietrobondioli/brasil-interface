@@ -32,7 +32,7 @@
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/bondiolipietro/brasil-interface.git
+git clone https://github.com/pietrobondioli/brasil-interface.git
 cd brasil-interface
 ```
 

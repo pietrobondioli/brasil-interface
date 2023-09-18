@@ -4,7 +4,7 @@
   "description": "",
   "license": "MIT",
   "author": "Pietro Bondioli <dev@pietrobondioli.com.br>",
-  "homepage": "https://github.com/bondiolipietro/brasil-interface#readme",
+  "homepage": "https://github.com/pietrobondioli/brasil-interface#readme",
   "type": "module",
   "main": "./dist/@brasil-interface/sdks.umd.js",
   "module": "./dist/@brasil-interface/sdks.es.js",
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bondiolipietro/brasil-interface.git"
+    "url": "https://github.com/pietrobondioli/brasil-interface.git"
   },
   "keywords": [
     "brasil",
