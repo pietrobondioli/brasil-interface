@@ -1,0 +1,133 @@
+# Brasil Interface - Roadmap
+
+## Sumário
+
+placas carro, CID, AIH, Estados, conta banco, boletos, renavam, cep, NIS, CNS, Certidao Nascimento/Casamento/Obito, CTPS
+
+## To Do
+
+- CEP - Código de Endereçamento Postal
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+    - [ ] Máscara
+    - [ ] Remoção de Máscara
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- RG (IFP RJ) - Registro Geral - Instituto Félix Pacheco do Rio de Janeiro
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+    - [ ] Máscara
+    - [ ] Remoção de Máscara
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- IPTU - Imposto Predial e Territorial Urbano
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- Telefone - Para todos os estados
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+    - [ ] Máscara
+    - [ ] Remoção de Máscara
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- Celular - Para todos os estados/operadoras
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+    - [ ] Máscara
+    - [ ] Remoção de Máscara
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- Placas de Carro - Para todos os padrões
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+    - [ ] Máscara
+    - [ ] Remoção de Máscara
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- CID - Classificação Internacional de Doenças
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- Renavam - Registro Nacional de Veículos Automotores
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+    - [ ] Máscara
+    - [ ] Remoção de Máscara
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- AIH - Autorização de Internação Hospitalar
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+    - [ ] Máscara
+    - [ ] Remoção de Máscara
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- Certidão de Nascimento/Casamento/Óbito e outros
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+    - [ ] Máscara
+    - [ ] Remoção de Máscara
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- CNS - Cartão Nacional de Saúde
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+    - [ ] Máscara
+    - [ ] Remoção de Máscara
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- NIF - Número de Identificação Fiscal
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Validação
+    - [ ] Geração Aleatória
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- Passaporte
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+    - [ ] Geração Aleatória
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
+- NIS - Número de Identificação Social
+  - [ ] Documentação
+  - [ ] Implementação do Algoritmo
+  - [ ] Testes
+  - [ ] CLI
+  - [ ] Exemplos
