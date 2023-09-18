@@ -1,5 +1,5 @@
 import { program } from "commander";
-import "./packages/util";
+import "./core/utils";
 
 program.version("0.0.0");
 
