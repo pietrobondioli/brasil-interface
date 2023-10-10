@@ -3,6 +3,13 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+  "author": "Pietro Bondioli <dev@pietrobondioli.com.br>",
+  "contributors": [
+    {
+      "name": "Pietro Bondioli",
+      "email": "dev@pietrobondioli.com.br"
+    }
+  ],
   "workspaces": [
     "packages/*"
   ],
