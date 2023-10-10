@@ -1,3 +1,5 @@
+import fs from "fs";
+
 export class InputHelper {
 	static isSerializedArray(arg: string) {
 		if (typeof arg !== "string") {
@@ -30,5 +32,27 @@ export class InputHelper {
 		}
 
 		return [arg];
+	}
+
+	static getArrayFromInputAlternativesOrFail(
+		cmdArg: string,
+		options: { input?: string }
+	): string[] {
+		let input: string = "";
+		let array: string[] = [];
+
+		if (cmdArg) {
+			input = cmdArg;
+		} else if (input) {
+			input = fs.readFileSync(input, "utf8");
+		} else {
+			throw new Error(
+				"PT-BR: Nenhum input válido fornecido. EN-US: No valid input provided."
+			);
+		}
+
+		array = InputHelper.getArrayFromArrayLike(input);
+
+		return array;
 	}
 }

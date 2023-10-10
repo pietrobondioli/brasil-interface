@@ -1,51 +1,39 @@
 import { CNPJ } from "@brasil-interface/utils";
 import { program } from "commander";
-import fs from "fs";
 
 import { InputHelper } from "@/helpers/input-helper";
+import { OutputHelper } from "@/helpers/output-helper";
 
 const cnpj = program.command("cnpj").description("CNPF utilities.");
 
 cnpj
 	.command("validate <cnpjList>")
 	.option(
-		"-i, --input <inputFile>",
+		"-i, --input <filepath>",
 		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
 	)
 	.option(
-		"-o, --output <outputFile>",
+		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
 	.description(
 		"PT-BR: Valida uma lista de números de CNPJ. EN-US: Validate a list of CNPJ numbers."
 	)
 	.action((cnpjList, options) => {
-		const { inputFile, outputFile } = options;
-
-		let input: string = "";
-		let cnpjArray: string[] = [];
-
-		if (cnpjList) {
-			input = cnpjList;
-		} else if (inputFile) {
-			input = fs.readFileSync(inputFile, "utf8");
-		} else {
-			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
-			return;
-		}
-
-		cnpjArray = InputHelper.getArrayFromArrayLike(input);
+		const { input, output } = options;
+		const cnpjArray = InputHelper.getArrayFromInputAlternativesOrFail(
+			cnpjList,
+			{ input }
+		);
 
 		const result = cnpjArray.map((cnpj: string) => {
 			return { value: cnpj, isValid: CNPJ.isValid(cnpj) };
 		});
 
-		if (outputFile) {
-			const fs = require("fs");
-			fs.writeFileSync(outputFile, JSON.stringify(result));
-		} else {
-			console.log(result);
-		}
+		OutputHelper.handleResultOutputBasedOnOptions(result, {
+			output,
+			isJson: true,
+		});
 	});
 
 cnpj
@@ -60,12 +48,12 @@ cnpj
 		"PT-BR: Formata o número de CNPJ. EN-US: Mask the CNPJ number."
 	)
 	.option(
-		"-o --output <output>",
+		"-o --output <filepath>",
 		"PT-BR: Salva o resultado (array) em um arquivo JSON. EN-US: Save the result (array) in a JSON file."
 	)
 	.description("PT-BR: Gera um número de CNPJ. EN-US: Generate a CNPJ number.")
 	.action((options) => {
-		const { amount, mask } = options;
+		const { amount, mask, output } = options;
 
 		const cnpjList: string[] = [];
 
@@ -75,23 +63,20 @@ cnpj
 			cnpjList.push(cnpj);
 		}
 
-		console.log(JSON.stringify(cnpjList));
-
-		if (options.output) {
-			const fs = require("fs");
-
-			fs.writeFileSync(options.output, JSON.stringify(cnpjList));
-		}
+		OutputHelper.handleResultOutputBasedOnOptions(cnpjList, {
+			output,
+			isJson: true,
+		});
 	});
 
 cnpj
 	.command("mask <cnpjList>")
 	.option(
-		"-i, --input <inputFile>",
+		"-i, --input <filepath>",
 		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
 	)
 	.option(
-		"-o, --output <outputFile>",
+		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
 	.option(
@@ -102,21 +87,11 @@ cnpj
 		"PT-BR: Formata uma lista de números de CNPJ. EN-US: Mask a list of CNPJ numbers."
 	)
 	.action((cnpjList, options) => {
-		const { sensitive, inputFile, outputFile } = options;
-
-		let input: string = "";
-		let cnpjArray: string[] = [];
-
-		if (cnpjList) {
-			input = cnpjList;
-		} else if (inputFile) {
-			input = fs.readFileSync(inputFile, "utf8");
-		} else {
-			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
-			return;
-		}
-
-		cnpjArray = InputHelper.getArrayFromArrayLike(input);
+		const { sensitive, input, output } = options;
+		const cnpjArray = InputHelper.getArrayFromInputAlternativesOrFail(
+			cnpjList,
+			{ input }
+		);
 
 		const result = cnpjArray.map((cnpj: string) => {
 			return {
@@ -125,52 +100,38 @@ cnpj
 			};
 		});
 
-		if (outputFile) {
-			const fs = require("fs");
-			fs.writeFileSync(outputFile, JSON.stringify(result));
-		} else {
-			console.log(result);
-		}
+		OutputHelper.handleResultOutputBasedOnOptions(result, {
+			output,
+			isJson: true,
+		});
 	});
 
 cnpj
 	.command("unmask <cnpjList>")
 	.option(
-		"-i, --input <inputFile>",
+		"-i, --input <filepath>",
 		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
 	)
 	.option(
-		"-o, --output <outputFile>",
+		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
 	.description(
 		"PT-BR: Remove a máscara de um número de CNPJ. EN-US: Unmask a CNPJ number."
 	)
 	.action((cnpjList, options) => {
-		const { inputFile, outputFile } = options;
-
-		let input: string = "";
-		let cnpjArray: string[] = [];
-
-		if (cnpjList) {
-			input = cnpjList;
-		} else if (inputFile) {
-			input = fs.readFileSync(inputFile, "utf8");
-		} else {
-			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
-			return;
-		}
-
-		cnpjArray = InputHelper.getArrayFromArrayLike(input);
+		const { input, output } = options;
+		const cnpjArray = InputHelper.getArrayFromInputAlternativesOrFail(
+			cnpjList,
+			{ input }
+		);
 
 		const result = cnpjArray.map((cnpj: string) => {
 			return { value: cnpj, unmasked: CNPJ.unmask(cnpj) };
 		});
 
-		if (outputFile) {
-			const fs = require("fs");
-			fs.writeFileSync(outputFile, JSON.stringify(result));
-		} else {
-			console.log(result);
-		}
+		OutputHelper.handleResultOutputBasedOnOptions(result, {
+			output,
+			isJson: true,
+		});
 	});

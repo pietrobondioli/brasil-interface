@@ -68,7 +68,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "yarn run clean && tsc",
+    "build": "yarn run clean && tsc && tsc-alias",
     "test": "jest --coverage --no-cache --passWithNoTests",
     "dev": "ts-node -r tsconfig-paths/register src/index.ts"
   },
@@ -79,6 +79,7 @@
     "rimraf": "^5.0.1",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
   },

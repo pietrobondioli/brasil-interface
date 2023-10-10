@@ -1,14 +1,14 @@
 import { EstadoSigla, RG } from "@brasil-interface/utils";
 import { Argument, program } from "commander";
-import fs from "fs";
 
 import { InputHelper } from "@/helpers/input-helper";
+import { OutputHelper } from "@/helpers/output-helper";
 
 const rg = program.command("rg").description("RG utilities.");
 
 const ESTADOS_STRATEGY = new Map<EstadoSigla, any>([["SP", RG.SP]]);
 
-rg.command("validate <rg>")
+rg.command("validate <rgList>")
 	.addArgument(
 		new Argument("<estado>", "Estado do RG.").choices(
 			Array.from(ESTADOS_STRATEGY.keys())
@@ -16,43 +16,33 @@ rg.command("validate <rg>")
 	)
 	.description("PT-BR: Valida um número de RG. EN-US: Validate a RG number.")
 	.option(
-		"-i, --input <inputFile>",
+		"-i, --input <filepath>",
 		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
 	)
 	.option(
-		"-o, --output <outputFile>",
+		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
-	.action((rg, estado, options) => {
+	.action((rgList, estado, options) => {
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
 		if (!strategy) {
 			throw new Error("Invalid state");
 		}
 
-		const { inputFile, outputFile } = options;
-		let input: string = "";
-
-		if (rg) {
-			input = rg;
-		} else if (inputFile) {
-			input = fs.readFileSync(inputFile, "utf8");
-		} else {
-			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
-			return;
-		}
-
-		const rgArray: string[] = InputHelper.getArrayFromArrayLike(input);
+		const { input, output } = options;
+		const rgArray = InputHelper.getArrayFromInputAlternativesOrFail(rgList, {
+			input,
+		});
 
 		const result = rgArray.map((rg: string) => {
 			return { value: rg, isValid: strategy.isValid(rg) };
 		});
 
-		if (outputFile) {
-			fs.writeFileSync(outputFile, JSON.stringify(result));
-		} else {
-			console.log(result);
-		}
+		OutputHelper.handleResultOutputBasedOnOptions(result, {
+			output,
+			isJson: true,
+		});
 	});
 
 rg.command("generate")
@@ -71,12 +61,12 @@ rg.command("generate")
 		"PT-BR: Formata o número de RG. EN-US: Mask the RG number."
 	)
 	.option(
-		"-o --output <output>",
+		"-o --output <filepath>",
 		"PT-BR: Salva o resultado (array) em um arquivo JSON. EN-US: Save the result (array) in a JSON file."
 	)
 	.description("PT-BR: Gera um número de RG. EN-US: Generate a RG number.")
 	.action((estado, options) => {
-		const { amount, mask } = options;
+		const { amount, mask, output } = options;
 
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
@@ -92,16 +82,13 @@ rg.command("generate")
 			rgList.push(rg);
 		}
 
-		console.log(JSON.stringify(rgList));
-
-		if (options.output) {
-			const fs = require("fs");
-
-			fs.writeFileSync(options.output, JSON.stringify(rgList));
-		}
+		OutputHelper.handleResultOutputBasedOnOptions(rgList, {
+			output,
+			isJson: true,
+		});
 	});
 
-rg.command("mask <rg>")
+rg.command("mask <rgList>")
 	.addArgument(
 		new Argument("<estado>", "Estado do RG.").choices(
 			Array.from(ESTADOS_STRATEGY.keys())
@@ -112,37 +99,27 @@ rg.command("mask <rg>")
 		"PT-BR: Formata o número de CPF de forma sensível. EN-US: Mask the CPF number in a sensitive way."
 	)
 	.option(
-		"-i, --input <inputFile>",
+		"-i, --input <filepath>",
 		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
 	)
 	.option(
-		"-o, --output <outputFile>",
+		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
 	.description(
 		"PT-BR: Aplica uma máscara a um número de RG. EN-US: Masks an RG number."
 	)
-	.action((rg, estado, options) => {
+	.action((rgList, estado, options) => {
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
 		if (!strategy) {
 			throw new Error("Invalid state");
 		}
 
-		const { sensitive, inputFile, outputFile } = options;
-
-		let input: string = "";
-
-		if (rg) {
-			input = rg;
-		} else if (inputFile) {
-			input = fs.readFileSync(inputFile, "utf8");
-		} else {
-			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
-			return;
-		}
-
-		const rgArray: string[] = InputHelper.getArrayFromArrayLike(input);
+		const { sensitive, input, output } = options;
+		const rgArray = InputHelper.getArrayFromInputAlternativesOrFail(rgList, {
+			input,
+		});
 
 		const result = rgArray.map((rg: string) => {
 			return {
@@ -151,14 +128,13 @@ rg.command("mask <rg>")
 			};
 		});
 
-		if (outputFile) {
-			fs.writeFileSync(outputFile, JSON.stringify(result));
-		} else {
-			console.log(result);
-		}
+		OutputHelper.handleResultOutputBasedOnOptions(result, {
+			output,
+			isJson: true,
+		});
 	});
 
-rg.command("unmask <rg>")
+rg.command("unmask <rgList>")
 	.addArgument(
 		new Argument("<estado>", "Estado do RG.").choices(
 			Array.from(ESTADOS_STRATEGY.keys())
@@ -168,33 +144,24 @@ rg.command("unmask <rg>")
 		"PT-BR: Remove a máscara de um número de RG. EN-US: Removes the mask from an RG number."
 	)
 	.option(
-		"-i, --input <inputFile>",
+		"-i, --input <filepath>",
 		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
 	)
 	.option(
-		"-o, --output <outputFile>",
+		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
-	.action((rg, estado, options) => {
+	.action((rgList, estado, options) => {
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
 		if (!strategy) {
 			throw new Error("Invalid state");
 		}
 
-		const { inputFile, outputFile } = options;
-		let input: string = "";
-
-		if (rg) {
-			input = rg;
-		} else if (inputFile) {
-			input = fs.readFileSync(inputFile, "utf8");
-		} else {
-			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
-			return;
-		}
-
-		const rgArray: string[] = InputHelper.getArrayFromArrayLike(input);
+		const { input, output } = options;
+		const rgArray = InputHelper.getArrayFromInputAlternativesOrFail(rgList, {
+			input,
+		});
 
 		const result = rgArray.map((rg: string) => {
 			return {
@@ -203,9 +170,8 @@ rg.command("unmask <rg>")
 			};
 		});
 
-		if (outputFile) {
-			fs.writeFileSync(outputFile, JSON.stringify(result));
-		} else {
-			console.log(result);
-		}
+		OutputHelper.handleResultOutputBasedOnOptions(result, {
+			output,
+			isJson: true,
+		});
 	});
