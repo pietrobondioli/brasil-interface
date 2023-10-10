@@ -32,7 +32,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "pnpm run clean && vite build",
+    "build": "yarn run clean && vite build",
     "test": "jest --coverage --passWithNoTests"
   },
   "devDependencies": {
