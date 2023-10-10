@@ -1,15 +1,51 @@
-import { program } from "commander";
 import { CNPJ } from "@brasil-interface/utils";
+import { program } from "commander";
+import fs from "fs";
+
+import { InputHelper } from "@/helpers/input-helper";
 
 const cnpj = program.command("cnpj").description("CNPF utilities.");
 
 cnpj
-	.command("validate <cnpj>")
-	.description(
-		"PT-BR: Valida um número de CNPJ. EN-US: Validate a CNPJ number."
+	.command("validate <cnpjList>")
+	.option(
+		"-i, --input <inputFile>",
+		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
 	)
-	.action((cnpj) => {
-		console.log(`CNPJ Validator: ${cnpj}. Result: ${CNPJ.isValid(cnpj)}`);
+	.option(
+		"-o, --output <outputFile>",
+		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
+	)
+	.description(
+		"PT-BR: Valida uma lista de números de CNPJ. EN-US: Validate a list of CNPJ numbers."
+	)
+	.action((cnpjList, options) => {
+		const { inputFile, outputFile } = options;
+
+		let input: string = "";
+		let cnpjArray: string[] = [];
+
+		if (cnpjList) {
+			input = cnpjList;
+		} else if (inputFile) {
+			input = fs.readFileSync(inputFile, "utf8");
+		} else {
+			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
+			return;
+		}
+
+		cnpjArray = InputHelper.getArrayFromArrayLike(input);
+
+		const result = cnpjArray.map((cnpj: string) => {
+			return { value: cnpj, isValid: CNPJ.isValid(cnpj) };
+		});
+
+		if (outputFile) {
+			const fs = require("fs");
+			fs.writeFileSync(outputFile, JSON.stringify(result));
+		} else {
+			console.log(result);
+		}
 	});
 
 cnpj
@@ -31,47 +67,110 @@ cnpj
 	.action((options) => {
 		const { amount, mask } = options;
 
-		console.log(`CNPJ Generator:`);
-
-		const cpfs: string[] = [];
+		const cnpjList: string[] = [];
 
 		for (let i = 0; i < parseInt(amount); i++) {
 			const cnpj = mask ? CNPJ.generateMasked() : CNPJ.generate();
 
-			cpfs.push(cnpj);
-
-			console.log(`CNPJ ${i + 1}: ${cnpj}`);
+			cnpjList.push(cnpj);
 		}
+
+		console.log(JSON.stringify(cnpjList));
 
 		if (options.output) {
 			const fs = require("fs");
 
-			fs.writeFileSync(options.output, JSON.stringify(cpfs));
+			fs.writeFileSync(options.output, JSON.stringify(cnpjList));
 		}
 	});
 
 cnpj
-	.command("mask <cnpj>")
+	.command("mask <cnpjList>")
+	.option(
+		"-i, --input <inputFile>",
+		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
+	)
+	.option(
+		"-o, --output <outputFile>",
+		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
+	)
 	.option(
 		"-s --sensitive",
 		"PT-BR: Formata o número de CNPJ de forma sensível. EN-US: Mask the CNPJ number in a sensitive way."
 	)
-	.description("PT-BR: Formata um número de CNPJ. EN-US: Mask a CNPJ number.")
-	.action((cnpj, options) => {
-		const { sensitive } = options;
+	.description(
+		"PT-BR: Formata uma lista de números de CNPJ. EN-US: Mask a list of CNPJ numbers."
+	)
+	.action((cnpjList, options) => {
+		const { sensitive, inputFile, outputFile } = options;
 
-		if (sensitive) {
-			console.log(`CNPJ Masked: ${CNPJ.maskSensitive(cnpj)}`);
+		let input: string = "";
+		let cnpjArray: string[] = [];
+
+		if (cnpjList) {
+			input = cnpjList;
+		} else if (inputFile) {
+			input = fs.readFileSync(inputFile, "utf8");
 		} else {
-			console.log(`CNPJ Masked: ${CNPJ.mask(cnpj)}`);
+			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
+			return;
+		}
+
+		cnpjArray = InputHelper.getArrayFromArrayLike(input);
+
+		const result = cnpjArray.map((cnpj: string) => {
+			return {
+				value: cnpj,
+				masked: sensitive ? CNPJ.maskSensitive(cnpj) : CNPJ.mask(cnpj),
+			};
+		});
+
+		if (outputFile) {
+			const fs = require("fs");
+			fs.writeFileSync(outputFile, JSON.stringify(result));
+		} else {
+			console.log(result);
 		}
 	});
 
 cnpj
-	.command("unmask <cnpj>")
+	.command("unmask <cnpjList>")
+	.option(
+		"-i, --input <inputFile>",
+		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
+	)
+	.option(
+		"-o, --output <outputFile>",
+		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
+	)
 	.description(
 		"PT-BR: Remove a máscara de um número de CNPJ. EN-US: Unmask a CNPJ number."
 	)
-	.action((cnpj) => {
-		console.log(`CNPJ: ${cnpj}. Result: ${CNPJ.unmask(cnpj)}`);
+	.action((cnpjList, options) => {
+		const { inputFile, outputFile } = options;
+
+		let input: string = "";
+		let cnpjArray: string[] = [];
+
+		if (cnpjList) {
+			input = cnpjList;
+		} else if (inputFile) {
+			input = fs.readFileSync(inputFile, "utf8");
+		} else {
+			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
+			return;
+		}
+
+		cnpjArray = InputHelper.getArrayFromArrayLike(input);
+
+		const result = cnpjArray.map((cnpj: string) => {
+			return { value: cnpj, unmasked: CNPJ.unmask(cnpj) };
+		});
+
+		if (outputFile) {
+			const fs = require("fs");
+			fs.writeFileSync(outputFile, JSON.stringify(result));
+		} else {
+			console.log(result);
+		}
 	});

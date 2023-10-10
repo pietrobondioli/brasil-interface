@@ -1,13 +1,52 @@
-import { program } from "commander";
 import { CPF } from "@brasil-interface/utils";
+import { program } from "commander";
+import fs from "fs";
+
+import { InputHelper } from "@/helpers/input-helper";
 
 const cpf = program.command("cpf").description("CPF utilities.");
 
 cpf
-	.command("validate <cpf>")
-	.description("PT-BR: Valida um número de CPF. EN-US: Validate a CPF number.")
-	.action((cpf) => {
-		console.log(`CPF Validator: ${cpf}. Result: ${CPF.isValid(cpf)}`);
+	.command("validate <cpfList>")
+	.description(
+		"PT-BR: Valida uma lista de números de CPF. EN-US: Validate a list of CPF numbers."
+	)
+	.option(
+		"-i, --input <inputFile>",
+		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
+	)
+	.option(
+		"-o, --output <outputFile>",
+		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
+	)
+	.action((cpfList, options) => {
+		const { inputFile, outputFile } = options;
+		let input: string = "";
+		let cpfArray: string[] = [];
+
+		console.log(cpfList, inputFile, outputFile);
+
+		if (cpfList) {
+			input = cpfList;
+		} else if (inputFile) {
+			input = fs.readFileSync(inputFile, "utf8");
+		} else {
+			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
+			return;
+		}
+
+		cpfArray = InputHelper.getArrayFromArrayLike(input);
+
+		const result = cpfArray.map((cpf: string) => {
+			return { value: cpf, isValid: CPF.isValid(cpf) };
+		});
+
+		if (outputFile) {
+			const fs = require("fs");
+			fs.writeFileSync(outputFile, JSON.stringify(result));
+		} else {
+			console.log(result);
+		}
 	});
 
 cpf
@@ -29,56 +68,147 @@ cpf
 	.action((options) => {
 		const { amount, mask } = options;
 
-		console.log(`CPF Generator:`);
-
-		const cpfs: string[] = [];
+		const cpfList: string[] = [];
 
 		for (let i = 0; i < parseInt(amount); i++) {
 			const cpf = mask ? CPF.generateMasked() : CPF.generate();
 
-			cpfs.push(cpf);
-
-			console.log(`CPF ${i + 1}: ${cpf}`);
+			cpfList.push(cpf);
 		}
 
-		if (options.output) {
-			const fs = require("fs");
+		console.log(JSON.stringify(cpfList));
 
-			fs.writeFileSync(options.output, JSON.stringify(cpfs));
+		if (options.output) {
+			fs.writeFileSync(options.output, JSON.stringify(cpfList));
 		}
 	});
 
 cpf
-	.command("mask <cpf>")
+	.command("mask <cpfList>")
+	.description(
+		"PT-BR: Formata uma lista de números de CPF. EN-US: Mask a list of CPF numbers."
+	)
 	.option(
 		"-s --sensitive",
 		"PT-BR: Formata o número de CPF de forma sensível. EN-US: Mask the CPF number in a sensitive way."
 	)
-	.description("PT-BR: Formata um número de CPF. EN-US: Mask a CPF number.")
-	.action((cpf, options) => {
-		const { sensitive } = options;
+	.option(
+		"-i, --input <inputFile>",
+		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
+	)
+	.option(
+		"-o, --output <outputFile>",
+		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
+	)
+	.action((cpfList, options) => {
+		const { sensitive, inputFile, outputFile } = options;
 
-		if (sensitive) {
-			console.log(`CPF Mask: ${CPF.maskSensitive(cpf)}`);
+		let input: string = "";
+		let cpfArray: string[] = [];
+
+		if (cpfList) {
+			input = cpfList;
+		} else if (inputFile) {
+			input = fs.readFileSync(inputFile, "utf8");
 		} else {
-			console.log(`CPF Mask: ${CPF.mask(cpf)}`);
+			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
+			return;
+		}
+
+		cpfArray = InputHelper.getArrayFromArrayLike(input);
+
+		const result = cpfArray.map((cpf: string) => {
+			return {
+				value: cpf,
+				masked: sensitive ? CPF.maskSensitive(cpf) : CPF.mask(cpf),
+			};
+		});
+
+		if (outputFile) {
+			fs.writeFileSync(outputFile, JSON.stringify(result));
+		} else {
+			console.log(result);
 		}
 	});
 
 cpf
-	.command("unmask <cpf>")
+	.command("unmask <cpfList>")
 	.description(
-		"PT-BR: Remove a formatação de um número de CPF. EN-US: Unmask a CPF number."
+		"PT-BR: Remove a formatação de uma lista de números de CPF. EN-US: Unmask a list of CPF numbers."
 	)
-	.action((cpf) => {
-		console.log(`CPF Unmask: ${CPF.unmask(cpf)}`);
+	.option(
+		"-i, --input <inputFile>",
+		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
+	)
+	.option(
+		"-o, --output <outputFile>",
+		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
+	)
+	.action((cpfList, options) => {
+		const { inputFile, outputFile } = options;
+
+		let input: string = "";
+		let cpfArray: string[] = [];
+
+		if (cpfList) {
+			input = cpfList;
+		} else if (inputFile) {
+			input = fs.readFileSync(inputFile, "utf8");
+		} else {
+			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
+			return;
+		}
+
+		cpfArray = InputHelper.getArrayFromArrayLike(input);
+
+		const result = cpfArray.map((cpf: string) => {
+			return { value: cpf, unmasked: CPF.unmask(cpf) };
+		});
+
+		if (outputFile) {
+			fs.writeFileSync(outputFile, JSON.stringify(result));
+		} else {
+			console.log(result);
+		}
 	});
 
 cpf
-	.command("get-estados <cpf>")
-	.description(
-		"PT-BR: Retorna os estados atrelados ao número de CPF. EN-US: Returns the states linked to the CPF number."
+	.command("get-estados <cpfList>")
+	.option(
+		"-i, --input <inputFile>",
+		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
 	)
-	.action((cpf) => {
-		console.log(`CPF States: ${CPF.getEstado(cpf)}`);
+	.option(
+		"-o, --output <outputFile>",
+		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
+	)
+	.description(
+		"PT-BR: Retorna os estados atrelados a uma lista de números de CPF. EN-US: Returns the states linked to a list of CPF numbers."
+	)
+	.action((cpfList, options) => {
+		const { inputFile, outputFile } = options;
+
+		let input: string = "";
+		let cpfArray: string[] = [];
+
+		if (cpfList) {
+			input = cpfList;
+		} else if (inputFile) {
+			input = fs.readFileSync(inputFile, "utf8");
+		} else {
+			console.log("PT-BR: Nenhum input fornecido. EN-US: No input provided.");
+			return;
+		}
+
+		cpfArray = InputHelper.getArrayFromArrayLike(input);
+
+		const result = cpfArray.map((cpf: string) => {
+			return { value: cpf, estado: CPF.getEstado(cpf) };
+		});
+
+		if (outputFile) {
+			fs.writeFileSync(outputFile, JSON.stringify(result));
+		} else {
+			console.log(result);
+		}
 	});
