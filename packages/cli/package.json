@@ -11,15 +11,10 @@
     }
   ],
   "homepage": "https://github.com/pietrobondioli/brasil-interface#readme",
-  "main": "./dist/@brasil-interface/cli.umd.js",
-  "module": "./dist/@brasil-interface/cli.es.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "bin": "./dist/@brasil-interface/cli.umd.js",
-  "exports": {
-    ".": {
-      "import": "./dist/@brasil-interface/cli.es.js",
-      "require": "./dist/@brasil-interface/cli.umd.js"
-    }
+  "bin": {
+    "brint": "./dist/index.js"
   },
   "publishConfig": {
     "access": "public"
@@ -73,7 +68,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "yarn run clean && vite build",
+    "build": "yarn run clean && tsc",
     "test": "jest --coverage --no-cache --passWithNoTests",
     "dev": "ts-node src/index.ts"
   },
@@ -85,9 +80,7 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.2.2",
-    "vite": "^4.4.9",
-    "vite-plugin-dts": "^3.5.3"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "@brasil-interface/utils": "^1.0.0-alpha.0",
