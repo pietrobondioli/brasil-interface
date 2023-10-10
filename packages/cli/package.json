@@ -14,7 +14,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "brint": "./dist/index.js"
+    "brasili": "./dist/index.js"
   },
   "publishConfig": {
     "access": "public"

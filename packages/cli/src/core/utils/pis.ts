@@ -7,7 +7,7 @@ import { OutputHelper } from "@/helpers/output-helper";
 const pis = program.command("pis").description("PIS utilities.");
 
 pis
-	.command("validate <pis>")
+	.command("validate <pisList>")
 	.description(
 		"PT-BR: Valida uma lista de números de PIS. EN-US: Validate a list of PIS numbers."
 	)
