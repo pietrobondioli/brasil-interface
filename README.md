@@ -108,31 +108,31 @@ Após instalar basta executar o comando `@brasil-interface/cli` e começar a usa
 Verificar todas as funcionalidades disponíveis:
 
 ```bash
-$ npx @brasil-interface/cli --help
+$ brasili --help
 ```
 
 Gerando 5 CPFs aleatórios e salvando em um arquivo JSON:
 
 ```bash
-$ npx @brasil-interface/cli cpf generate -a 5 -o ./output.json
+$ brasili cpf generate -a 5 -o ./output.json
 ```
 
 Validando um CPF:
 
 ```bash
-$ npx @brasil-interface/cli cpf validate 04379547060
+$ brasili cpf validate 04379547060
 ```
 
 Aplicando máscara em um CPF:
 
 ```bash
-$ npx @brasil-interface/cli cpf mask 04379547060
+$ brasili cpf mask 04379547060
 ```
 
 Removendo máscara de um CPF:
 
 ```bash
-$ npx @brasil-interface/cli cpf unmask 043.795.470-60
+$ brasili cpf unmask 043.795.470-60
 ```
 
 Leia mais sobre todos os métodos disponíveis em [@brasil-interface/cli](./packages/cli/README.md).

@@ -33,7 +33,9 @@
       - [Aplicar máscara em RG](#aplicar-máscara-em-rg)
       - [Remover máscara de RG](#remover-máscara-de-rg)
   - [Como contribuir](#como-contribuir)
+  - [Contribuidores](#contribuidores)
   - [Autor](#autor)
+  - [Licença](#licença)
 
 ## Descrição
 
@@ -526,11 +528,18 @@ brasili rg unmask [...rgs] <estado> -i <input_file> -o <output_file>
 | `-i, --input <input_file>`   | Arquivo de entrada com os RGs a terem a máscara removida.                                  |
 | `-o, --output <output_file>` | Arquivo de saída com os RGs com a máscara removida.                                        |
 
-
 ## Como contribuir
 
 Leia o arquivo [CONTRIBUTING.md](https://github.com/pietrobondioli/brasil-interface/blob/main/CONTRIBUTING.md) no repositório principal.
 
+## Contribuidores
+
+- [Pietro Bondioli](https://github.com/pietrobondioli)
+
 ## Autor
 
 - [Pietro Bondioli](https://github.com/pietrobondioli)
+
+## Licença
+
+[MIT](https://github.com/pietrobondioli/brasil-interface/blob/main/LICENSE.md)
