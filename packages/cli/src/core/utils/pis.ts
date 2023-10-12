@@ -19,8 +19,12 @@ pis
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((pisList, options) => {
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const pisArray = InputHelper.getArrayFromInputAlternativesOrFail(pisList, {
 			input,
 		});
@@ -32,11 +36,13 @@ pis
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 pis
 	.command("generate")
+	.description("PT-BR: Gera um número de PIS. EN-US: Generate a PIS number.")
 	.option(
 		"-a --amount <amount>",
 		"PT-BR: Gera uma quantidade de números de PIS. EN-US: Generate an amount of PIS numbers.",
@@ -50,9 +56,12 @@ pis
 		"-o --output <filepath>",
 		"PT-BR: Salva o resultado (array) em um arquivo JSON. EN-US: Save the result (array) in a JSON file."
 	)
-	.description("PT-BR: Gera um número de PIS. EN-US: Generate a PIS number.")
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((options) => {
-		const { amount, mask, output } = options;
+		const { amount, mask, output, copy } = options;
 
 		const pisList: string[] = [];
 
@@ -65,6 +74,7 @@ pis
 		OutputHelper.handleResultOutputBasedOnOptions(pisList, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
@@ -76,10 +86,6 @@ pis
 		"PT-BR: Formata o número de PIS de forma sensível. EN-US: Mask the PIS number in a sensitive way."
 	)
 	.option(
-		"-s --sensitive",
-		"PT-BR: Formata o número de CPF de forma sensível. EN-US: Mask the CPF number in a sensitive way."
-	)
-	.option(
 		"-i, --input <filepath>",
 		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
 	)
@@ -87,8 +93,12 @@ pis
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((pisList, options) => {
-		const { sensitive, input, output } = options;
+		const { sensitive, input, output, copy } = options;
 		const pisArray = InputHelper.getArrayFromInputAlternativesOrFail(pisList, {
 			input,
 		});
@@ -103,6 +113,7 @@ pis
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
@@ -119,8 +130,12 @@ pis
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((pisList, options) => {
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const pisArray = InputHelper.getArrayFromInputAlternativesOrFail(pisList, {
 			input,
 		});
@@ -132,5 +147,6 @@ pis
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});

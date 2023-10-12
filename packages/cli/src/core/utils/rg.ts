@@ -9,12 +9,12 @@ const rg = program.command("rg").description("RG utilities.");
 const ESTADOS_STRATEGY = new Map<EstadoSigla, any>([["SP", RG.SP]]);
 
 rg.command("validate <rgList>")
+	.description("PT-BR: Valida um número de RG. EN-US: Validate a RG number.")
 	.addArgument(
 		new Argument("<estado>", "Estado do RG.").choices(
 			Array.from(ESTADOS_STRATEGY.keys())
 		)
 	)
-	.description("PT-BR: Valida um número de RG. EN-US: Validate a RG number.")
 	.option(
 		"-i, --input <filepath>",
 		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
@@ -23,14 +23,18 @@ rg.command("validate <rgList>")
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((rgList, estado, options) => {
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
 		if (!strategy) {
-			throw new Error("Invalid state");
+			throw new Error("PT-BR: Estado inválido. EN-US: Invalid state.");
 		}
 
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const rgArray = InputHelper.getArrayFromInputAlternativesOrFail(rgList, {
 			input,
 		});
@@ -42,10 +46,12 @@ rg.command("validate <rgList>")
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 rg.command("generate")
+	.description("PT-BR: Gera um número de RG. EN-US: Generate a RG number.")
 	.addArgument(
 		new Argument("<estado>", "Estado do RG.").choices(
 			Array.from(ESTADOS_STRATEGY.keys())
@@ -64,14 +70,17 @@ rg.command("generate")
 		"-o --output <filepath>",
 		"PT-BR: Salva o resultado (array) em um arquivo JSON. EN-US: Save the result (array) in a JSON file."
 	)
-	.description("PT-BR: Gera um número de RG. EN-US: Generate a RG number.")
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((estado, options) => {
-		const { amount, mask, output } = options;
+		const { amount, mask, output, copy } = options;
 
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
 		if (!strategy) {
-			throw new Error("Invalid state");
+			throw new Error("PT-BR: Estado inválido. EN-US: Invalid state.");
 		}
 
 		const rgList: string[] = [];
@@ -85,10 +94,14 @@ rg.command("generate")
 		OutputHelper.handleResultOutputBasedOnOptions(rgList, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 rg.command("mask <rgList>")
+	.description(
+		"PT-BR: Aplica uma máscara a um número de RG. EN-US: Masks an RG number."
+	)
 	.addArgument(
 		new Argument("<estado>", "Estado do RG.").choices(
 			Array.from(ESTADOS_STRATEGY.keys())
@@ -96,7 +109,7 @@ rg.command("mask <rgList>")
 	)
 	.option(
 		"-s --sensitive",
-		"PT-BR: Formata o número de CPF de forma sensível. EN-US: Mask the CPF number in a sensitive way."
+		"PT-BR: Trata o número de RG como sensível. Adicionando asteriscos no lugar de alguns caracteres. EN-US: Treat the RG number as sensitive. Adding asterisks in place of some characters."
 	)
 	.option(
 		"-i, --input <filepath>",
@@ -106,17 +119,18 @@ rg.command("mask <rgList>")
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
-	.description(
-		"PT-BR: Aplica uma máscara a um número de RG. EN-US: Masks an RG number."
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
 	)
 	.action((rgList, estado, options) => {
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
 		if (!strategy) {
-			throw new Error("Invalid state");
+			throw new Error("PT-BR: Estado inválido. EN-US: Invalid state.");
 		}
 
-		const { sensitive, input, output } = options;
+		const { sensitive, input, output, copy } = options;
 		const rgArray = InputHelper.getArrayFromInputAlternativesOrFail(rgList, {
 			input,
 		});
@@ -131,17 +145,18 @@ rg.command("mask <rgList>")
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 rg.command("unmask <rgList>")
+	.description(
+		"PT-BR: Remove a máscara de um número de RG. EN-US: Removes the mask from an RG number."
+	)
 	.addArgument(
 		new Argument("<estado>", "Estado do RG.").choices(
 			Array.from(ESTADOS_STRATEGY.keys())
 		)
-	)
-	.description(
-		"PT-BR: Remove a máscara de um número de RG. EN-US: Removes the mask from an RG number."
 	)
 	.option(
 		"-i, --input <filepath>",
@@ -151,14 +166,18 @@ rg.command("unmask <rgList>")
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((rgList, estado, options) => {
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
 		if (!strategy) {
-			throw new Error("Invalid state");
+			throw new Error("PT-BR: Estado inválido. EN-US: Invalid state.");
 		}
 
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const rgArray = InputHelper.getArrayFromInputAlternativesOrFail(rgList, {
 			input,
 		});
@@ -173,5 +192,6 @@ rg.command("unmask <rgList>")
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});

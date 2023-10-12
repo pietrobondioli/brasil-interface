@@ -21,8 +21,12 @@ tituloEleitor
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((tituloEleitorList, options) => {
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const tituloEleitorArray = InputHelper.getArrayFromInputAlternativesOrFail(
 			tituloEleitorList,
 			{
@@ -40,11 +44,15 @@ tituloEleitor
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 tituloEleitor
 	.command("generate")
+	.description(
+		"PT-BR: Gera um número de Título de Eleitor. EN-US: Generate a Titulo Eleitor number."
+	)
 	.option(
 		"-a --amount <amount>",
 		"PT-BR: Gera uma quantidade de números de Título de Eleitor. EN-US: Generate an amount of Titulo Eleitor numbers.",
@@ -54,11 +62,12 @@ tituloEleitor
 		"-o --output <filepath>",
 		"PT-BR: Salva o resultado (array) em um arquivo JSON. EN-US: Save the result (array) in a JSON file."
 	)
-	.description(
-		"PT-BR: Gera um número de Título de Eleitor. EN-US: Generate a Titulo Eleitor number."
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
 	)
 	.action((options) => {
-		const { amount, output } = options;
+		const { amount, output, copy } = options;
 
 		const tituloEleitorList: string[] = [];
 
@@ -71,11 +80,15 @@ tituloEleitor
 		OutputHelper.handleResultOutputBasedOnOptions(tituloEleitorList, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 tituloEleitor
 	.command("get-estado <tituloEleitorList>")
+	.description(
+		"PT-BR: Retorna o estado atrelados a cada número de Título de Eleitor da lista. EN-US: Returns the state associated with each Titulo Eleitor number in the list."
+	)
 	.option(
 		"-i, --input <filepath>",
 		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
@@ -84,11 +97,12 @@ tituloEleitor
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
-	.description(
-		"PT-BR: Retorna o estado atrelados a cada número de Título de Eleitor da lista. EN-US: Returns the state associated with each Titulo Eleitor number in the list."
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
 	)
 	.action((tituloEleitorList, options) => {
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const tituloEleitorArray = InputHelper.getArrayFromInputAlternativesOrFail(
 			tituloEleitorList,
 			{ input }
@@ -104,5 +118,6 @@ tituloEleitor
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});

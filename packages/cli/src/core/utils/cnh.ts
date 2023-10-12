@@ -19,8 +19,12 @@ cnh
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((cnhList, options) => {
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const cnhArray = InputHelper.getArrayFromInputAlternativesOrFail(cnhList, {
 			input,
 		});
@@ -32,11 +36,13 @@ cnh
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 cnh
 	.command("generate")
+	.description("PT-BR: Gera um número de CNH. EN-US: Generate a CNH number.")
 	.option(
 		"-a --amount <amount>",
 		"PT-BR: Gera uma quantidade de números de CNH. EN-US: Generate an amount of CNH numbers.",
@@ -46,9 +52,12 @@ cnh
 		"-o --output <filepath>",
 		"PT-BR: Salva o resultado (array) em um arquivo JSON. EN-US: Save the result (array) in a JSON file."
 	)
-	.description("PT-BR: Gera um número de CNH. EN-US: Generate a CNH number.")
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((options) => {
-		const { amount, output } = options;
+		const { amount, output, copy } = options;
 
 		const cnhList: string[] = [];
 
@@ -61,5 +70,6 @@ cnh
 		OutputHelper.handleResultOutputBasedOnOptions(cnhList, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});

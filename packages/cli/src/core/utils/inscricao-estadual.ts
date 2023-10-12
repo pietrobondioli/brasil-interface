@@ -56,6 +56,10 @@ inscricaoEstadual
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((inscricaoEstadualList, estado, options) => {
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
@@ -63,7 +67,7 @@ inscricaoEstadual
 			throw new Error("PT-BR: Estado inválido. EN-US: Invalid state.");
 		}
 
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const inscricaoEstadualArray =
 			InputHelper.getArrayFromInputAlternativesOrFail(inscricaoEstadualList, {
 				input,
@@ -79,11 +83,15 @@ inscricaoEstadual
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 inscricaoEstadual
 	.command("generate")
+	.description(
+		"PT-BR: Gera um número de Inscrição Estadual. EN-US: Generate an Inscrição Estadual number."
+	)
 	.addArgument(
 		new Argument("<estado>", "Estado da Inscrição Estadual.").choices(
 			Array.from(ESTADOS_STRATEGY.keys())
@@ -102,11 +110,12 @@ inscricaoEstadual
 		"-o --output <filepath>",
 		"PT-BR: Salva o resultado (array) em um arquivo JSON. EN-US: Save the result (array) in a JSON file."
 	)
-	.description(
-		"PT-BR: Gera um número de Inscrição Estadual. EN-US: Generate an Inscrição Estadual number."
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
 	)
 	.action((estado, options) => {
-		const { amount, mask, output } = options;
+		const { amount, mask, output, copy } = options;
 
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
@@ -127,11 +136,15 @@ inscricaoEstadual
 		OutputHelper.handleResultOutputBasedOnOptions(inscricaoEstadualList, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 inscricaoEstadual
 	.command("mask <inscricaoEstadualList>")
+	.description(
+		"PT-BR: Aplica uma máscara a um número de Inscrição Estadual. EN-US: Masks an Inscrição Estadual number."
+	)
 	.addArgument(
 		new Argument("<estado>", "Estado da Inscrição Estadual.").choices(
 			Array.from(ESTADOS_STRATEGY.keys())
@@ -149,8 +162,9 @@ inscricaoEstadual
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
-	.description(
-		"PT-BR: Aplica uma máscara a um número de Inscrição Estadual. EN-US: Masks an Inscrição Estadual number."
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
 	)
 	.action((inscricaoEstadualList, estado, options) => {
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
@@ -159,7 +173,7 @@ inscricaoEstadual
 			throw new Error("PT-BR: Estado inválido. EN-US: Invalid state.");
 		}
 
-		const { sensitive, input, output } = options;
+		const { sensitive, input, output, copy } = options;
 		const inscricaoEstadualArray =
 			InputHelper.getArrayFromInputAlternativesOrFail(inscricaoEstadualList, {
 				input,
@@ -177,18 +191,19 @@ inscricaoEstadual
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 inscricaoEstadual
 	.command("unmask <inscricaoEstadualList>")
+	.description(
+		"PT-BR: Remove a máscara de um número de Inscrição Estadual. EN-US: Removes the mask from an Inscrição Estadual number."
+	)
 	.addArgument(
 		new Argument("<estado>", "Estado da Inscrição Estadual.").choices(
 			Array.from(ESTADOS_STRATEGY.keys())
 		)
-	)
-	.description(
-		"PT-BR: Remove a máscara de um número de Inscrição Estadual. EN-US: Removes the mask from an Inscrição Estadual number."
 	)
 	.option(
 		"-i, --input <filepath>",
@@ -198,6 +213,10 @@ inscricaoEstadual
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((inscricaoEstadualList, estado, options) => {
 		const strategy = ESTADOS_STRATEGY.get(estado as EstadoSigla);
 
@@ -205,7 +224,7 @@ inscricaoEstadual
 			throw new Error("PT-BR: Estado inválido. EN-US: Invalid state.");
 		}
 
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const inscricaoEstadualArray =
 			InputHelper.getArrayFromInputAlternativesOrFail(inscricaoEstadualList, {
 				input,
@@ -221,5 +240,6 @@ inscricaoEstadual
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});

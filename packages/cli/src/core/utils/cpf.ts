@@ -19,8 +19,12 @@ cpf
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((cpfList, options) => {
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const cpfArray = InputHelper.getArrayFromInputAlternativesOrFail(cpfList, {
 			input,
 		});
@@ -32,11 +36,13 @@ cpf
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 cpf
 	.command("generate")
+	.description("PT-BR: Gera um número de CPF. EN-US: Generate a CPF number.")
 	.option(
 		"-a --amount <amount>",
 		"PT-BR: Gera uma quantidade de números de CPF. EN-US: Generate an amount of CPF numbers.",
@@ -50,9 +56,12 @@ cpf
 		"-o --output <filepath>",
 		"PT-BR: Salva o resultado (array) em um arquivo JSON. EN-US: Save the result (array) in a JSON file."
 	)
-	.description("PT-BR: Gera um número de CPF. EN-US: Generate a CPF number.")
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((options) => {
-		const { amount, mask, output } = options;
+		const { amount, mask, output, copy } = options;
 
 		const cpfList: string[] = [];
 
@@ -65,6 +74,7 @@ cpf
 		OutputHelper.handleResultOutputBasedOnOptions(cpfList, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
@@ -75,7 +85,7 @@ cpf
 	)
 	.option(
 		"-s --sensitive",
-		"PT-BR: Formata o número de CPF de forma sensível. EN-US: Mask the CPF number in a sensitive way."
+		"PT-BR: Trata o número de CPF como sensível. Adicionando asteriscos no lugar de alguns dígitos. EN-US: Treat the CPF number as sensitive. Adding asterisks in place of some digits."
 	)
 	.option(
 		"-i, --input <filepath>",
@@ -85,8 +95,12 @@ cpf
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((cpfList, options) => {
-		const { sensitive, input, output } = options;
+		const { sensitive, input, output, copy } = options;
 		const cpfArray = InputHelper.getArrayFromInputAlternativesOrFail(cpfList, {
 			input,
 		});
@@ -101,6 +115,7 @@ cpf
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
@@ -117,8 +132,12 @@ cpf
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
+	)
 	.action((cpfList, options) => {
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const cpfArray = InputHelper.getArrayFromInputAlternativesOrFail(cpfList, {
 			input,
 		});
@@ -130,11 +149,15 @@ cpf
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
 
 cpf
 	.command("get-estados <cpfList>")
+	.description(
+		"PT-BR: Retorna os estados atrelados a uma lista de números de CPF. EN-US: Returns the states linked to a list of CPF numbers."
+	)
 	.option(
 		"-i, --input <filepath>",
 		"PT-BR: Caminho do arquivo de input. EN-US: Input file path"
@@ -143,11 +166,12 @@ cpf
 		"-o, --output <filepath>",
 		"PT-BR: Caminho do arquivo de output. EN-US: Output file path"
 	)
-	.description(
-		"PT-BR: Retorna os estados atrelados a uma lista de números de CPF. EN-US: Returns the states linked to a list of CPF numbers."
+	.option(
+		"-c, --copy",
+		"PT-BR: Copia o resultado para a área de transferência. EN-US: Copy the result to the clipboard."
 	)
 	.action((cpfList, options) => {
-		const { input, output } = options;
+		const { input, output, copy } = options;
 		const cpfArray = InputHelper.getArrayFromInputAlternativesOrFail(cpfList, {
 			input,
 		});
@@ -159,5 +183,6 @@ cpf
 		OutputHelper.handleResultOutputBasedOnOptions(result, {
 			output,
 			isJson: true,
+			copyToClipboard: copy,
 		});
 	});
