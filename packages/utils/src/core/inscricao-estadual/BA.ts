@@ -215,8 +215,6 @@ export class BA {
 			return false;
 		}
 
-		console.log(inscricaoE, case_);
-
 		const verifierDigits = this.calculateVerifierDigits(cleanedValue, case_);
 
 		return inscricaoE.endsWith(verifierDigits);

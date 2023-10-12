@@ -1,6 +1,6 @@
-import { InscricaoEstadual } from "./AL";
+import { AL } from "./AL";
 
-describe("InscricaoEstadual.AL class", () => {
+describe("AL class", () => {
 	describe("isValid method", () => {
 		it("should return true for valid Alagoas state registration numbers", () => {
 			const validNumbers = [
@@ -13,7 +13,7 @@ describe("InscricaoEstadual.AL class", () => {
 			];
 
 			for (const number of validNumbers) {
-				expect(InscricaoEstadual.AL.isValid(number)).toBe(true);
+				expect(AL.isValid(number)).toBe(true);
 			}
 		});
 
@@ -21,16 +21,16 @@ describe("InscricaoEstadual.AL class", () => {
 			const invalidNumbers = ["111111111", "248440999", "248100000"];
 
 			for (const number of invalidNumbers) {
-				expect(InscricaoEstadual.AL.isValid(number)).toBe(false);
+				expect(AL.isValid(number)).toBe(false);
 			}
 		});
 	});
 
 	describe("generate method", () => {
 		it("should generate a valid Alagoas state registration number", () => {
-			const generatedNumber = InscricaoEstadual.AL.generate();
+			const generatedNumber = AL.generate();
 
-			expect(InscricaoEstadual.AL.isValid(generatedNumber)).toBe(true);
+			expect(AL.isValid(generatedNumber)).toBe(true);
 		});
 	});
 });

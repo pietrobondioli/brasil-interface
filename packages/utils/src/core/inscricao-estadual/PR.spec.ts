@@ -1,4 +1,4 @@
-import { InscricaoEstadual } from "./PR";
+import { PR } from "./PR";
 
 const VALID_IES = ["2923358300", "3528840069", "5358147161", "6792311707"];
 
@@ -9,12 +9,12 @@ const VALID_MASKED_IES = [
 	"679.23117-07",
 ];
 
-describe("InscricaoEstadual.PR", () => {
+describe("PR", () => {
 	describe("isValid", () => {
 		describe("should validate unmasked IEs", () => {
 			VALID_IES.forEach((ie) => {
 				it(`should validate ${ie} as true`, () => {
-					expect(InscricaoEstadual.PR.isValid(ie)).toBe(true);
+					expect(PR.isValid(ie)).toBe(true);
 				});
 			});
 		});
@@ -22,7 +22,7 @@ describe("InscricaoEstadual.PR", () => {
 		describe("should validate masked IEs", () => {
 			VALID_MASKED_IES.forEach((ie) => {
 				it(`should validate masked IE ${ie} as true`, () => {
-					expect(InscricaoEstadual.PR.isValid(ie)).toBe(true);
+					expect(PR.isValid(ie)).toBe(true);
 				});
 			});
 		});
@@ -30,32 +30,32 @@ describe("InscricaoEstadual.PR", () => {
 		const invalidIEs = ["123111789", "555555555"];
 		invalidIEs.forEach((ie) => {
 			it(`should validate ${ie} as false`, () => {
-				expect(InscricaoEstadual.PR.isValid(ie)).toBe(false);
+				expect(PR.isValid(ie)).toBe(false);
 			});
 		});
 	});
 
 	describe("mask and unmask", () => {
 		it("should correctly mask an unmasked IE", () => {
-			expect(InscricaoEstadual.PR.mask("2923358300")).toBe("292.33583-00");
+			expect(PR.mask("2923358300")).toBe("292.33583-00");
 		});
 
 		it("should correctly unmask a masked IE", () => {
-			expect(InscricaoEstadual.PR.unmask("292.33583-00")).toBe("2923358300");
+			expect(PR.unmask("292.33583-00")).toBe("2923358300");
 		});
 	});
 
 	describe("generate", () => {
 		it("should generate a valid IE", () => {
-			const generated = InscricaoEstadual.PR.generate();
-			expect(InscricaoEstadual.PR.isValid(generated)).toBe(true);
+			const generated = PR.generate();
+			expect(PR.isValid(generated)).toBe(true);
 		});
 	});
 
 	describe("generateMasked", () => {
 		it("should generate a valid masked IE", () => {
-			const generated = InscricaoEstadual.PR.generateMasked();
-			expect(InscricaoEstadual.PR.isValid(generated)).toBe(true);
+			const generated = PR.generateMasked();
+			expect(PR.isValid(generated)).toBe(true);
 		});
 	});
 });
