@@ -1,4 +1,3 @@
-import axios, { AxiosInstance } from "axios";
 import {
 	ICepAbertoAddress,
 	ICepAbertoCity,
@@ -6,16 +5,24 @@ import {
 } from "./cep-aberto.types";
 
 export class CepAbertoAPI {
-	private axiosInstance: AxiosInstance;
+	private baseUrl = "https://www.cepaberto.com/api/v3";
 
-	constructor(private token: string) {
-		this.axiosInstance = axios.create({
-			baseURL: "https://www.cepaberto.com/api/v3",
+	constructor(private token: string) {}
+
+	private async fetchJson<T>(url: string): Promise<T> {
+		const response = await fetch(url, {
 			headers: {
 				Authorization: `Token token=${this.token}`,
 			},
 		});
-		console.log(this.axiosInstance);
+
+		if (!response.ok) {
+			throw new Error(
+				`Failed to fetch ${url}: ${response.status} ${response.statusText}`
+			);
+		}
+
+		return response.json();
 	}
 
 	/**
@@ -25,14 +32,9 @@ export class CepAbertoAPI {
 	 * @param cep PT-BR: O número do CEP. EN-US: The CEP number.
 	 * @returns PT-BR: As informações de endereço para o CEP fornecido. EN-US: The address information for the provided CEP.
 	 */
-	public async getCepByNumber(cep: string) {
-		const response = await this.axiosInstance.get<ICepAbertoAddress>(
-			`/cep?cep=${cep}`
-		);
-
-		console.log(response);
-
-		return response.data;
+	public async getCepByNumber(cep: string): Promise<ICepAbertoAddress> {
+		const url = `${this.baseUrl}/cep?cep=${cep}`;
+		return this.fetchJson<ICepAbertoAddress>(url);
 	}
 
 	/**
@@ -43,12 +45,12 @@ export class CepAbertoAPI {
 	 * @param lng PT-BR: A coordenada de longitude. EN-US: The longitude coordinate.
 	 * @returns PT-BR: As informações de endereço para as coordenadas fornecidas. EN-US: The address information for the provided coordinates.
 	 */
-	public async getCepByCoordinates(lat: number, lng: number) {
-		const response = await this.axiosInstance.get<ICepAbertoAddress>(
-			`/nearest?lat=${lat}&lng=${lng}`
-		);
-
-		return response.data;
+	public async getCepByCoordinates(
+		lat: number,
+		lng: number
+	): Promise<ICepAbertoAddress> {
+		const url = `${this.baseUrl}/nearest?lat=${lat}&lng=${lng}`;
+		return this.fetchJson<ICepAbertoAddress>(url);
 	}
 
 	/**
@@ -66,7 +68,7 @@ export class CepAbertoAPI {
 		city: string,
 		street?: string,
 		neighborhood?: string
-	) {
+	): Promise<ICepAbertoAddress> {
 		const params: IGetCepByAddressParams = {
 			estado: state,
 			cidade: city,
@@ -74,12 +76,10 @@ export class CepAbertoAPI {
 		if (street) params.logradouro = street;
 		if (neighborhood) params.bairro = neighborhood;
 
-		const response = await this.axiosInstance.get<ICepAbertoAddress>(
-			"/address",
-			{ params }
-		);
-
-		return response.data;
+		const url = `${this.baseUrl}/address?${new URLSearchParams(
+			params
+		).toString()}`;
+		return this.fetchJson<ICepAbertoAddress>(url);
 	}
 
 	/**
@@ -89,12 +89,9 @@ export class CepAbertoAPI {
 	 * @param state PT-BR: A sigla do estado. EN-US: The state abbreviation.
 	 * @returns PT-BR: Uma lista de cidades no estado fornecido. EN-US: A list of cities in the provided state.
 	 */
-	public async getCitiesByState(state: string) {
-		const response = await this.axiosInstance.get<ICepAbertoCity[]>(
-			`/cities?estado=${state}`
-		);
-
-		return response.data;
+	public async getCitiesByState(state: string): Promise<ICepAbertoCity[]> {
+		const url = `${this.baseUrl}/cities?estado=${state}`;
+		return this.fetchJson<ICepAbertoCity[]>(url);
 	}
 
 	/**
@@ -104,11 +101,23 @@ export class CepAbertoAPI {
 	 * @param ceps PT-BR: Um array de números de CEP. EN-US: An array of CEP numbers.
 	 * @returns PT-BR: Uma lista de números de CEP atualizados. EN-US: A list of updated CEP numbers.
 	 */
-	public async updateCeps(ceps: string[]) {
-		const response = await this.axiosInstance.post<string[]>("/update", {
-			ceps: ceps.join(","),
+	public async updateCeps(ceps: string[]): Promise<string[]> {
+		const url = `${this.baseUrl}/update`;
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Token token=${this.token}`,
+			},
+			body: JSON.stringify({ ceps }),
 		});
 
-		return response.data;
+		if (!response.ok) {
+			throw new Error(
+				`Failed to update CEPs: ${response.status} ${response.statusText}`
+			);
+		}
+
+		return response.json();
 	}
 }
