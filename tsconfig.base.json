@@ -22,7 +22,6 @@
         /* Building for a library: */
         "declaration": true,
         /* Others: */
-        "noUncheckedIndexedAccess": true,
         "exactOptionalPropertyTypes": true,
         "noImplicitAny": false,
         "removeComments": false,
