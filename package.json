@@ -15,6 +15,9 @@
   ],
   "scripts": {
     "test": "lerna run test --stream",
+    "test:cli": "lerna run test --scope @brasil-interface/cli --stream",
+    "test:sdks": "lerna run test --scope @brasil-interface/sdks --stream",
+    "test:utils": "lerna run test --scope @brasil-interface/utils --stream",
     "build": "lerna run build --stream",
     "build:cli": "lerna run build --scope @brasil-interface/cli --stream",
     "build:sdks": "lerna run build --scope @brasil-interface/sdks --stream",

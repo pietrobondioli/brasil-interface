@@ -11,7 +11,6 @@
     }
   ],
   "homepage": "https://github.com/pietrobondioli/brasil-interface#readme",
-  "type": "module",
   "main": "./dist/@brasil-interface/sdks.umd.js",
   "module": "./dist/@brasil-interface/sdks.es.js",
   "types": "./dist/index.d.ts",
@@ -31,11 +30,6 @@
     "type": "git",
     "url": "https://github.com/pietrobondioli/brasil-interface.git"
   },
-  "keywords": [
-    "brasil",
-    "interface",
-    "sdk"
-  ],
   "scripts": {
     "clean": "rimraf dist",
     "build": "yarn run clean && vite build",
@@ -51,5 +45,42 @@
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
     "vite-plugin-dts": "^3.5.3"
-  }
+  },
+  "dependencies": {
+    "@brasil-interface/utils": "^1.2.0-alpha.1"
+  },
+  "keywords": [
+    "brasil",
+    "interface",
+    "sdk",
+    "cep-aberto",
+    "cep",
+    "Acre",
+    "Alagoas",
+    "Amapá",
+    "Amazonas",
+    "Bahia",
+    "Ceará",
+    "Distrito Federal",
+    "Espírito Santo",
+    "Goiás",
+    "Maranhão",
+    "Mato Grosso",
+    "Mato Grosso do Sul",
+    "Minas Gerais",
+    "Pará",
+    "Paraíba",
+    "Paraná",
+    "Pernambuco",
+    "Piauí",
+    "Rio de Janeiro",
+    "Rio Grande do Norte",
+    "Rio Grande do Sul",
+    "Rondônia",
+    "Roraima",
+    "Santa Catarina",
+    "São Paulo",
+    "Sergipe",
+    "Tocantins"
+  ]
 }
