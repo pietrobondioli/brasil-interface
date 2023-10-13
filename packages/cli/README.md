@@ -7,7 +7,7 @@
   - [Descrição](#descrição)
   - [Instalação](#instalação)
   - [Como usar](#como-usar)
-  - [Nota](#nota)
+  - [Utils CLI](#utils-cli)
     - [CPF](#cpf)
       - [Validar CPF](#validar-cpf)
       - [Gerar CPF](#gerar-cpf)
@@ -32,6 +32,13 @@
       - [Gerar RG](#gerar-rg)
       - [Aplicar máscara em RG](#aplicar-máscara-em-rg)
       - [Remover máscara de RG](#remover-máscara-de-rg)
+  - [Sdks CLI](#sdks-cli)
+    - [Cep Aberto](#cep-aberto)
+      - [Pesquisar CEP por número de CEP](#pesquisar-cep-por-número-de-cep)
+      - [Pesquisar CEP por Coordenadas](#pesquisar-cep-por-coordenadas)
+      - [Pesquisar CEP por Endereço](#pesquisar-cep-por-endereço)
+      - [Pesquisar CEP por Estado](#pesquisar-cep-por-estado)
+      - [Atualizar uma lista de ceps](#atualizar-uma-lista-de-ceps)
   - [Como contribuir](#como-contribuir)
   - [Contribuidores](#contribuidores)
   - [Autor](#autor)
@@ -57,22 +64,25 @@ npm install -g @brasil-interface/cli
 
 Ao instalar a cli, você terá acesso a um comando chamado `brasili`. Este comando possui alguns sub-comandos que são as funcionalidades disponíveis na cli. Para saber mais sobre cada funcionalidade, basta executar o comando `brasili --help` e você verá uma lista com todos os sub-comandos disponíveis e uma breve descrição sobre cada um deles. Para saber mais sobre cada sub-comando, basta executar o comando `brasili <sub-comando> --help` e você verá uma descrição mais detalhada sobre o sub-comando.
 
-## Nota
+## Utils CLI
 
 Os comandos tendem a seguir o mesmo padrão de nomenclatura dos sub-comandos. Então para fins de brevidade, o maior detalhamento será feito apenas para o sub-comando `cpf`, e para os outros comandos apenas haverá maior detalhamento caso haja alguma particularidade ou um novo comando seja adicionado.
 
 ### CPF
+
+Note que todos os comandos terão algumas opções em comum, para fins de brevidade, estas opções serão listadas aqui:
+
+| Opção                        | Descrição                                                   |
+| ---------------------------- | ----------------------------------------------------------- |
+| `-i, --input <input_file>`   | Arquivo de entrada com os CPFs a serem processados.         |
+| `-o, --output <output_file>` | Arquivo de saída com o resultado do comando.                |
+| `-c, --copy`                 | Copiar o resultado da pesquisa para a área de transferência |
 
 #### Validar CPF
 
 ```bash
 brasili cpf validate [...cpfs] -i <input_file> -o <output_file>
 ```
-
-| Opção                        | Descrição                                         |
-| ---------------------------- | ------------------------------------------------- |
-| `-i, --input <input_file>`   | Arquivo de entrada com os CPFs a serem validados. |
-| `-o, --output <output_file>` | Arquivo de saída com os CPFs validados.           |
 
 Validar um único CPF:
 
@@ -132,11 +142,10 @@ O resultado de qualquer uma das validações acima será uma lista de objetos co
 brasili cpf generate -a <amount> -o <output_file> --mask
 ```
 
-| Opção                        | Descrição                                                                 |
-| ---------------------------- | ------------------------------------------------------------------------- |
-| `-a, --amount <amount>`      | Quantidade de CPFs a serem gerados.                                       |
-| `-o, --output <output_file>` | Arquivo de saída com os CPFs gerados.                                     |
-| `-m, --mask`                 | Aplicar máscara nos CPFs gerados. Caso não seja informado, não será usada |
+| Opção                   | Descrição                                                                 |
+| ----------------------- | ------------------------------------------------------------------------- |
+| `-a, --amount <amount>` | Quantidade de CPFs a serem gerados.                                       |
+| `-m, --mask`            | Aplicar máscara nos CPFs gerados. Caso não seja informado, não será usada |
 
 Gerar um único CPF:
 
@@ -168,11 +177,9 @@ O resultado de qualquer uma das gerações acima será um array de CPFs:
 brasili cpf mask [...cpfs] -i <input_file> -o <output_file> --sensitive
 ```
 
-| Opção                        | Descrição                                                                                                  |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `-i, --input <input_file>`   | Arquivo de entrada com os CPFs a terem a máscara aplicada.                                                 |
-| `-o, --output <output_file>` | Arquivo de saída com os CPFs com a máscara aplicada.                                                       |
-| `-s, --sensitive`            | Se a máscara deve esconder os caracteres do CPF. Caso não seja informado, o CPF será mascarado normalmente |
+| Opção             | Descrição                                                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------------------------- |
+| `-s, --sensitive` | Se a máscara deve esconder os caracteres do CPF. Caso não seja informado, o CPF será mascarado normalmente |
 
 Aplicar máscara em um único CPF:
 
@@ -232,11 +239,6 @@ O resultado de qualquer uma das aplicações de máscara acima será uma lista d
 brasili cpf unmask [...cpfs] -i <input_file> -o <output_file>
 ```
 
-| Opção                        | Descrição                                                  |
-| ---------------------------- | ---------------------------------------------------------- |
-| `-i, --input <input_file>`   | Arquivo de entrada com os CPFs a terem a máscara removida. |
-| `-o, --output <output_file>` | Arquivo de saída com os CPFs com a máscara removida.       |
-
 Remover máscara de um único CPF:
 
 ```bash
@@ -295,11 +297,6 @@ O resultado de qualquer uma das remoções de máscara acima será uma lista de 
 brasili cpf get-estados [...cpfs] -i <input_file> -o <output_file>
 ```
 
-| Opção                        | Descrição                                                  |
-| ---------------------------- | ---------------------------------------------------------- |
-| `-i, --input <input_file>`   | Arquivo de entrada com os CPFs a terem a máscara removida. |
-| `-o, --output <output_file>` | Arquivo de saída com os CPFs com a máscara removida.       |
-
 Pesquisar estado de origem de um único CPF:
 
 ```bash
@@ -354,16 +351,19 @@ O resultado de qualquer uma das pesquisas de estado de origem acima será uma li
 
 ### CNPJ
 
+Note que todos os comandos terão algumas opções em comum, para fins de brevidade, estas opções serão listadas aqui:
+
+| Opção                        | Descrição                                                    |
+| ---------------------------- | ------------------------------------------------------------ |
+| `-i, --input <input_file>`   | Arquivo de entrada com os CNPJs a serem processados.         |
+| `-o, --output <output_file>` | Arquivo de saída com o resultado do comando.                 |
+| `-c, --copy`                 | Copiar o resultado da pesquisa para a área de transferência. |
+
 #### Validar CNPJ
 
 ```bash
 brasili cnpj validate [...cnpjs] -i <input_file> -o <output_file>
 ```
-
-| Opção                        | Descrição                                          |
-| ---------------------------- | -------------------------------------------------- |
-| `-i, --input <input_file>`   | Arquivo de entrada com os CNPJs a serem validados. |
-| `-o, --output <output_file>` | Arquivo de saída com os CNPJs validados.           |
 
 #### Gerar CNPJ
 
@@ -371,12 +371,10 @@ brasili cnpj validate [...cnpjs] -i <input_file> -o <output_file>
 brasili cnpj generate [...cnpjs] -i <input_file> -o <output_file> -a <amount> --mask
 ```
 
-| Opção                        | Descrição                                                                  |
-| ---------------------------- | -------------------------------------------------------------------------- |
-| `-i, --input <input_file>`   | Arquivo de entrada com os CNPJs a serem gerados.                           |
-| `-o, --output <output_file>` | Arquivo de saída com os CNPJs gerados.                                     |
-| `-a, --amount <amount>`      | Quantidade de CNPJs a serem gerados.                                       |
-| `-m, --mask`                 | Aplicar máscara nos CNPJs gerados. Caso não seja informado, não será usada |
+| Opção                   | Descrição                                                                  |
+| ----------------------- | -------------------------------------------------------------------------- |
+| `-a, --amount <amount>` | Quantidade de CNPJs a serem gerados.                                       |
+| `-m, --mask`            | Aplicar máscara nos CNPJs gerados. Caso não seja informado, não será usada |
 
 #### Aplicar máscara em CNPJ
 
@@ -384,11 +382,9 @@ brasili cnpj generate [...cnpjs] -i <input_file> -o <output_file> -a <amount> --
 brasili cnpj mask [...cnpjs] -i <input_file> -o <output_file> --sensitive
 ```
 
-| Opção                        | Descrição                                                                                                    |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `-i, --input <input_file>`   | Arquivo de entrada com os CNPJs a terem a máscara aplicada.                                                  |
-| `-o, --output <output_file>` | Arquivo de saída com os CNPJs com a máscara aplicada.                                                        |
-| `-s, --sensitive`            | Se a máscara deve esconder os caracteres do CNPJ. Caso não seja informado, o CNPJ será mascarado normalmente |
+| Opção             | Descrição                                                                                                    |
+| ----------------- | ------------------------------------------------------------------------------------------------------------ |
+| `-s, --sensitive` | Se a máscara deve esconder os caracteres do CNPJ. Caso não seja informado, o CNPJ será mascarado normalmente |
 
 
 #### Remover máscara de CNPJ
@@ -404,16 +400,19 @@ brasili cnpj unmask [...cnpjs] -i <input_file> -o <output_file>
 
 ### PIS
 
+Note que todos os comandos terão algumas opções em comum, para fins de brevidade, estas opções serão listadas aqui:
+
+| Opção                        | Descrição                                                    |
+| ---------------------------- | ------------------------------------------------------------ |
+| `-i, --input <input_file>`   | Arquivo de entrada com os PIS a serem processados.           |
+| `-o, --output <output_file>` | Arquivo de saída com o resultado do comando.                 |
+| `-c, --copy`                 | Copiar o resultado da pesquisa para a área de transferência. |
+
 #### Validar PIS
 
 ```bash
 brasili pis validate [...pis] -i <input_file> -o <output_file>
 ```
-
-| Opção                        | Descrição                                        |
-| ---------------------------- | ------------------------------------------------ |
-| `-i, --input <input_file>`   | Arquivo de entrada com os PIS a serem validados. |
-| `-o, --output <output_file>` | Arquivo de saída com os PIS validados.           |
 
 #### Gerar PIS
 
@@ -421,11 +420,10 @@ brasili pis validate [...pis] -i <input_file> -o <output_file>
 brasili pis generate -a <amount> -o <output_file> --mask
 ```
 
-| Opção                        | Descrição                                                                |
-| ---------------------------- | ------------------------------------------------------------------------ |
-| `-a, --amount <amount>`      | Quantidade de PIS a serem gerados.                                       |
-| `-o, --output <output_file>` | Arquivo de saída com os PIS gerados.                                     |
-| `-m, --mask`                 | Aplicar máscara nos PIS gerados. Caso não seja informado, não será usada |
+| Opção                   | Descrição                                                                |
+| ----------------------- | ------------------------------------------------------------------------ |
+| `-a, --amount <amount>` | Quantidade de PIS a serem gerados.                                       |
+| `-m, --mask`            | Aplicar máscara nos PIS gerados. Caso não seja informado, não será usada |
 
 #### Aplicar máscara em PIS
 
@@ -478,17 +476,20 @@ brasili cnh generate -a <amount> -o <output_file>
 
 O RG tem uma particularidade que é o fato de que ele não possui um padrão nacional. Cada estado possui seu próprio padrão de RG. Por isso, para executar comandos relacionados ao rg é necessário informar o estado de origem do RG. Para isso, basta informar a sigla do estado de origem do RG logo após a lista de RGs.
 
+Note que todos os comandos terão algumas opções em comum, para fins de brevidade, estas opções serão listadas aqui:
+
+| Opção                        | Descrição                                                                                                           |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `estado`                     | Obrigatório. Sigla do estado de origem do RG a ser processado. A única opção disponível é `SP`.                     |
+| `-i, --input <input_file>`   | Arquivo de entrada com os RGs a serem processados.                                                                  |
+| `-o, --output <output_file>` | Arquivo de saída com o resultado do comando.                                                                        |
+| `-c, --copy`                 | Copiar o resultado da pesquisa para a área de transferência. Caso não seja informado, o resultado não será copiado. |
+
 #### Validar RG
 
 ```bash
 brasili rg validate [...rgs] <estado> -i <input_file> -o <output_file>
 ```
-
-| Opção                        | Descrição                                                                                  |
-| ---------------------------- | ------------------------------------------------------------------------------------------ |
-| `estado`                     | Obrigatório. Sigla do estado de origem do RG a ser validado. Única opção disponível é `SP` |
-| `-i, --input <input_file>`   | Arquivo de entrada com os RGs a serem validados                                            |
-| `-o, --output <output_file>` | Arquivo de saída com os RGs validados                                                      |
 
 #### Gerar RG
 
@@ -496,12 +497,10 @@ brasili rg validate [...rgs] <estado> -i <input_file> -o <output_file>
 brasili rg generate <estado> -a <amount> -o <output_file> --mask
 ```
 
-| Opção                        | Descrição                                                                                  |
-| ---------------------------- | ------------------------------------------------------------------------------------------ |
-| `estado`                     | Obrigatório. Sigla do estado de origem do RG a ser validado. Única opção disponível é `SP` |
-| `-a, --amount <amount>`      | Quantidade de RGs a serem gerados.                                                         |
-| `-o, --output <output_file>` | Arquivo de saída com os RGs gerados.                                                       |
-| `-m, --mask`                 | Aplicar máscara nos RGs gerados. Caso não seja usado                                       |
+| Opção                   | Descrição                                            |
+| ----------------------- | ---------------------------------------------------- |
+| `-a, --amount <amount>` | Quantidade de RGs a serem gerados.                   |
+| `-m, --mask`            | Aplicar máscara nos RGs gerados. Caso não seja usado |
 
 #### Aplicar máscara em RG
 
@@ -509,12 +508,9 @@ brasili rg generate <estado> -a <amount> -o <output_file> --mask
 brasili rg mask [...rgs] <estado> -i <input_file> -o <output_file> --sensitive
 ```
 
-| Opção                        | Descrição                                                                                                |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `estado`                     | Obrigatório. Sigla do estado de origem do RG a ser validado. Única opção disponível é `SP`               |
-| `-i, --input <input_file>`   | Arquivo de entrada com os RGs a terem a máscara aplicada.                                                |
-| `-o, --output <output_file>` | Arquivo de saída com os RGs com a máscara aplicada.                                                      |
-| `-s, --sensitive`            | Se a máscara deve esconder os caracteres do RG. Caso não seja informado, o RG será mascarado normalmente |
+| Opção             | Descrição                                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------------------------- |
+| `-s, --sensitive` | Se a máscara deve esconder os caracteres do RG. Caso não seja informado, o RG será mascarado normalmente |
 
 #### Remover máscara de RG
 
@@ -522,11 +518,126 @@ brasili rg mask [...rgs] <estado> -i <input_file> -o <output_file> --sensitive
 brasili rg unmask [...rgs] <estado> -i <input_file> -o <output_file>
 ```
 
-| Opção                        | Descrição                                                                                  |
-| ---------------------------- | ------------------------------------------------------------------------------------------ |
-| `estado`                     | Obrigatório. Sigla do estado de origem do RG a ser validado. Única opção disponível é `SP` |
-| `-i, --input <input_file>`   | Arquivo de entrada com os RGs a terem a máscara removida.                                  |
-| `-o, --output <output_file>` | Arquivo de saída com os RGs com a máscara removida.                                        |
+## Sdks CLI
+
+### Cep Aberto
+
+Esta funcionalidade permite que você faça consultas de CEPs utilizando a API do [Cep Aberto](https://cepaberto.com/), para checar o wrapper utilizado, acesse o package [@brasil-interface/sdks]([/packages/sdks](https://github.com/pietrobondioli/brasil-interface/tree/main/packages/sdks)) deste projeto.
+
+Note que todos os comandos terão algumas opções em comum, para fins de brevidade, estas opções serão listadas aqui:
+
+| Opção                        | Descrição                                                                                                           |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `token`                      | Obrigatório. Token de acesso a API do Cep Aberto.                                                                   |
+| `-o, --output <output_file>` | Arquivo de saída com o endereço pesquisado.                                                                         |
+| `-c, --copy`                 | Copiar o resultado da pesquisa para a área de transferência. Caso não seja informado, o resultado não será copiado. |
+
+#### Pesquisar CEP por número de CEP
+
+```bash
+brasili cep-aberto get-by-number <cep> --token <token> -o <output_file> -c
+```
+
+| Opção | Descrição                          |
+| ----- | ---------------------------------- |
+| `cep` | Obrigatório. CEP a ser pesquisado. |
+
+Em caso de sucesso o resultado será algo como:
+
+```json
+{
+  "cep": "01001-000",
+  "logradouro": "Praça da Sé",
+  "complemento": "lado ímpar",
+  "bairro": "Sé",
+  "cidade": {
+    "nome": "São Paulo",
+    "ddd": 11,
+    "ibge": "3550308"
+  },
+  "estado": {
+    "sigla": "SP"
+  },
+  "altitude": 760.0,
+  "latitude": "-23.5503",
+  "longitude": "-46.6342"
+}
+```
+
+#### Pesquisar CEP por Coordenadas
+
+```bash
+brasili cep-aberto get-by-coordinates <latitude> <longitude> --token <token> -o <output_file> -c
+```
+
+| Opção       | Descrição                                |
+| ----------- | ---------------------------------------- |
+| `latitude`  | Obrigatório. Latitude a ser pesquisada.  |
+| `longitude` | Obrigatório. Longitude a ser pesquisada. |
+
+Em caso de sucesso o JSON será o mesmo da pesquisa por CEP.
+
+#### Pesquisar CEP por Endereço
+
+```bash
+brasili cep-aberto get-by-address <state> <city> [street] [neighborhood] --token <token> -o <output_file> -c
+```
+
+| Opção          | Descrição                                      |
+| -------------- | ---------------------------------------------- |
+| `state`        | Obrigatório. Sigla do estado a ser pesquisado. |
+| `city`         | Obrigatório. Nome da cidade a ser pesquisada.  |
+| `street`       | Opcional. Nome da rua a ser pesquisada.        |
+| `neighborhood` | Opcional. Nome do bairro a ser pesquisado.     |
+
+Em caso de sucesso o JSON será o mesmo da pesquisa por CEP.
+
+#### Pesquisar CEP por Estado
+
+```bash
+brasili cep-aberto get-cities-by-state <state> --token <token> -o <output_file> -c
+```
+
+| Opção   | Descrição                                      |
+| ------- | ---------------------------------------------- |
+| `state` | Obrigatório. Sigla do estado a ser pesquisado. |
+
+Em caso de sucesso o resultado será uma lista de objetos com o nome das cidades:
+
+```json
+[
+  {
+    "nome": "São Paulo",
+  },
+  {
+    "nome": "São Pedro",
+  },
+  {
+    "nome": "São Pedro do Turvo",
+  }
+]
+```
+
+#### Atualizar uma lista de ceps
+
+```bash
+brasili cep-aberto update-ceps <cepList> --token <token> -i <input_file> -o <output_file> -c
+```
+
+| Opção                      | Descrição                                                                                                                              |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `cepList`                  | Obrigatório. Lista de CEPs a serem atualizados.                                                                                        |
+| `-i, --input <input_file>` | Arquivo de entrada com os CEPs a serem atualizados, pode ser um arquivo JSON ou um arquivo de texto com os CEPs separados por vírgula. |
+
+Em caso de sucesso o resultado será uma lista de strings com os ceps atualizados:
+
+```json
+[
+  "01001-000",
+  "01002-000",
+  "01003-000"
+]
+```
 
 ## Como contribuir
 
