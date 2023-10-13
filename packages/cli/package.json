@@ -44,6 +44,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@brasil-interface/sdks": "^1.0.0-alpha.0",
     "@brasil-interface/utils": "^1.2.0-alpha.1",
     "cli-table": "^0.3.11",
     "clipboardy": "2.3.0",
