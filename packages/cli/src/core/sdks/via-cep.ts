@@ -3,7 +3,7 @@ import { ViaCepAPI } from "@brasil-interface/sdks";
 import { program } from "commander";
 
 const viaCep = program
-	.command("viacep")
+	.command("via-cep")
 	.description("ViaCepAPI utilities.");
 
 viaCep
