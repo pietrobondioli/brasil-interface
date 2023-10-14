@@ -164,5 +164,3 @@ cepAberto
 			copyToClipboard: copy,
 		});
 	});
-
-program.parse(process.argv);
