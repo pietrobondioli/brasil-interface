@@ -3,11 +3,11 @@ import { OutputHelper } from "@/helpers/output-helper";
 import { BrasilApi } from "@brasil-interface/sdks";
 import { program } from "commander";
 
-const brasilApiCep = program
-	.command("brasil-api/cep")
-	.description("Brasil API CEP SDK");
+const cepv2 = program
+	.command("brasil-api/cep-v2")
+	.description("Brasil API CEPv2 SDK");
 
-brasilApiCep
+cepv2
 	.command("get-by-number <cep>")
 	.description("Get information about an address by CEP number.")
 	.option("-o, --output <filepath>", "Output file path")
@@ -16,12 +16,10 @@ brasilApiCep
 	.action(async (cep, options) => {
 		const { output, copy, debug } = options;
 		const logger = new Logger(debug);
-		const CEP = new BrasilApi.CEP();
+		const cepv2 = new BrasilApi.CEPv2();
 
 		try {
-			const result = await CEP.getCepByNumber(cep).catch((error) => {
-				console.error(error);
-			});
+			const result = await cepv2.getCepByNumber(Number(cep));
 
 			OutputHelper.handleResultOutputBasedOnOptions(result, {
 				output,
