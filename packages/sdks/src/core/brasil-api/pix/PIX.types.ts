@@ -1,5 +1,5 @@
 /**
- * Pix Participantes
+ * PIXParticipant
  * @example {
  *   "ispb": "360305",
  *   "nome": "CAIXA ECONOMICA FEDERAL",
@@ -9,7 +9,7 @@
  *   "inicio_operacao": "2020-11-03T09:30:00.000Z"
  * }
  */
-export type PIX_PARTICIPANTES = {
+export type PIXParticipant = {
 	/** @description ISPB */
 	ispb: string;
 
