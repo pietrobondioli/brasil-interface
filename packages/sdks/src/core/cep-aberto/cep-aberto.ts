@@ -40,9 +40,9 @@ export class CepAbertoAPI {
 		lat: number,
 		lng: number
 	): Promise<ICepAbertoAddress> {
-		const response = await this.http.get<ICepAbertoAddress>(
-			`/nearest?lat=${lat}&lng=${lng}`
-		);
+		const response = await this.http.get<ICepAbertoAddress>(`/nearest`, {
+			query: { lat, lng },
+		});
 
 		return response.data;
 	}
@@ -70,9 +70,9 @@ export class CepAbertoAPI {
 		if (street) params.logradouro = street;
 		if (neighborhood) params.bairro = neighborhood;
 
-		const response = await this.http.get<ICepAbertoAddress>(
-			`/address?${new URLSearchParams(params).toString()}`
-		);
+		const response = await this.http.get<ICepAbertoAddress>(`/address`, {
+			query: params,
+		});
 
 		return response.data;
 	}
@@ -85,9 +85,9 @@ export class CepAbertoAPI {
 	 * @returns PT-BR: Uma lista de cidades no estado fornecido. EN-US: A list of cities in the provided state.
 	 */
 	public async getCitiesByState(state: string): Promise<ICepAbertoCity[]> {
-		const response = await this.http.get<ICepAbertoCity[]>(
-			`/cities?estado=${state}`
-		);
+		const response = await this.http.get<ICepAbertoCity[]>(`/cities`, {
+			query: { estado: state },
+		});
 
 		return response.data;
 	}

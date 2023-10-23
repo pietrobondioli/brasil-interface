@@ -12,6 +12,7 @@ brasilApiBanks
 	.description("Get information about all banks in Brazil.")
 	.option("-o, --output <filepath>", "Output file path")
 	.option("-c, --copy", "Copy the result to the clipboard.")
+	.option("-d, --debug", "Show debug information.")
 	.action(async (options) => {
 		const { output, copy, debug } = options;
 		const logger = new Logger(debug);
@@ -36,6 +37,7 @@ brasilApiBanks
 	.description("Get information about a bank by code.")
 	.option("-o, --output <filepath>", "Output file path")
 	.option("-c, --copy", "Copy the result to the clipboard.")
+	.option("-d, --debug", "Show debug information.")
 	.action(async (code, options) => {
 		const { output, copy, debug } = options;
 		const logger = new Logger(debug);
