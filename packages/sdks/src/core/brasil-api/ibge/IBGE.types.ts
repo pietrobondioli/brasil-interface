@@ -1,5 +1,17 @@
 /**
- * State
+ * Municipio
+ * @example {
+ *   "nome": "União do Oeste",
+ *   "codigo_ibge": "421885505"
+ * }
+ */
+export type Municipio = {
+	nome: string;
+	codigo_ibge: string;
+};
+
+/**
+ * Estado
  * @example {
  *   "id": 35,
  *   "sigla": "SP",
@@ -11,23 +23,23 @@
  *   }
  * }
  */
-export type State = {
+export type Estado = {
 	/** Format: int32 */
 	id: number;
 	sigla: string;
 	nome: string;
-	regiao: Region;
+	regiao: Regiao;
 };
 
 /**
- * Region
+ * Regiao
  * @example {
  *   "id": 3,
  *   "sigla": "SE",
  *   "nome": "Sudeste"
  * }
  */
-export type Region = {
+export type Regiao = {
 	/** Format: int32 */
 	id: number;
 	sigla: string;
