@@ -1,5 +1,7 @@
 # Brasil Interface
 
+![Brasil Interface Project Cover](assets/brasil-interface-cover.png)
+
 ## Sumário
 
 - [Brasil Interface](#brasil-interface)
