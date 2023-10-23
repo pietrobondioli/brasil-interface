@@ -1,12 +1,12 @@
 /**
- * Holiday
+ * Feriado
  * @example {
  *   "date": "2021-01-01",
  *   "name": "Confraternização mundial",
  *   "type": "national"
  * }
  */
-export type Holiday = {
+export type Feriado = {
 	date: string;
 	type: string;
 
