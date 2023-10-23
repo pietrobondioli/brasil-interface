@@ -39,5 +39,3 @@ brasilApiBanks
 			copyToClipboard: copy,
 		});
 	});
-
-export { brasilApiBanks };
