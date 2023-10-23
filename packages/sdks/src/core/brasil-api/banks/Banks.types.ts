@@ -1,5 +1,4 @@
 /**
- * Bank
  * @example {
  *   "ispb": "00000000",
  *   "name": "BCO DO BRASIL S.A.",
