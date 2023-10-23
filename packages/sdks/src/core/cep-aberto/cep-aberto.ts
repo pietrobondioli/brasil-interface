@@ -1,28 +1,18 @@
+import { FetchJson } from "@/helpers/fetch-json";
 import {
 	ICepAbertoAddress,
 	ICepAbertoCity,
 	IGetCepByAddressParams,
 } from "./cep-aberto.types";
+import { CEP_ABERTO_URL } from "./constants";
 
 export class CepAbertoAPI {
-	private baseUrl = "https://www.cepaberto.com/api/v3";
+	private readonly http: FetchJson;
 
-	constructor(private token: string) {}
-
-	private async fetchJson<T>(url: string): Promise<T> {
-		const response = await fetch(url, {
-			headers: {
-				Authorization: `Token token=${this.token}`,
-			},
+	constructor(private token: string) {
+		this.http = new FetchJson(CEP_ABERTO_URL, {
+			Authorization: `Token token=${this.token}`,
 		});
-
-		if (!response.ok) {
-			throw new Error(
-				`Failed to fetch ${url}: ${response.status} ${response.statusText}`
-			);
-		}
-
-		return response.json();
 	}
 
 	/**
@@ -33,8 +23,9 @@ export class CepAbertoAPI {
 	 * @returns PT-BR: As informações de endereço para o CEP fornecido. EN-US: The address information for the provided CEP.
 	 */
 	public async getCepByNumber(cep: string): Promise<ICepAbertoAddress> {
-		const url = `${this.baseUrl}/cep?cep=${cep}`;
-		return this.fetchJson<ICepAbertoAddress>(url);
+		const response = await this.http.get<ICepAbertoAddress>(`/cep?cep=${cep}`);
+
+		return response.data;
 	}
 
 	/**
@@ -49,8 +40,11 @@ export class CepAbertoAPI {
 		lat: number,
 		lng: number
 	): Promise<ICepAbertoAddress> {
-		const url = `${this.baseUrl}/nearest?lat=${lat}&lng=${lng}`;
-		return this.fetchJson<ICepAbertoAddress>(url);
+		const response = await this.http.get<ICepAbertoAddress>(
+			`/nearest?lat=${lat}&lng=${lng}`
+		);
+
+		return response.data;
 	}
 
 	/**
@@ -76,10 +70,11 @@ export class CepAbertoAPI {
 		if (street) params.logradouro = street;
 		if (neighborhood) params.bairro = neighborhood;
 
-		const url = `${this.baseUrl}/address?${new URLSearchParams(
-			params
-		).toString()}`;
-		return this.fetchJson<ICepAbertoAddress>(url);
+		const response = await this.http.get<ICepAbertoAddress>(
+			`/address?${new URLSearchParams(params).toString()}`
+		);
+
+		return response.data;
 	}
 
 	/**
@@ -90,8 +85,11 @@ export class CepAbertoAPI {
 	 * @returns PT-BR: Uma lista de cidades no estado fornecido. EN-US: A list of cities in the provided state.
 	 */
 	public async getCitiesByState(state: string): Promise<ICepAbertoCity[]> {
-		const url = `${this.baseUrl}/cities?estado=${state}`;
-		return this.fetchJson<ICepAbertoCity[]>(url);
+		const response = await this.http.get<ICepAbertoCity[]>(
+			`/cities?estado=${state}`
+		);
+
+		return response.data;
 	}
 
 	/**
@@ -102,22 +100,8 @@ export class CepAbertoAPI {
 	 * @returns PT-BR: Uma lista de números de CEP atualizados. EN-US: A list of updated CEP numbers.
 	 */
 	public async updateCeps(ceps: string[]): Promise<string[]> {
-		const url = `${this.baseUrl}/update`;
-		const response = await fetch(url, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Token token=${this.token}`,
-			},
-			body: JSON.stringify({ ceps }),
-		});
+		const response = await this.http.post<string[]>("/update", { ceps });
 
-		if (!response.ok) {
-			throw new Error(
-				`Failed to update CEPs: ${response.status} ${response.statusText}`
-			);
-		}
-
-		return response.json();
+		return response.data;
 	}
 }
