@@ -1,22 +1,12 @@
-import {
-	ViaCepAddress
-} from "./via-cep.types";
+import { FetchJson } from "@/helpers/fetch-json";
+import { VIA_CEP_URL } from "./contants";
+import { ViaCepAddress } from "./via-cep.types";
 
 export class ViaCepAPI {
-	private baseUrl = "https://viacep.com.br";
+	private readonly http: FetchJson;
 
-	constructor() {}
-
-	private async fetchJson<T>(url: string): Promise<T> {
-		const response = await fetch(url);
-
-		if (!response.ok) {
-			throw new Error(
-				`Failed to fetch ${url}: ${response.status} ${response.statusText}`
-			);
-		}
-
-		return response.json();
+	constructor() {
+		this.http = new FetchJson(VIA_CEP_URL);
 	}
 
 	/**
@@ -27,7 +17,8 @@ export class ViaCepAPI {
 	 * @returns PT-BR: As informações de endereço para o CEP fornecido. EN-US: The address information for the provided CEP.
 	 */
 	public async getCepByNumber(cep: string): Promise<ViaCepAddress> {
-		const url = `${this.baseUrl}/ws/${cep}/json/`;
-		return this.fetchJson<ViaCepAddress>(url);
+		const response = await this.http.get<ViaCepAddress>(`/${cep}/json/`);
+
+		return response.data;
 	}
 }

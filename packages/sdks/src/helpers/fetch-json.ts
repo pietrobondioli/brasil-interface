@@ -1,7 +1,7 @@
 export interface FetchJsonConfig extends RequestInit {}
 
 export interface FetchJsonResponse<T = any> extends Response {
-	data?: T;
+	data: T;
 }
 
 export interface FetchJsonError extends Error {
@@ -9,13 +9,10 @@ export interface FetchJsonError extends Error {
 }
 
 export class FetchJson {
-	private baseUrl: string;
-	private headers: Headers;
-
-	constructor(baseUrl: string, headers: Headers = new Headers()) {
-		this.baseUrl = baseUrl;
-		this.headers = headers;
-	}
+	constructor(
+		private baseUrl: string = "",
+		private headers: Record<string, string> = {}
+	) {}
 
 	public async get<T = any>(
 		url: string,
