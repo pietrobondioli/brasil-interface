@@ -74,7 +74,7 @@
  *   ]
  * }
  */
-export type CNPJ = {
+export type CNPJInfo = {
 	cnpj?: string;
 
 	/** Format: int32 */
