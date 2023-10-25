@@ -1,5 +1,5 @@
 /**
- * NCM
+ * NCMInfo
  * @example {
  *   "codigo": "3305.10.00",
  *   "descricao": "- Xampus",
@@ -10,7 +10,7 @@
  *   "ano_ato": "2021"
  * }
  */
-export type NCM = {
+export type NCMInfo = {
 	codigo: string;
 	descricao: string;
 	data_inicio: string;
