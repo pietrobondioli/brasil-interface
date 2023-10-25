@@ -1,4 +1,5 @@
 /**
+ * DomainInfo
  * Avaliação de domínio .br
  * @example {
  *   "status_code": 2,
@@ -39,7 +40,7 @@
  *   ]
  * }
  */
-export type RegistroBR = {
+export type DomainInfo = {
 	/** @description 0 - domínio disponível | 1 - disponível com tickets concorrentes | 2 - já registrado | 3 - indisponível | 4 - inválido | 5 - aguardando processo de liberação | 6 - disponível no processo de liberação em andamento | 7 - disponível no processo de liberação em andamento com tickets concorrentes | 8 - erro | 9 - domínio em processo de liberação competitivo | 10 - desconhecido */
 	status_code: number;
 
