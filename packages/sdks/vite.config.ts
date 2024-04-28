@@ -11,5 +11,10 @@ export default defineConfig({
 			fileName: (format) => `@brasil-interface/sdks.${format}.js`,
 		},
 	},
+	resolve: {
+		alias: {
+			"@/helpers": resolve(__dirname, "src/helpers"),
+		},
+	},
 	plugins: [dts()],
 });
