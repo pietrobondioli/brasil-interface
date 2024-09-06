@@ -1,6 +1,6 @@
 {
   "name": "@brasil-interface/utils",
-  "version": "1.2.0-alpha.1",
+  "version": "1.2.1-alpha.0",
   "description": "",
   "license": "MIT",
   "author": "Pietro Bondioli <dev@pietrobondioli.com.br>",
@@ -17,7 +17,8 @@
   "exports": {
     ".": {
       "import": "./dist/@brasil-interface/utils.es.js",
-      "require": "./dist/@brasil-interface/utils.umd.js"
+      "require": "./dist/@brasil-interface/utils.umd.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "publishConfig": {
