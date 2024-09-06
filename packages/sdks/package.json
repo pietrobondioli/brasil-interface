@@ -17,7 +17,8 @@
   "exports": {
     ".": {
       "import": "./dist/@brasil-interface/sdks.es.js",
-      "require": "./dist/@brasil-interface/sdks.umd.js"
+      "require": "./dist/@brasil-interface/sdks.umd.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "publishConfig": {
