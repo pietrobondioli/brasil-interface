@@ -22,6 +22,7 @@
     "build:cli": "lerna run build --scope @brasil-interface/cli --stream",
     "build:sdks": "lerna run build --scope @brasil-interface/sdks --stream",
     "build:utils": "lerna run build --scope @brasil-interface/utils --stream",
+    "prePublishOnly": "lerna run build --stream",
     "publish": "lerna publish",
     "prepare": "husky install"
   },
