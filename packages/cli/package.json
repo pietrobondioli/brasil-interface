@@ -28,7 +28,7 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "build": "yarn run clean && tsc && tsc-alias",
+    "build": "yarn run clean && tsc --build --force && tsc-alias",
     "test": "jest --coverage --no-cache --passWithNoTests",
     "dev": "ts-node -r tsconfig-paths/register src/index.ts"
   },
